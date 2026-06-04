@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>OS A320 · Crew Duty Planner · LOWW</title>
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#080B10">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="OS Duty">
+<meta name="description" content="Austrian Airlines A320 crew duty planner – LOWW">
+<!-- Icons (inline SVG favicon) -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23CC0A2F'/><text y='.9em' font-size='55' x='50' text-anchor='middle' dominant-baseline='middle' dy='5' fill='white' font-family='sans-serif' font-weight='bold'>OS</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red:     #CC0A2F;
+  --red-dim: rgba(204,10,47,0.15);
+  --gold:    #D4A847;
+  --sky:     #3B8BEB;
+  --sky-dim: rgba(59,139,235,0.13);
+  --green:   #27AE60;
+  --sb:      #1B6FBE;
+  --sb-dim:  rgba(27,111,190,0.15);
+  --bg:      #080B10;
+  --bg1:     #0E1218;
+  --bg2:     #141920;
+  --bg3:     #1A2029;
+  --line:    rgba(255,255,255,0.06);
+  --text:    #DDE3EC;
+  --muted:   #5A6474;
+  --mono:    'IBM Plex Mono', monospace;
+  --sans:    'IBM Plex Sans', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:300;min-height:100vh;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);}
+
+.shell{display:flex;min-height:100vh;}
+.sidebar{width:270px;flex-shrink:0;background:var(--bg1);border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.main{flex:1;padding:36px 40px 80px;overflow-x:hidden;}
+
+/* SIDEBAR */
+.s-header{padding:24px 22px 18px;border-bottom:1px solid var(--line);}
+.s-logo{display:flex;align-items:center;gap:11px;margin-bottom:12px;}
+.os-dot{width:38px;height:38px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;font-weight:600;color:#fff;box-shadow:0 0 14px rgba(204,10,47,0.4);flex-shrink:0;}
+.s-title{font-family:var(--mono);font-size:11px;color:#fff;letter-spacing:0.05em;line-height:1.4;}
+.s-title .small{font-size:9px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:2px;}
+
+.s-section{padding:18px 22px;border-bottom:1px solid var(--line);}
+.s-label{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+
+/* WEEKDAY / WEEKEND TOGGLE */
+.sched-toggle{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:12px;}
+.sched-btn{
+  padding:10px 8px;border-radius:5px;border:1px solid var(--line);
+  background:var(--bg2);color:var(--muted);font-family:var(--mono);font-size:11px;
+  cursor:pointer;text-align:center;transition:all 0.15s;letter-spacing:0.04em;
+}
+.sched-btn:hover{border-color:var(--gold);color:#fff;}
+.sched-btn.active{background:rgba(212,168,71,0.14);border-color:var(--gold);color:var(--gold);}
+.sched-sub{font-family:var(--mono);font-size:8px;color:var(--muted);text-align:center;margin-top:6px;letter-spacing:0.06em;}
+
+/* LEGS */
+.leg-btns{display:flex;gap:3px;}
+.leg-btn{flex:1;padding:7px 4px;border-radius:4px;border:1px solid var(--line);background:var(--bg2);color:var(--muted);font-family:var(--mono);font-size:11px;cursor:pointer;text-align:center;transition:all 0.15s;}
+.leg-btn:hover{border-color:var(--sky);color:#fff;}
+.leg-btn.active{background:var(--sky-dim);border-color:var(--sky);color:var(--sky);}
+
+/* REGION */
+.s-filters{display:flex;flex-direction:column;gap:3px;}
+.sf-btn{padding:6px 9px;border-radius:4px;border:1px solid var(--line);background:transparent;color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:0.05em;cursor:pointer;text-align:left;transition:all 0.15s;}
+.sf-btn:hover{color:#fff;background:rgba(255,255,255,0.04);}
+.sf-btn.active{color:#fff;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.14);}
+
+/* SIMBRIEF PILOT ID */
+.pid-wrap{display:flex;gap:6px;align-items:center;}
+.pid-wrap input{
+  flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:5px;
+  color:var(--text);font-family:var(--mono);font-size:11px;
+  padding:7px 10px;outline:none;transition:border-color 0.2s;
+}
+.pid-wrap input:focus{border-color:var(--sb);}
+.pid-wrap input::placeholder{color:var(--muted);}
+.pid-save{padding:7px 10px;border-radius:5px;border:1px solid var(--line);background:var(--bg2);color:var(--muted);font-family:var(--mono);font-size:10px;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.pid-save:hover{border-color:var(--sb);color:var(--sky);}
+.pid-note{font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:6px;line-height:1.5;}
+
+/* SELECTED SUMMARY */
+.s-selected{margin-top:auto;padding:18px 22px;border-top:1px solid var(--line);}
+.sel-label{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+#sel-summary{font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.7;}
+.sel-none{color:var(--muted);font-style:italic;}
+
+.sb-all-btn{
+  display:block;width:100%;margin-top:10px;padding:9px;border-radius:5px;
+  border:1px solid rgba(27,111,190,0.4);background:rgba(27,111,190,0.12);
+  color:var(--sky);font-family:var(--mono);font-size:10px;
+  cursor:pointer;text-align:center;letter-spacing:0.06em;
+  transition:all 0.2s;text-decoration:none;
+}
+.sb-all-btn:hover{background:rgba(27,111,190,0.22);border-color:var(--sky);}
+.sb-all-btn.hidden{display:none;}
+
+.clear-btn{margin-top:6px;width:100%;padding:7px;border-radius:4px;border:1px solid var(--line);background:transparent;color:var(--muted);font-family:var(--mono);font-size:10px;cursor:pointer;transition:all 0.15s;letter-spacing:0.05em;}
+.clear-btn:hover{border-color:var(--red);color:var(--red);}
+
+/* MAIN */
+.m-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;}
+.m-title{font-family:var(--mono);font-size:20px;color:#fff;letter-spacing:0.04em;}
+.m-sub{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:5px;letter-spacing:0.08em;}
+.m-badge{text-align:right;}
+.sched-badge{font-family:var(--mono);font-size:12px;color:var(--gold);letter-spacing:0.08em;}
+.sched-days{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:4px;letter-spacing:0.06em;}
+
+/* STATS BAR */
+.duty-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:24px;}
+.db-cell{background:var(--bg1);border:1px solid var(--line);padding:12px 14px;}
+.db-cell:first-child{border-radius:8px 0 0 8px;}
+.db-cell:last-child{border-radius:0 8px 8px 0;}
+.db-val{font-family:var(--mono);font-size:17px;color:#fff;font-weight:500;}
+.db-val .unit{font-size:10px;color:var(--muted);}
+.db-lbl{font-size:9px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:3px;}
+
+/* GRID */
+.pairings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;}
+
+/* CARD */
+.p-card{background:var(--bg1);border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer;transition:all 0.2s;position:relative;animation:cardIn 0.3s ease both;}
+.p-card:hover{border-color:rgba(255,255,255,0.13);transform:translateY(-1px);box-shadow:0 8px 28px rgba(0,0,0,0.4);}
+.p-card.selected{border-color:var(--red);box-shadow:0 0 0 1px var(--red),0 8px 28px rgba(204,10,47,0.2);}
+
+.p-card-head{padding:12px 15px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);}
+.p-id{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:0.1em;}
+.p-meta{display:flex;align-items:center;gap:7px;}
+.p-legs-badge{font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:3px;background:var(--bg3);border:1px solid var(--line);color:var(--muted);letter-spacing:0.05em;}
+.p-dur{font-family:var(--mono);font-size:11px;color:var(--gold);}
+
+/* TIMELINE */
+.p-timeline{padding:12px 15px;}
+.leg-row{display:flex;align-items:stretch;margin-bottom:6px;position:relative;}
+.leg-row:last-child{margin-bottom:0;}
+.leg-connector{display:flex;flex-direction:column;align-items:center;width:26px;flex-shrink:0;margin-right:9px;}
+.leg-dot{width:8px;height:8px;border-radius:50%;background:var(--bg3);border:1.5px solid var(--muted);flex-shrink:0;margin-top:3px;}
+.leg-dot.dep{border-color:var(--sky);background:var(--sky-dim);}
+.leg-dot.arr{border-color:var(--green);background:rgba(39,174,96,0.15);}
+.leg-line{flex:1;width:1px;background:var(--line);margin:3px 0;}
+.leg-info{flex:1;min-width:0;}
+.leg-ap{font-family:var(--mono);font-size:13px;font-weight:500;color:#fff;letter-spacing:0.05em;}
+.leg-city{font-size:10px;color:var(--muted);}
+.leg-times{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:1px;}
+.leg-fn{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:0.05em;}
+.leg-ac{font-family:var(--mono);font-size:8px;padding:1px 5px;border-radius:2px;border:1px solid var(--line);background:var(--bg3);color:var(--muted);}
+.leg-block-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;}
+
+.gnd-row{display:flex;align-items:center;gap:7px;padding:3px 0 3px 35px;font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:0.05em;}
+.gnd-bar{height:1px;flex:1;background:repeating-linear-gradient(90deg,var(--muted) 0,var(--muted) 3px,transparent 3px,transparent 6px);opacity:0.25;}
+
+/* SIMBRIEF LEG LINK */
+.sb-leg-link{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:var(--mono);font-size:8px;letter-spacing:0.06em;
+  padding:3px 7px;border-radius:3px;
+  border:1px solid rgba(27,111,190,0.3);background:rgba(27,111,190,0.1);
+  color:var(--sky);text-decoration:none;transition:all 0.15s;
+  white-space:nowrap;
+}
+.sb-leg-link:hover{background:rgba(27,111,190,0.22);border-color:var(--sky);}
+.sb-icon{font-size:9px;}
+
+/* CARD FOOTER */
+.p-card-foot{padding:9px 15px;border-top:1px solid var(--line);background:var(--bg2);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.p-fdp{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:0.04em;}
+.p-fdp span{color:var(--text);}
+
+/* CARD FOOT ACTIONS */
+.foot-actions{display:flex;align-items:center;gap:6px;}
+.sb-pairing-link{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:var(--mono);font-size:9px;letter-spacing:0.05em;
+  padding:4px 9px;border-radius:4px;
+  border:1px solid rgba(27,111,190,0.35);background:rgba(27,111,190,0.12);
+  color:var(--sky);text-decoration:none;transition:all 0.15s;
+}
+.sb-pairing-link:hover{background:rgba(27,111,190,0.24);border-color:var(--sky);}
+.p-select-btn{font-family:var(--mono);font-size:9px;letter-spacing:0.06em;padding:4px 10px;border-radius:4px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.15s;text-transform:uppercase;}
+.p-card.selected .p-select-btn{background:var(--red);border-color:var(--red);color:#fff;}
+.p-card:not(.selected) .p-select-btn:hover{border-color:var(--red);color:var(--red);}
+
+.p-check{position:absolute;top:9px;right:9px;width:17px;height:17px;border-radius:50%;background:var(--red);display:none;align-items:center;justify-content:center;font-size:9px;}
+.p-card.selected .p-check{display:flex;}
+
+.empty-msg{grid-column:1/-1;text-align:center;padding:60px;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:0.08em;}
+
+@keyframes cardIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+@media(max-width:800px){
+  .shell{flex-direction:column;}
+  .sidebar{width:100%;height:auto;position:static;}
+  .main{padding:18px 14px 60px;}
+  .pairings-grid{grid-template-columns:1fr;}
+  .duty-bar{grid-template-columns:repeat(2,1fr);}
+}
+/* PWA safe areas */
+@supports(padding:max(0px)){
+  .sidebar{padding-top:max(0px,env(safe-area-inset-top));}
+  .main{padding-bottom:max(80px,calc(60px + env(safe-area-inset-bottom)));}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="s-header">
+    <div class="s-logo">
+      <div class="os-dot">OS</div>
+      <div class="s-title">Austrian Airlines
+        <div class="small">A320 · Crew Duty Planner</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEKDAY / WEEKEND -->
+  <div class="s-section">
+    <div class="s-label">Schedule Type</div>
+    <div class="sched-toggle">
+      <button class="sched-btn active" data-sched="weekday">Weekday<br><span style="font-size:8px;opacity:0.7">Mon – Fri</span></button>
+      <button class="sched-btn" data-sched="weekend">Weekend<br><span style="font-size:8px;opacity:0.7">Sat &amp; Sun</span></button>
+    </div>
+    <div class="sched-sub" id="sched-sub">Full schedule operating · Mon–Fri</div>
+  </div>
+
+  <!-- LEGS -->
+  <div class="s-section">
+    <div class="s-label">Duty Legs</div>
+    <div class="leg-btns">
+      <button class="leg-btn active" data-legs="all">All</button>
+      <button class="leg-btn" data-legs="2">2</button>
+      <button class="leg-btn" data-legs="3">3</button>
+      <button class="leg-btn" data-legs="4">4</button>
+    </div>
+  </div>
+
+  <!-- REGION -->
+  <div class="s-section">
+    <div class="s-label">Region</div>
+    <div class="s-filters">
+      <button class="sf-btn active" data-region="all">◈  All Regions</button>
+      <button class="sf-btn" data-region="DACH">◈  DACH</button>
+      <button class="sf-btn" data-region="Western Europe">◈  Western Europe</button>
+      <button class="sf-btn" data-region="Southern Europe">◈  Southern Europe</button>
+      <button class="sf-btn" data-region="Eastern Europe">◈  Eastern Europe</button>
+      <button class="sf-btn" data-region="Scandinavia">◈  Scandinavia</button>
+      <button class="sf-btn" data-region="Holiday">☀  Holiday</button>
+    </div>
+  </div>
+
+  <!-- SIMBRIEF PILOT ID -->
+  <div class="s-section">
+    <div class="s-label">SimBrief Pilot ID</div>
+    <div class="pid-wrap">
+      <input type="text" id="pid-input" placeholder="e.g. 123456" maxlength="12">
+      <button class="pid-save" onclick="savePid()">Save</button>
+    </div>
+    <div class="pid-note">Optional – pre-fills your weights &amp; preferences.<br>Find it under SimBrief → Account Settings.</div>
+  </div>
+
+  <!-- SELECTED -->
+  <div class="s-selected">
+    <div class="sel-label">Selected Pairing</div>
+    <div id="sel-summary"><span class="sel-none">No pairing selected</span></div>
+    <a class="sb-all-btn hidden" id="sb-all-btn" href="#" target="_blank">⟶ Open First Leg in SimBrief</a>
+    <button class="clear-btn" onclick="clearSelection()">✕  Clear Selection</button>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+  <div class="m-header">
+    <div>
+      <div class="m-title">Duty Pairings</div>
+      <div class="m-sub" id="m-sub">LOWW · Select schedule type to view duties</div>
+    </div>
+    <div class="m-badge">
+      <div class="sched-badge" id="sched-badge">WEEKDAY</div>
+      <div class="sched-days" id="sched-days">Monday · Tuesday · Wednesday · Thursday · Friday</div>
+    </div>
+  </div>
+
+  <div class="duty-bar">
+    <div class="db-cell"><div class="db-val" id="st-pairings">—</div><div class="db-lbl">Pairings</div></div>
+    <div class="db-cell"><div class="db-val" id="st-flt">—</div><div class="db-lbl">Min Block</div></div>
+    <div class="db-cell"><div class="db-val" id="st-fdp">—</div><div class="db-lbl">Max FDP</div></div>
+    <div class="db-cell"><div class="db-val" id="st-sectors">—</div><div class="db-lbl">City Pairs</div></div>
+  </div>
+
+  <div class="pairings-grid" id="pairingsGrid">
+    <div class="empty-msg">← Select Weekday or Weekend to load pairings</div>
+  </div>
+</main>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  CITY DATA
+// ═══════════════════════════════════════════════
+const CITIES = {
+  VIE:{name:"Vienna",country:"🇦🇹",icao:"LOWW"},
+  MUC:{name:"Munich",country:"🇩🇪",icao:"EDDM"},
+  FRA:{name:"Frankfurt",country:"🇩🇪",icao:"EDDF"},
+  STR:{name:"Stuttgart",country:"🇩🇪",icao:"EDDS"},
+  DUS:{name:"Düsseldorf",country:"🇩🇪",icao:"EDDL"},
+  HAM:{name:"Hamburg",country:"🇩🇪",icao:"EDDH"},
+  BER:{name:"Berlin",country:"🇩🇪",icao:"EDDB"},
+  CGN:{name:"Cologne/Bonn",country:"🇩🇪",icao:"EDDK"},
+  ZRH:{name:"Zurich",country:"🇨🇭",icao:"LSZH"},
+  GVA:{name:"Geneva",country:"🇨🇭",icao:"LSGG"},
+  CDG:{name:"Paris CDG",country:"🇫🇷",icao:"LFPG"},
+  ORY:{name:"Paris Orly",country:"🇫🇷",icao:"LFPO"},
+  AMS:{name:"Amsterdam",country:"🇳🇱",icao:"EHAM"},
+  BRU:{name:"Brussels",country:"🇧🇪",icao:"EBBR"},
+  LHR:{name:"London Heathrow",country:"🇬🇧",icao:"EGLL"},
+  BCN:{name:"Barcelona",country:"🇪🇸",icao:"LEBL"},
+  MAD:{name:"Madrid",country:"🇪🇸",icao:"LEMD"},
+  LIS:{name:"Lisbon",country:"🇵🇹",icao:"LPPT"},
+  FCO:{name:"Rome Fiumicino",country:"🇮🇹",icao:"LIRF"},
+  MXP:{name:"Milan Malpensa",country:"🇮🇹",icao:"LIMC"},
+  ATH:{name:"Athens",country:"🇬🇷",icao:"LGAV"},
+  IST:{name:"Istanbul",country:"🇹🇷",icao:"LTFM"},
+  PRG:{name:"Prague",country:"🇨🇿",icao:"LKPR"},
+  WAW:{name:"Warsaw",country:"🇵🇱",icao:"EPWA"},
+  BUD:{name:"Budapest",country:"🇭🇺",icao:"LHBP"},
+  BEG:{name:"Belgrade",country:"🇷🇸",icao:"LYBE"},
+  SOF:{name:"Sofia",country:"🇧🇬",icao:"LBSF"},
+  SKP:{name:"Skopje",country:"🇲🇰",icao:"LWSK"},
+  VNO:{name:"Vilnius",country:"🇱🇹",icao:"EYVI"},
+  CPH:{name:"Copenhagen",country:"🇩🇰",icao:"EKCH"},
+  ARN:{name:"Stockholm Arlanda",country:"🇸🇪",icao:"ESSA"},
+  OSL:{name:"Oslo Gardermoen",country:"🇳🇴",icao:"ENGM"},
+  HEL:{name:"Helsinki",country:"🇫🇮",icao:"EFHK"},
+  TLV:{name:"Tel Aviv",country:"🇮🇱",icao:"LLBG"},
+  // ── Holiday ──
+  PMI:{name:"Palma de Mallorca",country:"🇪🇸",icao:"LEPA"},
+  AYT:{name:"Antalya",country:"🇹🇷",icao:"LTAI"},
+  HER:{name:"Heraklion (Crete)",country:"🇬🇷",icao:"LGIR"},
+  RHO:{name:"Rhodes",country:"🇬🇷",icao:"LGRP"},
+  CFU:{name:"Corfu",country:"🇬🇷",icao:"LGKR"},
+  JMK:{name:"Mykonos",country:"🇬🇷",icao:"LGMK"},
+  JTR:{name:"Santorini",country:"🇬🇷",icao:"LGSR"},
+  KGS:{name:"Kos",country:"🇬🇷",icao:"LGKO"},
+  ZTH:{name:"Zakynthos",country:"🇬🇷",icao:"LGZA"},
+  OLB:{name:"Olbia (Sardinia)",country:"🇮🇹",icao:"LIEO"},
+  CAG:{name:"Cagliari (Sardinia)",country:"🇮🇹",icao:"LIEE"},
+  NAP:{name:"Naples",country:"🇮🇹",icao:"LIRN"},
+  CTA:{name:"Catania (Sicily)",country:"🇮🇹",icao:"LICC"},
+  PMO:{name:"Palermo (Sicily)",country:"🇮🇹",icao:"LICJ"},
+  BDS:{name:"Brindisi (Puglia)",country:"🇮🇹",icao:"LIBR"},
+  SUF:{name:"Lamezia Terme",country:"🇮🇹",icao:"LICA"},
+};
+
+const REGION = {
+  MUC:"DACH",FRA:"DACH",STR:"DACH",DUS:"DACH",HAM:"DACH",BER:"DACH",CGN:"DACH",ZRH:"DACH",GVA:"DACH",
+  CDG:"Western Europe",ORY:"Western Europe",AMS:"Western Europe",BRU:"Western Europe",LHR:"Western Europe",LIS:"Western Europe",
+  BCN:"Southern Europe",MAD:"Southern Europe",FCO:"Southern Europe",MXP:"Southern Europe",ATH:"Southern Europe",IST:"Southern Europe",
+  PRG:"Eastern Europe",WAW:"Eastern Europe",BUD:"Eastern Europe",BEG:"Eastern Europe",SOF:"Eastern Europe",SKP:"Eastern Europe",VNO:"Eastern Europe",TLV:"Eastern Europe",
+  CPH:"Scandinavia",ARN:"Scandinavia",OSL:"Scandinavia",HEL:"Scandinavia",
+  PMI:"Holiday",AYT:"Holiday",HER:"Holiday",RHO:"Holiday",CFU:"Holiday",JMK:"Holiday",JTR:"Holiday",KGS:"Holiday",ZTH:"Holiday",
+  OLB:"Holiday",CAG:"Holiday",NAP:"Holiday",CTA:"Holiday",PMO:"Holiday",BDS:"Holiday",SUF:"Holiday",
+};
+
+// Flights: [fn, dep_iata, arr_iata, std_min, dur_min, ac, weekday(bool), weekend(bool)]
+// weekday = Mon-Fri, weekend = Sat/Sun  (some routes differ)
+const FLIGHTS = [
+  // DACH
+  ["OS121","VIE","MUC", 6*60+45, 50,"ceo",true,true],
+  ["OS123","VIE","MUC",12*60+20, 45,"ceo",true,true],
+  ["OS122","MUC","VIE", 8*60+10, 50,"ceo",true,true],
+  ["OS124","MUC","VIE",13*60+30, 50,"ceo",true,true],
+  ["OS211","VIE","FRA", 7*60+10, 60,"ceo",true,true],
+  ["OS213","VIE","FRA",13*60+35, 60,"ceo",true,true],
+  ["OS215","VIE","FRA",18*60+ 5, 60,"ceo",true,false],
+  ["OS212","FRA","VIE", 9*60+ 0, 65,"ceo",true,true],
+  ["OS214","FRA","VIE",15*60+20, 65,"ceo",true,true],
+  ["OS216","FRA","VIE",19*60+55, 65,"ceo",true,false],
+  ["OS135","VIE","STR", 8*60+ 0, 55,"ceo",true,false],
+  ["OS136","STR","VIE", 9*60+20, 55,"ceo",true,false],
+  ["OS233","VIE","DUS", 7*60+15, 80,"neo",true,true],
+  ["OS235","VIE","DUS",14*60+30, 80,"neo",true,false],
+  ["OS234","DUS","VIE", 9*60+25, 80,"neo",true,true],
+  ["OS236","DUS","VIE",17*60+ 5, 80,"neo",true,false],
+  ["OS251","VIE","HAM", 7*60+ 0, 90,"neo",true,true],
+  ["OS253","VIE","HAM",16*60+45, 90,"neo",true,false],
+  ["OS252","HAM","VIE", 9*60+20, 90,"neo",true,true],
+  ["OS254","HAM","VIE",19*60+15, 90,"neo",true,false],
+  ["OS203","VIE","BER", 6*60+50, 75,"neo",true,true],
+  ["OS205","VIE","BER",17*60+30, 75,"neo",true,false],
+  ["OS204","BER","VIE", 8*60+45, 80,"neo",true,true],
+  ["OS206","BER","VIE",19*60+25, 80,"neo",true,false],
+  ["OS223","VIE","CGN", 7*60+40, 80,"ceo",true,false],
+  ["OS224","CGN","VIE", 9*60+55, 85,"ceo",true,false],
+  ["OS737","VIE","ZRH", 6*60+55, 60,"ceo",true,true],
+  ["OS731","VIE","ZRH",11*60+40, 60,"ceo",true,true],
+  ["OS738","ZRH","VIE", 8*60+30, 65,"ceo",true,true],
+  ["OS732","ZRH","VIE",13*60+15, 65,"ceo",true,true],
+  ["OS441","VIE","GVA", 7*60+35,105,"ceo",true,true],
+  ["OS443","VIE","GVA",15*60+10,105,"ceo",true,false],
+  ["OS442","GVA","VIE",10*60+10,105,"ceo",true,true],
+  ["OS444","GVA","VIE",17*60+45,105,"ceo",true,false],
+  // Western Europe
+  ["OS401","VIE","CDG", 7*60+ 5,135,"neo",true,true],
+  ["OS403","VIE","CDG",14*60+10,135,"neo",true,false],
+  ["OS402","CDG","VIE",10*60+30,135,"neo",true,true],
+  ["OS404","CDG","VIE",17*60+45,135,"neo",true,false],
+  ["OS451","VIE","ORY", 9*60+55,130,"ceo",true,false],
+  ["OS452","ORY","VIE",13*60+ 0,130,"ceo",true,false],
+  ["OS361","VIE","AMS", 7*60+20,120,"neo",true,true],
+  ["OS363","VIE","AMS",14*60+ 5,120,"neo",true,false],
+  ["OS362","AMS","VIE",10*60+10,120,"neo",true,true],
+  ["OS364","AMS","VIE",17*60+ 0,120,"neo",true,false],
+  ["OS371","VIE","BRU", 7*60+30,115,"ceo",true,true],
+  ["OS373","VIE","BRU",15*60+40,115,"ceo",true,false],
+  ["OS372","BRU","VIE",10*60+25,110,"ceo",true,true],
+  ["OS374","BRU","VIE",18*60+40,110,"ceo",true,false],
+  ["OS491","VIE","LHR", 7*60+ 0,125,"neo",true,true],
+  ["OS493","VIE","LHR",12*60+20,125,"neo",true,true],
+  ["OS495","VIE","LHR",18*60+15,125,"neo",true,false],
+  ["OS492","LHR","VIE", 9*60+40,125,"neo",true,true],
+  ["OS494","LHR","VIE",15*60+ 5,125,"neo",true,true],
+  ["OS496","LHR","VIE",21*60+ 0,125,"neo",true,false],
+  ["OS391","VIE","LIS", 7*60+40,160,"neo",true,false],
+  ["OS392","LIS","VIE",11*60+ 0,165,"neo",true,false],
+  // Southern Europe
+  ["OS461","VIE","BCN", 6*60+50,150,"neo",true,true],
+  ["OS463","VIE","BCN",14*60+20,150,"neo",true,false],
+  ["OS462","BCN","VIE",10*60+30,155,"neo",true,true],
+  ["OS464","BCN","VIE",18*60+ 0,155,"neo",true,false],
+  ["OS471","VIE","MAD", 7*60+30,155,"neo",true,true],
+  ["OS472","MAD","VIE",11*60+15,165,"neo",true,true],
+  ["OS551","VIE","FCO", 7*60+10,105,"ceo",true,true],
+  ["OS553","VIE","FCO",13*60+40,105,"ceo",true,true],
+  ["OS552","FCO","VIE", 9*60+30,105,"ceo",true,true],
+  ["OS554","FCO","VIE",16*60+ 5,105,"ceo",true,true],
+  ["OS561","VIE","MXP", 7*60+25, 85,"ceo",true,true],
+  ["OS563","VIE","MXP",14*60+ 0, 85,"ceo",true,false],
+  ["OS562","MXP","VIE", 9*60+25, 85,"ceo",true,true],
+  ["OS564","MXP","VIE",16*60+20, 85,"ceo",true,false],
+  ["OS861","VIE","ATH", 8*60+40,140,"neo",true,true],
+  ["OS863","VIE","ATH",15*60+55,140,"neo",true,false],
+  ["OS862","ATH","VIE",12*60+10,135,"neo",true,true],
+  ["OS864","ATH","VIE",19*60+25,135,"neo",true,false],
+  ["OS791","VIE","IST", 7*60+15,180,"neo",true,true],
+  ["OS793","VIE","IST",14*60+20,180,"neo",true,false],
+  ["OS792","IST","VIE",10*60+45,175,"neo",true,true],
+  ["OS794","IST","VIE",17*60+50,175,"neo",true,false],
+  // Eastern Europe
+  ["OS165","VIE","PRG", 7*60+25, 40,"ceo",true,true],
+  ["OS167","VIE","PRG",14*60+50, 40,"ceo",true,true],
+  ["OS166","PRG","VIE", 8*60+35, 45,"ceo",true,true],
+  ["OS168","PRG","VIE",16*60+10, 45,"ceo",true,true],
+  ["OS701","VIE","BUD", 8*60+30, 40,"ceo",true,true],
+  ["OS703","VIE","BUD",15*60+20, 40,"ceo",true,true],
+  ["OS702","BUD","VIE", 9*60+45, 45,"ceo",true,true],
+  ["OS704","BUD","VIE",16*60+45, 45,"ceo",true,true],
+  ["OS185","VIE","WAW", 9*60+ 5, 70,"neo",true,true],
+  ["OS187","VIE","WAW",16*60+30, 70,"neo",true,false],
+  ["OS186","WAW","VIE",11*60+25, 70,"neo",true,true],
+  ["OS188","WAW","VIE",18*60+50, 70,"neo",true,false],
+  ["OS601","VIE","BEG", 9*60+ 0, 50,"ceo",true,true],
+  ["OS603","VIE","BEG",15*60+10, 50,"ceo",true,false],
+  ["OS602","BEG","VIE",10*60+20, 55,"ceo",true,true],
+  ["OS604","BEG","VIE",16*60+40, 55,"ceo",true,false],
+  ["OS633","VIE","SOF", 8*60+15, 75,"ceo",true,true],
+  ["OS635","VIE","SOF",15*60+40, 75,"ceo",true,false],
+  ["OS634","SOF","VIE",10*60+35, 75,"ceo",true,true],
+  ["OS636","SOF","VIE",18*60+ 0, 75,"ceo",true,false],
+  ["OS611","VIE","SKP", 7*60+50, 95,"ceo",true,false],
+  ["OS612","SKP","VIE",10*60+30, 95,"ceo",true,false],
+  ["OS531","VIE","VNO", 7*60+30, 80,"neo",true,false],
+  ["OS532","VNO","VIE", 9*60+40, 80,"neo",true,false],
+  // Scandinavia
+  ["OS381","VIE","CPH", 7*60+30,135,"neo",true,true],
+  ["OS383","VIE","CPH",16*60+ 0,135,"neo",true,false],
+  ["OS382","CPH","VIE",10*60+35,130,"neo",true,true],
+  ["OS384","CPH","VIE",19*60+15,130,"neo",true,false],
+  ["OS801","VIE","ARN", 6*60+55,175,"neo",true,true],
+  ["OS802","ARN","VIE",10*60+40,175,"neo",true,true],
+  ["OS751","VIE","OSL", 7*60+ 5,170,"neo",true,true],
+  ["OS752","OSL","VIE",10*60+55,175,"neo",true,true],
+  ["OS841","VIE","HEL", 7*60+10,175,"neo",true,true],
+  ["OS842","HEL","VIE",11*60+ 5,180,"neo",true,true],
+  // ── HOLIDAY ── (seasonal / summer schedule, heavy weekend bias)
+  // Palma de Mallorca (LEPA) ~115 min
+  ["OS711","VIE","PMI", 6*60+30,115,"neo",true,true],
+  ["OS713","VIE","PMI",13*60+15,115,"neo",false,true],
+  ["OS712","PMI","VIE", 9*60+20,120,"neo",true,true],
+  ["OS714","PMI","VIE",16*60+30,120,"neo",false,true],
+  // Antalya (LTAI) ~195 min
+  ["OS811","VIE","AYT", 7*60+ 0,195,"neo",false,true],
+  ["OS813","VIE","AYT",14*60+20,195,"neo",true,false],
+  ["OS812","AYT","VIE",11*60+30,195,"neo",false,true],
+  ["OS814","AYT","VIE",18*60+50,195,"neo",true,false],
+  // Heraklion / Crete (LGIR) ~155 min
+  ["OS671","VIE","HER", 7*60+10,155,"neo",false,true],
+  ["OS673","VIE","HER",13*60+45,155,"neo",true,false],
+  ["OS672","HER","VIE",11*60+ 0,150,"neo",false,true],
+  ["OS674","HER","VIE",17*60+50,150,"neo",true,false],
+  // Rhodes (LGRP) ~160 min
+  ["OS681","VIE","RHO", 6*60+55,160,"neo",false,true],
+  ["OS682","RHO","VIE",10*60+50,160,"neo",false,true],
+  // Corfu (LGKR) ~120 min
+  ["OS641","VIE","CFU", 7*60+20,120,"neo",false,true],
+  ["OS643","VIE","CFU",14*60+ 0,120,"neo",true,false],
+  ["OS642","CFU","VIE",10*60+25,120,"neo",false,true],
+  ["OS644","CFU","VIE",17*60+15,120,"neo",true,false],
+  // Mykonos (LGMK) ~150 min
+  ["OS651","VIE","JMK", 7*60+30,150,"neo",false,true],
+  ["OS652","JMK","VIE",11*60+20,150,"neo",false,true],
+  // Santorini (LGSR) ~155 min
+  ["OS661","VIE","JTR", 7*60+45,155,"neo",false,true],
+  ["OS662","JTR","VIE",11*60+45,150,"neo",false,true],
+  // Kos (LGKO) ~155 min
+  ["OS683","VIE","KGS", 8*60+ 0,155,"neo",false,true],
+  ["OS684","KGS","VIE",12*60+ 0,150,"neo",false,true],
+  // Zakynthos (LGZA) ~130 min
+  ["OS645","VIE","ZTH", 8*60+10,130,"neo",false,true],
+  ["OS646","ZTH","VIE",11*60+35,130,"neo",false,true],
+  // Olbia / Sardinia (LIEO) ~100 min
+  ["OS571","VIE","OLB", 7*60+ 0,100,"ceo",false,true],
+  ["OS573","VIE","OLB",14*60+30,100,"ceo",true,false],
+  ["OS572","OLB","VIE", 9*60+25,105,"ceo",false,true],
+  ["OS574","OLB","VIE",17*60+15,105,"ceo",true,false],
+  // Cagliari (LIEE) ~105 min
+  ["OS575","VIE","CAG", 7*60+15,105,"ceo",false,true],
+  ["OS576","CAG","VIE",10*60+ 5,105,"ceo",false,true],
+  // Naples (LIRN) ~85 min
+  ["OS581","VIE","NAP", 7*60+30, 85,"ceo",true,true],
+  ["OS583","VIE","NAP",15*60+10, 85,"ceo",true,false],
+  ["OS582","NAP","VIE", 9*60+30, 85,"ceo",true,true],
+  ["OS584","NAP","VIE",17*60+20, 85,"ceo",true,false],
+  // Catania / Sicily (LICC) ~110 min
+  ["OS591","VIE","CTA", 7*60+20,110,"ceo",false,true],
+  ["OS593","VIE","CTA",14*60+45,110,"ceo",true,false],
+  ["OS592","CTA","VIE",10*60+15,110,"ceo",false,true],
+  ["OS594","CTA","VIE",17*60+40,110,"ceo",true,false],
+  // Palermo / Sicily (LICJ) ~110 min
+  ["OS595","VIE","PMO", 8*60+ 0,110,"ceo",false,true],
+  ["OS596","PMO","VIE",11*60+ 5,110,"ceo",false,true],
+  // Brindisi / Puglia (LIBR) ~90 min
+  ["OS585","VIE","BDS", 7*60+50, 90,"ceo",false,true],
+  ["OS587","VIE","BDS",15*60+20, 90,"ceo",true,false],
+  ["OS586","BDS","VIE",10*60+15, 90,"ceo",false,true],
+  ["OS588","BDS","VIE",17*60+50, 90,"ceo",true,false],
+  // Lamezia Terme (LICA) ~110 min
+  ["OS597","VIE","SUF", 8*60+15,110,"ceo",false,true],
+  ["OS598","SUF","VIE",11*60+20,110,"ceo",false,true],
+];
+
+// ═══════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════
+function minToHHMM(m){return`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;}
+function durStr(m){return`${Math.floor(m/60)}h${String(m%60).padStart(2,'0')}`;}
+
+// SimBrief ICAO type codes for A320 variants
+const AC_TYPE = {ceo:"A320",neo:"A20N"};
+
+function simbriefURL(f, pid){
+  const dep = CITIES[f[1]];
+  const arr = CITIES[f[2]];
+  const fn  = f[0].replace('OS','').trim();
+  const deph= Math.floor(f[3]/60);
+  const depm= f[3]%60;
+  const steh= Math.floor(f[4]/60);
+  const stem= f[4]%60;
+  let url = `https://dispatch.simbrief.com/options/custom?airline=AUA&fltnum=${fn}&type=${AC_TYPE[f[5]]}&orig=${dep.icao}&dest=${arr.icao}&deph=${deph}&depm=${depm}&steh=${steh}&stem=${stem}&planformat=LIDO&navlog=1&find_sidstar=1&units=KGS`;
+  if(pid) url += `&pid=${encodeURIComponent(pid)}`;
+  return url;
+}
+
+// ═══════════════════════════════════════════════
+//  PAIRING ENGINE
+// ═══════════════════════════════════════════════
+function flightsForSched(isWeekend){
+  return FLIGHTS.filter(f => isWeekend ? f[7] : f[6]);
+}
+
+function buildPairings(isWeekend){
+  const daily = flightsForSched(isWeekend);
+  const byDep = {};
+  daily.forEach(f=>{if(!byDep[f[1]])byDep[f[1]]=[];byDep[f[1]].push(f);});
+  const results=[];
+  function dfs(chain,arrAp,arrTime){
+    if(chain.length>=2&&arrAp==='VIE')results.push([...chain]);
+    if(chain.length>=4)return;
+    const nexts=byDep[arrAp]||[];
+    for(const f of nexts){
+      const gnd=f[3]-arrTime;
+      if(gnd<30||gnd>240)continue;
+      dfs([...chain,f],f[2],f[3]+f[4]);
+    }
+  }
+  (byDep['VIE']||[]).forEach(f=>dfs([f],f[2],f[3]+f[4]));
+  const seen=new Set();
+  return results.filter(p=>{const k=p.map(f=>f[0]).join('|');if(seen.has(k))return false;seen.add(k);return true;});
+}
+
+function pairingStats(p){
+  const firstDep=p[0][3],lastArr=p[p.length-1][3]+p[p.length-1][4];
+  return{firstDep,lastArr,fdp:lastArr-firstDep,block:p.reduce((s,f)=>s+f[4],0)};
+}
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let schedType   = 'weekday'; // 'weekday' | 'weekend'
+let filterLegs  = 'all';
+let filterRegion= 'all';
+let selectedPairing = null;
+let selectedPairingData = null;
+
+// Load saved pilot ID
+let pilotId = localStorage.getItem('sb_pid') || '';
+if(pilotId) document.addEventListener('DOMContentLoaded',()=>{
+  const el=document.getElementById('pid-input');
+  if(el) el.value=pilotId;
+});
+
+function savePid(){
+  pilotId=document.getElementById('pid-input').value.trim();
+  localStorage.setItem('sb_pid',pilotId);
+  const btn=document.querySelector('.pid-save');
+  btn.textContent='✓ Saved';setTimeout(()=>btn.textContent='Save',1500);
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════
+function renderAll(){
+  const isWeekend = schedType==='weekend';
+  let pairings = buildPairings(isWeekend);
+
+  if(filterLegs!=='all') pairings=pairings.filter(p=>p.length===parseInt(filterLegs));
+  if(filterRegion!=='all') pairings=pairings.filter(p=>p.some(f=>REGION[f[2]]===filterRegion||REGION[f[1]]===filterRegion));
+  pairings.sort((a,b)=>a[0][3]-b[0][3]);
+
+  // header
+  document.getElementById('sched-badge').textContent = isWeekend ? 'WEEKEND' : 'WEEKDAY';
+  document.getElementById('sched-days').textContent   = isWeekend ? 'Saturday · Sunday' : 'Monday · Tuesday · Wednesday · Thursday · Friday';
+  document.getElementById('sched-sub').textContent    = isWeekend ? 'Reduced schedule · Sat–Sun' : 'Full schedule operating · Mon–Fri';
+  document.getElementById('m-sub').textContent        = `${pairings.length} pairing${pairings.length!==1?'s':''} available · A320 Family · LOWW`;
+
+  // stats
+  document.getElementById('st-pairings').textContent = pairings.length;
+  if(pairings.length){
+    const blocks=pairings.map(p=>pairingStats(p).block);
+    const fdps  =pairings.map(p=>pairingStats(p).fdp);
+    document.getElementById('st-flt').innerHTML  = durStr(Math.min(...blocks));
+    document.getElementById('st-fdp').innerHTML  = durStr(Math.max(...fdps));
+    document.getElementById('st-sectors').textContent = new Set(pairings.flatMap(p=>p.map(f=>`${f[1]}-${f[2]}`))).size;
+  } else {
+    ['st-flt','st-fdp','st-sectors'].forEach(id=>document.getElementById(id).textContent='—');
+  }
+
+  // grid
+  const grid = document.getElementById('pairingsGrid');
+  grid.innerHTML='';
+  if(!pairings.length){grid.innerHTML='<div class="empty-msg">No pairings match the selected filters.</div>';return;}
+
+  pairings.forEach((p,idx)=>{
+    const stats = pairingStats(p);
+    const isSel = selectedPairing===idx;
+    const card  = document.createElement('div');
+    card.className = 'p-card'+(isSel?' selected':'');
+    card.style.animationDelay = `${Math.min(idx,20)*0.03}s`;
+
+    let legsHTML='';
+    p.forEach((f,li)=>{
+      const dep=f[1],arr=f[2];
+      const depC=CITIES[dep],arrC=CITIES[arr];
+      if(li>0){
+        const gnd=f[3]-(p[li-1][3]+p[li-1][4]);
+        legsHTML+=`<div class="gnd-row"><span>GND ${durStr(gnd)} · ${dep}</span><div class="gnd-bar"></div></div>`;
+      }
+      const sbURL = simbriefURL(f, pilotId);
+      legsHTML+=`
+        <div class="leg-row">
+          <div class="leg-connector">
+            <div class="leg-dot dep"></div>
+            <div class="leg-line"></div>
+            <div class="leg-dot arr"></div>
+          </div>
+          <div class="leg-info">
+            <div class="leg-block-row">
+              <div>
+                <span class="leg-ap">${dep}</span>
+                <span class="leg-city"> ${depC.country} ${depC.name}</span>
+              </div>
+              <span class="leg-fn">${f[0]}</span>
+            </div>
+            <div class="leg-times">${minToHHMM(f[3])} → ${minToHHMM(f[3]+f[4])} · ${durStr(f[4])}</div>
+            <div class="leg-block-row" style="margin-top:4px">
+              <div>
+                <span class="leg-ap">${arr}</span>
+                <span class="leg-city"> ${arrC.country} ${arrC.name}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:5px">
+                <span class="leg-ac">${f[5]==='neo'?'A320neo':'A320ceo'}</span>
+                <a class="sb-leg-link" href="${sbURL}" target="_blank" onclick="event.stopPropagation()">
+                  <span class="sb-icon">✈</span> SimBrief
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    });
+
+    // Full pairing SimBrief link = first leg only (multi-leg needs separate OFPs)
+    const sbFirst = simbriefURL(p[0], pilotId);
+
+    card.innerHTML=`
+      <div class="p-check">✓</div>
+      <div class="p-card-head">
+        <div class="p-id">PAIRING ${String(idx+1).padStart(3,'0')} · ${schedType.toUpperCase()}</div>
+        <div class="p-meta">
+          <span class="p-legs-badge">${p.length} LEG${p.length>1?'S':''}</span>
+          <span class="p-dur">FLT ${durStr(stats.block)}</span>
+        </div>
+      </div>
+      <div class="p-timeline">${legsHTML}</div>
+      <div class="p-card-foot">
+        <div class="p-fdp">
+          ${minToHHMM(stats.firstDep)}–${minToHHMM(stats.lastArr)}
+          &nbsp;·&nbsp; Block <span>${durStr(stats.block)}</span>
+          &nbsp;·&nbsp; FDP <span>${durStr(stats.fdp)}</span>
+        </div>
+        <div class="foot-actions">
+          <button class="p-select-btn">${isSel?'✓ Selected':'Select'}</button>
+        </div>
+      </div>`;
+
+    card.addEventListener('click',()=>{
+      selectedPairing = selectedPairing===idx ? null : idx;
+      selectedPairingData = selectedPairing!==null ? p : null;
+      updateSelSummary(selectedPairingData);
+      renderAll();
+    });
+    grid.appendChild(card);
+  });
+}
+
+function updateSelSummary(p){
+  const el=document.getElementById('sel-summary');
+  const sbBtn=document.getElementById('sb-all-btn');
+  if(!p){
+    el.innerHTML='<span class="sel-none">No pairing selected</span>';
+    sbBtn.classList.add('hidden');
+    return;
+  }
+  const stats=pairingStats(p);
+  let html='';
+  p.forEach(f=>{
+    const dep=CITIES[f[1]],arr=CITIES[f[2]];
+    html+=`<div style="color:var(--text)">${f[0]} &nbsp;${f[1]}→${f[2]}</div>`;
+    html+=`<div style="color:var(--muted);font-size:9px;padding-left:8px;margin-bottom:3px">${dep.country}${dep.name} → ${arr.country}${arr.name}<br>${minToHHMM(f[3])} – ${minToHHMM(f[3]+f[4])}</div>`;
+  });
+  html+=`<div style="color:var(--gold);margin-top:6px;border-top:1px solid var(--line);padding-top:6px">Block ${durStr(stats.block)} · FDP ${durStr(stats.fdp)}</div>`;
+  el.innerHTML=html;
+  // Show first-leg SimBrief link in sidebar
+  sbBtn.href = simbriefURL(p[0], pilotId);
+  sbBtn.classList.remove('hidden');
+}
+
+function clearSelection(){
+  selectedPairing=null;selectedPairingData=null;
+  updateSelSummary(null);renderAll();
+}
+
+// ═══════════════════════════════════════════════
+//  EVENT BINDINGS
+// ═══════════════════════════════════════════════
+document.querySelectorAll('.sched-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.sched-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    schedType=btn.dataset.sched;
+    selectedPairing=null;selectedPairingData=null;
+    updateSelSummary(null);renderAll();
+  });
+});
+document.querySelectorAll('.leg-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.leg-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    filterLegs=btn.dataset.legs;
+    selectedPairing=null;selectedPairingData=null;
+    updateSelSummary(null);renderAll();
+  });
+});
+document.querySelectorAll('.sf-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.sf-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    filterRegion=btn.dataset.region;
+    selectedPairing=null;selectedPairingData=null;
+    updateSelSummary(null);renderAll();
+  });
+});
+
+// Reload saved PID on boot
+window.addEventListener('DOMContentLoaded',()=>{
+  const saved=localStorage.getItem('sb_pid');
+  if(saved){pilotId=saved;document.getElementById('pid-input').value=saved;}
+  renderAll();
+});
+
+// ── PWA: Register Service Worker ──
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js')
+      .then(()=>console.log('SW registered'))
+      .catch(e=>console.log('SW error',e));
+  });
+}
+</script>
+</body>
+</html>
