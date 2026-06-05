@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>NJ Europe · Phenom 300E · LFMN Base</title>
+<link rel="manifest" href="manifest_nj_lfmn.json">
+<meta name="theme-color" content="#05080D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NJ Nice">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%231a3a6b'/><text y='.9em' font-size='42' x='50' text-anchor='middle' dominant-baseline='middle' dy='5' fill='%23D4AF37' font-family='sans-serif' font-weight='bold'>NJ</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --nj:#1a3a6b;--nj-dim:rgba(26,58,107,0.18);
+  --gold:#D4AF37;--gold-dim:rgba(212,175,55,0.14);
+  --sky:#4a9eff;--sky-dim:rgba(74,158,255,0.11);
+  --green:#2ecc71;--amber:#f39c12;--rose:#e74c3c;
+  --bg:#05080D;--bg1:#0A0F18;--bg2:#101723;--bg3:#16213a;
+  --line:rgba(255,255,255,0.055);
+  --text:#d8e4f0;--muted:#4a5a72;
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:300;min-height:100vh;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);}
+
+.shell{display:flex;min-height:100vh;}
+.sidebar{width:275px;flex-shrink:0;background:var(--bg1);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.main{flex:1;padding:36px 40px 80px;overflow-x:hidden;}
+
+/* SIDEBAR */
+.s-header{padding:22px 20px 16px;border-bottom:1px solid var(--line);}
+.s-logo{display:flex;align-items:center;gap:11px;margin-bottom:10px;}
+.nj-badge{width:40px;height:40px;border-radius:50%;background:var(--nj);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:13px;font-weight:600;color:var(--gold);
+  box-shadow:0 0 14px rgba(26,58,107,0.5),0 0 0 1px rgba(212,175,55,0.2);flex-shrink:0;}
+.s-title{font-family:var(--mono);font-size:11px;color:#fff;letter-spacing:0.04em;line-height:1.5;}
+.s-title .small{font-size:8px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:2px;}
+.base-pill{display:inline-block;margin-top:6px;padding:3px 9px;border-radius:4px;
+  border:1px solid rgba(212,175,55,0.35);background:rgba(212,175,55,0.1);
+  font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:0.08em;}
+
+.s-section{padding:14px 20px;border-bottom:1px solid var(--line);}
+.s-label{font-family:var(--mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;}
+
+/* SCHED TOGGLE */
+.sched-toggle{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.sched-btn{padding:8px 4px;border-radius:5px;border:1px solid var(--line);background:var(--bg2);
+  color:var(--muted);font-family:var(--mono);font-size:11px;cursor:pointer;text-align:center;transition:all 0.15s;}
+.sched-btn:hover{border-color:var(--sky);color:#fff;}
+.sched-btn.active{background:var(--sky-dim);border-color:var(--sky);color:var(--sky);}
+
+/* LEGS */
+.leg-btns{display:flex;gap:3px;}
+.leg-btn{flex:1;padding:7px 2px;border-radius:4px;border:1px solid var(--line);background:var(--bg2);
+  color:var(--muted);font-family:var(--mono);font-size:11px;cursor:pointer;text-align:center;transition:all 0.15s;}
+.leg-btn:hover{border-color:var(--sky);color:#fff;}
+.leg-btn.active{background:var(--sky-dim);border-color:var(--sky);color:var(--sky);}
+
+/* FILTERS */
+.s-filters{display:flex;flex-direction:column;gap:3px;}
+.sf-btn{padding:6px 9px;border-radius:4px;border:1px solid var(--line);background:transparent;
+  color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:0.04em;
+  cursor:pointer;text-align:left;transition:all 0.15s;}
+.sf-btn:hover{color:#fff;background:rgba(255,255,255,0.03);}
+.sf-btn.active{color:#fff;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.13);}
+
+/* PILOT ID */
+.pid-wrap{display:flex;gap:5px;}
+.pid-wrap input{flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:5px;
+  color:var(--text);font-family:var(--mono);font-size:11px;padding:6px 9px;outline:none;transition:border-color 0.2s;}
+.pid-wrap input:focus{border-color:var(--sky);}
+.pid-wrap input::placeholder{color:var(--muted);}
+.pid-save{padding:6px 9px;border-radius:5px;border:1px solid var(--line);background:var(--bg2);
+  color:var(--muted);font-family:var(--mono);font-size:10px;cursor:pointer;transition:all 0.15s;}
+.pid-save:hover{border-color:var(--sky);color:var(--sky);}
+.pid-note{font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:5px;line-height:1.5;}
+
+/* SELECTED */
+.s-selected{margin-top:auto;padding:14px 20px;border-top:1px solid var(--line);}
+.sel-label{font-family:var(--mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+#sel-summary{font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.7;}
+.sel-none{font-style:italic;}
+.sb-all-btn{display:block;width:100%;margin-top:8px;padding:8px;border-radius:5px;
+  border:1px solid rgba(74,158,255,0.3);background:rgba(74,158,255,0.09);
+  color:var(--sky);font-family:var(--mono);font-size:10px;cursor:pointer;
+  text-align:center;letter-spacing:0.06em;transition:all 0.2s;text-decoration:none;}
+.sb-all-btn:hover{background:rgba(74,158,255,0.18);border-color:var(--sky);}
+.sb-all-btn.hidden{display:none;}
+.clear-btn{margin-top:5px;width:100%;padding:6px;border-radius:4px;border:1px solid var(--line);
+  background:transparent;color:var(--muted);font-family:var(--mono);font-size:10px;
+  cursor:pointer;transition:all 0.15s;letter-spacing:0.05em;}
+.clear-btn:hover{border-color:var(--rose);color:var(--rose);}
+
+/* MAIN */
+.m-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;}
+.m-title{font-family:var(--mono);font-size:20px;color:#fff;letter-spacing:0.04em;}
+.m-sub{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:0.07em;}
+.m-badge-wrap{text-align:right;}
+.base-badge{font-family:var(--mono);font-size:16px;color:var(--gold);letter-spacing:0.1em;font-weight:600;}
+.base-full{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:3px;letter-spacing:0.06em;}
+
+/* STATS */
+.duty-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;margin-bottom:20px;}
+.db-cell{background:var(--bg1);border:1px solid var(--line);padding:11px 12px;}
+.db-cell:first-child{border-radius:8px 0 0 8px;}
+.db-cell:last-child{border-radius:0 8px 8px 0;}
+.db-val{font-family:var(--mono);font-size:15px;color:#fff;font-weight:500;}
+.db-lbl{font-size:8px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:3px;}
+
+/* GRID */
+.pairings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(355px,1fr));gap:12px;}
+
+/* CARD */
+.p-card{background:var(--bg1);border:1px solid var(--line);border-radius:10px;overflow:hidden;
+  cursor:pointer;transition:all 0.2s;position:relative;animation:cardIn 0.28s ease both;}
+.p-card:hover{border-color:rgba(255,255,255,0.11);transform:translateY(-1px);box-shadow:0 8px 28px rgba(0,0,0,0.5);}
+.p-card.selected{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 8px 28px rgba(212,175,55,0.12);}
+
+.p-card-head{padding:11px 14px 9px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--line);}
+.p-head-left{flex:1;min-width:0;}
+.p-name{font-family:var(--mono);font-size:11px;color:#fff;letter-spacing:0.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.p-desc{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;letter-spacing:0.04em;}
+.p-meta{display:flex;align-items:center;gap:5px;flex-shrink:0;margin-left:8px;flex-wrap:wrap;justify-content:flex-end;}
+.p-legs-badge{font-family:var(--mono);font-size:8px;padding:2px 6px;border-radius:3px;
+  background:var(--bg3);border:1px solid var(--line);color:var(--muted);}
+.p-dur{font-family:var(--mono);font-size:11px;color:var(--gold);}
+.p-end-badge{font-family:var(--mono);font-size:8px;padding:2px 7px;border-radius:3px;
+  border:1px solid rgba(212,175,55,0.28);background:rgba(212,175,55,0.07);color:var(--gold);}
+.p-end-badge.away{border-color:rgba(243,156,18,0.28);background:rgba(243,156,18,0.07);color:var(--amber);}
+
+/* TIMELINE */
+.p-timeline{padding:12px 14px;}
+.leg-row{display:flex;align-items:stretch;margin-bottom:5px;}
+.leg-row:last-child{margin-bottom:0;}
+.leg-connector{display:flex;flex-direction:column;align-items:center;width:22px;flex-shrink:0;margin-right:9px;}
+.leg-dot{width:8px;height:8px;border-radius:50%;background:var(--bg3);border:1.5px solid var(--muted);flex-shrink:0;margin-top:3px;}
+.leg-dot.dep{border-color:var(--sky);background:var(--sky-dim);}
+.leg-dot.arr{border-color:var(--green);background:rgba(46,204,113,0.12);}
+.leg-dot.base{border-color:var(--gold);background:var(--gold-dim);}
+.leg-line{flex:1;width:1px;background:var(--line);margin:3px 0;}
+.leg-info{flex:1;min-width:0;}
+.leg-ap{font-family:var(--mono);font-size:13px;font-weight:500;color:#fff;letter-spacing:0.04em;}
+.leg-city{font-size:10px;color:var(--muted);}
+.leg-times{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:1px;}
+.leg-row-top{display:flex;align-items:center;justify-content:space-between;padding:3px 0;}
+.leg-row-bot{display:flex;align-items:center;justify-content:space-between;padding:3px 0;margin-top:2px;}
+.leg-tags{display:flex;align-items:center;gap:4px;}
+.leg-type-tag{font-family:var(--mono);font-size:8px;padding:2px 5px;border-radius:2px;
+  border:1px solid var(--line);background:var(--bg3);color:var(--muted);letter-spacing:0.04em;}
+.leg-type-tag.reposit{border-color:rgba(243,156,18,0.22);color:var(--amber);}
+.leg-type-tag.charter{border-color:rgba(46,204,113,0.22);color:var(--green);}
+.leg-type-tag.positioning{border-color:rgba(74,158,255,0.22);color:var(--sky);}
+.sb-leg-link{display:inline-flex;align-items:center;gap:3px;font-family:var(--mono);font-size:8px;
+  letter-spacing:0.05em;padding:2px 6px;border-radius:3px;
+  border:1px solid rgba(74,158,255,0.28);background:rgba(74,158,255,0.07);
+  color:var(--sky);text-decoration:none;transition:all 0.15s;white-space:nowrap;}
+.sb-leg-link:hover{background:rgba(74,158,255,0.18);border-color:var(--sky);}
+
+.gnd-row{display:flex;align-items:center;gap:7px;padding:3px 0 3px 31px;
+  font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:0.05em;}
+.gnd-bar{height:1px;flex:1;
+  background:repeating-linear-gradient(90deg,var(--muted) 0,var(--muted) 3px,transparent 3px,transparent 6px);
+  opacity:0.18;}
+
+.p-card-foot{padding:8px 14px;border-top:1px solid var(--line);background:var(--bg2);
+  display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.p-fdp{font-family:var(--mono);font-size:9px;color:var(--muted);}
+.p-fdp span{color:var(--text);}
+.p-select-btn{font-family:var(--mono);font-size:8px;letter-spacing:0.06em;padding:4px 10px;
+  border-radius:4px;border:1px solid var(--line);background:transparent;color:var(--muted);
+  cursor:pointer;transition:all 0.15s;text-transform:uppercase;}
+.p-card.selected .p-select-btn{background:var(--nj);border-color:var(--gold);color:var(--gold);}
+.p-card:not(.selected) .p-select-btn:hover{border-color:var(--gold);color:var(--gold);}
+.p-check{position:absolute;top:9px;right:9px;width:16px;height:16px;border-radius:50%;
+  background:var(--nj);border:1px solid var(--gold);display:none;align-items:center;
+  justify-content:center;font-size:8px;color:var(--gold);}
+.p-card.selected .p-check{display:flex;}
+
+.empty-msg{grid-column:1/-1;text-align:center;padding:60px;
+  font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:0.08em;}
+
+@keyframes cardIn{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
+@supports(padding:max(0px)){
+  .sidebar{padding-top:max(0px,env(safe-area-inset-top));}
+  .main{padding-bottom:max(80px,calc(60px + env(safe-area-inset-bottom)));}
+}
+@media(max-width:820px){
+  .shell{flex-direction:column;}
+  .sidebar{width:100%;height:auto;position:static;}
+  .main{padding:16px 12px 60px;}
+  .pairings-grid{grid-template-columns:1fr;}
+  .duty-bar{grid-template-columns:repeat(3,1fr);}
+  .duty-bar .db-cell:nth-child(4),.duty-bar .db-cell:nth-child(5){display:none;}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="s-header">
+    <div class="s-logo">
+      <div class="nj-badge">NJ</div>
+      <div class="s-title">NetJets Europe
+        <div class="small">Phenom 300E · Duty Planner</div>
+      </div>
+    </div>
+    <div class="base-pill">⌂ LFMN · Nice Côte d'Azur</div>
+  </div>
+
+  <div class="s-section">
+    <div class="s-label">Schedule</div>
+    <div class="sched-toggle">
+      <button class="sched-btn active" data-sched="weekday">Weekday<br><span style="font-size:8px;opacity:0.6">Mon–Fri</span></button>
+      <button class="sched-btn" data-sched="weekend">Weekend<br><span style="font-size:8px;opacity:0.6">Sat–Sun</span></button>
+    </div>
+  </div>
+
+  <div class="s-section">
+    <div class="s-label">Duty Legs</div>
+    <div class="leg-btns">
+      <button class="leg-btn active" data-legs="all">All</button>
+      <button class="leg-btn" data-legs="2">2</button>
+      <button class="leg-btn" data-legs="3">3</button>
+      <button class="leg-btn" data-legs="4">4</button>
+      <button class="leg-btn" data-legs="5">5</button>
+    </div>
+  </div>
+
+  <div class="s-section">
+    <div class="s-label">End of Duty</div>
+    <div class="s-filters">
+      <button class="sf-btn active" data-end="all">◈  All</button>
+      <button class="sf-btn" data-end="base">⌂  Returns to LFMN</button>
+      <button class="sf-btn" data-end="away">✈  Ends Away</button>
+    </div>
+  </div>
+
+  <div class="s-section">
+    <div class="s-label">Region</div>
+    <div class="s-filters">
+      <button class="sf-btn active" data-region="all">◈  All</button>
+      <button class="sf-btn" data-region="Alps">◈  Alps &amp; Switzerland</button>
+      <button class="sf-btn" data-region="Germany">◈  Germany GA</button>
+      <button class="sf-btn" data-region="Italy">◈  Italy</button>
+      <button class="sf-btn" data-region="Austria">◈  Austria</button>
+      <button class="sf-btn" data-region="UK">◈  United Kingdom</button>
+      <button class="sf-btn" data-region="Iberia">◈  Iberia</button>
+      <button class="sf-btn" data-region="France">◈  France</button>
+    </div>
+  </div>
+
+  <div class="s-section">
+    <div class="s-label">SimBrief Pilot ID</div>
+    <div class="pid-wrap">
+      <input type="text" id="pid-input" placeholder="e.g. 123456" maxlength="12">
+      <button class="pid-save" onclick="savePid()">Save</button>
+    </div>
+    <div class="pid-note">Pre-fills your SimBrief preferences.<br>Reg N87CG pre-loaded.</div>
+  </div>
+
+  <div class="s-selected">
+    <div class="sel-label">Selected Pairing</div>
+    <div id="sel-summary"><span class="sel-none">No pairing selected</span></div>
+    <a class="sb-all-btn hidden" id="sb-all-btn" href="#" target="_blank">⟶ Open Leg 1 in SimBrief</a>
+    <button class="clear-btn" onclick="clearSelection()">✕  Clear</button>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+  <div class="m-header">
+    <div>
+      <div class="m-title">Duty Pairings</div>
+      <div class="m-sub" id="m-sub">LFMN · Phenom 300E · N87CG</div>
+    </div>
+    <div class="m-badge-wrap">
+      <div class="base-badge">LFMN</div>
+      <div class="base-full">Nice Côte d'Azur · Phenom 300E · N87CG</div>
+    </div>
+  </div>
+
+  <div class="duty-bar">
+    <div class="db-cell"><div class="db-val" id="st-pairings">—</div><div class="db-lbl">Pairings</div></div>
+    <div class="db-cell"><div class="db-val" id="st-legs">—</div><div class="db-lbl">Avg Legs</div></div>
+    <div class="db-cell"><div class="db-val" id="st-flt">—</div><div class="db-lbl">Min Block</div></div>
+    <div class="db-cell"><div class="db-val" id="st-fdp">—</div><div class="db-lbl">Max FDP</div></div>
+    <div class="db-cell"><div class="db-val" id="st-dest">—</div><div class="db-lbl">Destinations</div></div>
+  </div>
+
+  <div class="pairings-grid" id="pairingsGrid">
+    <div class="empty-msg">← Select schedule to load pairings</div>
+  </div>
+</main>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  AIRPORT DATA
+//  Block times from LFMN at 464 kt cruise (Phenom 300E)
+//  All distances and times are realistic great-circle estimates
+// ═══════════════════════════════════════════════════════════
+const AP = {
+  LFMN:{name:"Nice Côte d'Azur",city:"Nice",country:"🇫🇷",region:"France"},
+  // Austria
+  LOWW:{name:"Vienna Int'l",city:"Vienna",country:"🇦🇹",region:"Austria"},
+  LOWS:{name:"Salzburg",city:"Salzburg",country:"🇦🇹",region:"Austria"},
+  LOWI:{name:"Innsbruck",city:"Innsbruck",country:"🇦🇹",region:"Austria"},
+  // Germany GA
+  EDNY:{name:"Friedrichshafen",city:"Bodensee",country:"🇩🇪",region:"Germany"},
+  EDMA:{name:"Augsburg",city:"Augsburg/Munich",country:"🇩🇪",region:"Germany"},
+  EDJA:{name:"Memmingen",city:"Allgäu",country:"🇩🇪",region:"Germany"},
+  EDFE:{name:"Frankfurt Egelsbach",city:"Frankfurt",country:"🇩🇪",region:"Germany"},
+  EDXW:{name:"Sylt / Westerland",city:"Sylt Island",country:"🇩🇪",region:"Germany"},
+  EGSS:{name:"London Stansted",city:"London",country:"🇬🇧",region:"UK"},
+  // Italy
+  LIML:{name:"Milan Linate",city:"Milan",country:"🇮🇹",region:"Italy"},
+  LIRF:{name:"Rome Fiumicino",city:"Rome",country:"🇮🇹",region:"Italy"},
+  LIRN:{name:"Naples",city:"Naples",country:"🇮🇹",region:"Italy"},
+  LIRI:{name:"Salerno Costa d'Amalfi",city:"Salerno/Amalfi",country:"🇮🇹",region:"Italy"},
+  // Slovenia
+  LJPZ:{name:"Portorož",city:"Portorož/Piran",country:"🇸🇮",region:"Italy"},
+  // Switzerland
+  LSZS:{name:"Samedan / St Moritz",city:"Engadin",country:"🇨🇭",region:"Alps"},
+  LSZR:{name:"St Gallen-Altenrhein",city:"St Gallen/Bodensee",country:"🇨🇭",region:"Alps"},
+  LSZH:{name:"Zurich",city:"Zurich",country:"🇨🇭",region:"Alps"},
+  LSGG:{name:"Geneva",city:"Geneva",country:"🇨🇭",region:"Alps"},
+  // UK
+  EGTK:{name:"Oxford (Kidlington)",city:"Oxford",country:"🇬🇧",region:"UK"},
+  EGKB:{name:"London Biggin Hill",city:"London",country:"🇬🇧",region:"UK"},
+  // France
+  LFPB:{name:"Paris Le Bourget",city:"Paris",country:"🇫🇷",region:"France"},
+  LFMD:{name:"Cannes Mandelieu",city:"Cannes",country:"🇫🇷",region:"France"},
+  // Iberia
+  LEMD:{name:"Madrid Barajas",city:"Madrid",country:"🇪🇸",region:"Iberia"},
+  LEIB:{name:"Ibiza",city:"Ibiza",country:"🇪🇸",region:"Iberia"},
+  LEPA:{name:"Palma de Mallorca",city:"Palma",country:"🇪🇸",region:"Iberia"},
+};
+
+// ═══════════════════════════════════════════════════════════
+//  BLOCK TIMES FROM LFMN (minutes, Phenom 300E 464 kt)
+//  Realistic routing including routing penalties & wind avg
+//  GND minimum 20 min between legs
+// ═══════════════════════════════════════════════════════════
+// LFMN to/from each airport (symmetric ± 5 min for wind)
+const BLK = {
+  // Austria
+  LOWW:  95, LOWS:  70, LOWI:  55,
+  // Germany GA
+  EDNY:  50, EDMA:  60, EDJA:  55,
+  EDFE:  95, EDXW: 155,
+  // Italy
+  LIML:  40, LIRF:  75, LIRN:  90, LIRI:  95,
+  // Slovenia
+  LJPZ:  80,
+  // Switzerland
+  LSZS:  45, LSZR:  65, LSZH:  60, LSGG:  30,
+  // UK
+  EGSS: 110, EGTK: 105, EGKB: 100,
+  // France
+  LFPB: 75,  LFMD:  10,
+  // Iberia
+  LEMD: 130, LEIB:  65, LEPA:  70,
+};
+
+// ═══════════════════════════════════════════════════════════
+//  CURATED PAIRINGS
+//  All depart from LFMN. std = local departure (minutes).
+//  dur = block time. type: charter|reposit|positioning
+// ═══════════════════════════════════════════════════════════
+const PAIRINGS = [
+
+// ══════════════════════════════
+//  2-LEG – SIMPLE DAY RETURNS
+// ══════════════════════════════
+
+{id:"R01",name:"Nice → Geneva",desc:"30-min Riviera–Lac Léman hop, return",
+ legs:[{dep:"LFMN",arr:"LSGG",std:8*60,   dur:30, type:"charter"},
+       {dep:"LSGG",arr:"LFMN",std:13*60,  dur:30, type:"charter"}],
+ weekday:true,weekend:true},
+
+{id:"R02",name:"Nice → Cannes",desc:"Coastal repositioning, 10-min run",
+ legs:[{dep:"LFMN",arr:"LFMD",std:7*60+30,dur:10, type:"reposit"},
+       {dep:"LFMD",arr:"LFMN",std:18*60,  dur:10, type:"reposit"}],
+ weekday:true,weekend:true},
+
+{id:"R03",name:"Nice → Zurich",desc:"Swiss finance day trip",
+ legs:[{dep:"LFMN",arr:"LSZH",std:7*60+30,dur:60, type:"charter"},
+       {dep:"LSZH",arr:"LFMN",std:19*60,  dur:60, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"R04",name:"Nice → Samedan",desc:"Ski charter Engadin, return",
+ legs:[{dep:"LFMN",arr:"LSZS",std:8*60,   dur:45, type:"charter"},
+       {dep:"LSZS",arr:"LFMN",std:16*60,  dur:45, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"R05",name:"Nice → Milan Linate",desc:"City-centre Milan exec",
+ legs:[{dep:"LFMN",arr:"LIML",std:8*60,   dur:40, type:"charter"},
+       {dep:"LIML",arr:"LFMN",std:18*60,  dur:40, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"R06",name:"Nice → Innsbruck",desc:"Alpine ski connect",
+ legs:[{dep:"LFMN",arr:"LOWI",std:8*60,   dur:55, type:"charter"},
+       {dep:"LOWI",arr:"LFMN",std:17*60,  dur:55, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"R07",name:"Nice → Friedrichshafen",desc:"Bodensee business run",
+ legs:[{dep:"LFMN",arr:"EDNY",std:8*60,   dur:50, type:"charter"},
+       {dep:"EDNY",arr:"LFMN",std:17*60,  dur:50, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"R08",name:"Nice → Augsburg",desc:"Munich area GA field",
+ legs:[{dep:"LFMN",arr:"EDMA",std:8*60,   dur:60, type:"charter"},
+       {dep:"EDMA",arr:"LFMN",std:18*60,  dur:60, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"R09",name:"Nice → Memmingen",desc:"Allgäu / Southern Bavaria",
+ legs:[{dep:"LFMN",arr:"EDJA",std:8*60,   dur:55, type:"charter"},
+       {dep:"EDJA",arr:"LFMN",std:17*60,  dur:55, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"R10",name:"Nice → Altenrhein",desc:"Bodensee / St Gallen bizjet",
+ legs:[{dep:"LFMN",arr:"LSZR",std:8*60,   dur:65, type:"charter"},
+       {dep:"LSZR",arr:"LFMN",std:17*60,  dur:65, type:"charter"}],
+ weekday:true,weekend:true},
+
+{id:"R11",name:"Nice → Salzburg",desc:"Mozart city charter",
+ legs:[{dep:"LFMN",arr:"LOWS",std:8*60,   dur:70, type:"charter"},
+       {dep:"LOWS",arr:"LFMN",std:18*60,  dur:70, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"R12",name:"Nice → Vienna",desc:"Austrian capital day trip",
+ legs:[{dep:"LFMN",arr:"LOWW",std:7*60+30,dur:95, type:"charter"},
+       {dep:"LOWW",arr:"LFMN",std:19*60,  dur:95, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"R13",name:"Nice → Paris Le Bourget",desc:"VIP terminal Paris",
+ legs:[{dep:"LFMN",arr:"LFPB",std:8*60,   dur:75, type:"charter"},
+       {dep:"LFPB",arr:"LFMN",std:19*60,  dur:75, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"R14",name:"Nice → Rome Fiumicino",desc:"Eternal city business",
+ legs:[{dep:"LFMN",arr:"LIRF",std:8*60,   dur:75, type:"charter"},
+       {dep:"LIRF",arr:"LFMN",std:18*60,  dur:75, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"R15",name:"Nice → Ibiza",desc:"Balearic island charter",
+ legs:[{dep:"LFMN",arr:"LEIB",std:8*60+30,dur:65, type:"charter"},
+       {dep:"LEIB",arr:"LFMN",std:18*60,  dur:65, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"R16",name:"Nice → Palma",desc:"Mallorca VIP run",
+ legs:[{dep:"LFMN",arr:"LEPA",std:8*60+30,dur:70, type:"charter"},
+       {dep:"LEPA",arr:"LFMN",std:18*60,  dur:70, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"R17",name:"Nice → Biggin Hill",desc:"South London bizjet GA",
+ legs:[{dep:"LFMN",arr:"EGKB",std:8*60,  dur:100, type:"charter"},
+       {dep:"EGKB",arr:"LFMN",std:19*60, dur:100, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"R18",name:"Nice → Egelsbach",desc:"Frankfurt GA field, slot-free",
+ legs:[{dep:"LFMN",arr:"EDFE",std:8*60,   dur:95, type:"charter"},
+       {dep:"EDFE",arr:"LFMN",std:19*60,  dur:95, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"R19",name:"Nice → Portorož ends away",desc:"Slovenian Adriatic overnight",
+ legs:[{dep:"LFMN",arr:"LJPZ",std:9*60,   dur:80, type:"charter"},
+       {dep:"LJPZ",arr:"LJPZ",std:0,       dur:0,  type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"R20",name:"Nice → Naples ends away",desc:"Southern Italy overnight",
+ legs:[{dep:"LFMN",arr:"LIRN",std:9*60,   dur:90, type:"charter"},
+       {dep:"LIRN",arr:"LIRN",std:0,       dur:0,  type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"R21",name:"Nice → Salerno ends away",desc:"Amalfi Coast overnight",
+ legs:[{dep:"LFMN",arr:"LIRI",std:9*60,   dur:95, type:"charter"},
+       {dep:"LIRI",arr:"LIRI",std:0,       dur:0,  type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"R22",name:"Nice → Oxford",desc:"Oxford bizjet day trip",
+ legs:[{dep:"LFMN",arr:"EGTK",std:8*60,  dur:105, type:"charter"},
+       {dep:"EGTK",arr:"LFMN",std:19*60, dur:105, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"R23",name:"Nice → Stansted ends away",desc:"London Stansted overnight",
+ legs:[{dep:"LFMN",arr:"EGSS",std:8*60,  dur:110, type:"charter"},
+       {dep:"EGSS",arr:"EGSS",std:0,      dur:0,   type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"R24",name:"Nice → Madrid ends away",desc:"Spanish capital overnight",
+ legs:[{dep:"LFMN",arr:"LEMD",std:8*60,  dur:130, type:"charter"},
+       {dep:"LEMD",arr:"LEMD",std:0,      dur:0,   type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"R25",name:"Nice → Sylt ends away",desc:"North Sea island overnight",
+ legs:[{dep:"LFMN",arr:"EDXW",std:7*60+30,dur:155,type:"charter"},
+       {dep:"EDXW",arr:"EDXW",std:0,       dur:0,  type:"charter"}],
+ weekday:false,weekend:true},
+
+// ══════════════════════════════
+//  3-LEG PAIRINGS
+// ══════════════════════════════
+
+{id:"T01",name:"Geneva – Zurich – Nice",desc:"Swiss dual-city circuit",
+ legs:[{dep:"LFMN",arr:"LSGG",std:7*60+30,dur:30, type:"charter"},
+       {dep:"LSGG",arr:"LSZH",std:9*60+30, dur:30, type:"charter"},
+       {dep:"LSZH",arr:"LFMN",std:16*60,   dur:60, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"T02",name:"Geneva – Samedan – Nice",desc:"Geneva drop, ski collect",
+ legs:[{dep:"LFMN",arr:"LSGG",std:8*60,    dur:30, type:"charter"},
+       {dep:"LSGG",arr:"LSZS",std:11*60,   dur:35, type:"charter"},
+       {dep:"LSZS",arr:"LFMN",std:15*60,   dur:45, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"T03",name:"Zurich – Altenrhein – Nice",desc:"Swiss loop via Bodensee",
+ legs:[{dep:"LFMN",arr:"LSZH",std:7*60+30,dur:60, type:"charter"},
+       {dep:"LSZH",arr:"LSZR",std:11*60,   dur:30, type:"charter"},
+       {dep:"LSZR",arr:"LFMN",std:15*60,   dur:65, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"T04",name:"Samedan – Innsbruck – Nice",desc:"Alpine ski circuit",
+ legs:[{dep:"LFMN",arr:"LSZS",std:8*60,    dur:45, type:"charter"},
+       {dep:"LSZS",arr:"LOWI",std:11*60,   dur:30, type:"charter"},
+       {dep:"LOWI",arr:"LFMN",std:15*60,   dur:55, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"T05",name:"Friedrichshafen – Memmingen – Nice",desc:"Bavarian GA double",
+ legs:[{dep:"LFMN",arr:"EDNY",std:8*60,    dur:50, type:"charter"},
+       {dep:"EDNY",arr:"EDJA",std:10*60+30,dur:20, type:"charter"},
+       {dep:"EDJA",arr:"LFMN",std:15*60,   dur:55, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"T06",name:"Augsburg – Friedrichshafen – Nice",desc:"South Bavaria loop",
+ legs:[{dep:"LFMN",arr:"EDMA",std:7*60+30,dur:60, type:"charter"},
+       {dep:"EDMA",arr:"EDNY",std:11*60,   dur:25, type:"charter"},
+       {dep:"EDNY",arr:"LFMN",std:15*60,   dur:50, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"T07",name:"Milan – Rome – Nice",desc:"Italian capital diagonal",
+ legs:[{dep:"LFMN",arr:"LIML",std:8*60,    dur:40, type:"charter"},
+       {dep:"LIML",arr:"LIRF",std:11*60,   dur:65, type:"charter"},
+       {dep:"LIRF",arr:"LFMN",std:17*60,   dur:75, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"T08",name:"Rome – Naples – Nice",desc:"Southern Italy return arc",
+ legs:[{dep:"LFMN",arr:"LIRF",std:8*60,    dur:75, type:"charter"},
+       {dep:"LIRF",arr:"LIRN",std:12*60,   dur:45, type:"charter"},
+       {dep:"LIRN",arr:"LFMN",std:17*60,   dur:90, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"T09",name:"Naples – Salerno – Nice",desc:"Campania coast circuit",
+ legs:[{dep:"LFMN",arr:"LIRN",std:8*60,    dur:90, type:"charter"},
+       {dep:"LIRN",arr:"LIRI",std:12*60,   dur:20, type:"charter"},
+       {dep:"LIRI",arr:"LFMN",std:16*60,   dur:95, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"T10",name:"Portorož – Milan – Nice",desc:"Adriatic–Lombardy return",
+ legs:[{dep:"LFMN",arr:"LJPZ",std:8*60,    dur:80, type:"charter"},
+       {dep:"LJPZ",arr:"LIML",std:11*60+30,dur:55, type:"charter"},
+       {dep:"LIML",arr:"LFMN",std:16*60,   dur:40, type:"charter"}],
+ weekday:true,weekend:true},
+
+{id:"T11",name:"Ibiza – Palma – Nice",desc:"Balearic island hop return",
+ legs:[{dep:"LFMN",arr:"LEIB",std:8*60+30,dur:65, type:"charter"},
+       {dep:"LEIB",arr:"LEPA",std:12*60,   dur:25, type:"charter"},
+       {dep:"LEPA",arr:"LFMN",std:16*60,   dur:70, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"T12",name:"Vienna – Innsbruck – Nice",desc:"Austrian circuit via Alps",
+ legs:[{dep:"LFMN",arr:"LOWW",std:7*60+30,dur:95, type:"charter"},
+       {dep:"LOWW",arr:"LOWI",std:12*60,   dur:35, type:"charter"},
+       {dep:"LOWI",arr:"LFMN",std:16*60,   dur:55, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"T13",name:"Salzburg – Samedan – Nice",desc:"Austrian ski to Engadin",
+ legs:[{dep:"LFMN",arr:"LOWS",std:8*60,    dur:70, type:"charter"},
+       {dep:"LOWS",arr:"LSZS",std:11*60+30,dur:35, type:"charter"},
+       {dep:"LSZS",arr:"LFMN",std:15*60,   dur:45, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"T14",name:"Biggin Hill – Paris LBG – Nice",desc:"London–Paris VIP arc",
+ legs:[{dep:"LFMN",arr:"EGKB",std:8*60,   dur:100, type:"charter"},
+       {dep:"EGKB",arr:"LFPB",std:12*60,  dur:50,  type:"charter"},
+       {dep:"LFPB",arr:"LFMN",std:17*60,  dur:75,  type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"T15",name:"Oxford – Stansted – Nice",desc:"UK dual-airport day",
+ legs:[{dep:"LFMN",arr:"EGTK",std:8*60,   dur:105, type:"charter"},
+       {dep:"EGTK",arr:"EGSS",std:12*60+30,dur:20, type:"charter"},
+       {dep:"EGSS",arr:"LFMN",std:17*60,  dur:110, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"T16",name:"Nice → Madrid – Ibiza ends away",desc:"Iberia two-stop overnight",
+ legs:[{dep:"LFMN",arr:"LEMD",std:8*60,   dur:130, type:"charter"},
+       {dep:"LEMD",arr:"LEIB",std:13*60,  dur:80,  type:"charter"},
+       {dep:"LEIB",arr:"LEIB",std:0,       dur:0,   type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"T17",name:"Egelsbach – Altenrhein – Nice",desc:"Frankfurt GA to Bodensee",
+ legs:[{dep:"LFMN",arr:"EDFE",std:7*60+30,dur:95, type:"charter"},
+       {dep:"EDFE",arr:"LSZR",std:12*60,   dur:55, type:"charter"},
+       {dep:"LSZR",arr:"LFMN",std:17*60,   dur:65, type:"charter"}],
+ weekday:true,weekend:false},
+
+// ══════════════════════════════
+//  4-LEG PAIRINGS
+// ══════════════════════════════
+
+{id:"F01",name:"Swiss Grand Circuit",desc:"Geneva – Samedan – Altenrhein – Zurich",
+ legs:[{dep:"LFMN",arr:"LSGG",std:7*60+30,dur:30, type:"charter"},
+       {dep:"LSGG",arr:"LSZS",std:9*60+30, dur:35, type:"charter"},
+       {dep:"LSZS",arr:"LSZR",std:13*60,   dur:30, type:"charter"},
+       {dep:"LSZR",arr:"LFMN",std:17*60,   dur:65, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"F02",name:"Alpine Ski Day",desc:"Samedan – Innsbruck – Salzburg – Nice",
+ legs:[{dep:"LFMN",arr:"LSZS",std:7*60+30,dur:45, type:"charter"},
+       {dep:"LSZS",arr:"LOWI",std:10*60,   dur:30, type:"charter"},
+       {dep:"LOWI",arr:"LOWS",std:13*60,   dur:35, type:"charter"},
+       {dep:"LOWS",arr:"LFMN",std:17*60,   dur:70, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"F03",name:"Bavaria GA Loop",desc:"Friedrichshafen – Augsburg – Memmingen – Nice",
+ legs:[{dep:"LFMN",arr:"EDNY",std:7*60+30,dur:50, type:"charter"},
+       {dep:"EDNY",arr:"EDMA",std:10*60,   dur:25, type:"charter"},
+       {dep:"EDMA",arr:"EDJA",std:13*60,   dur:20, type:"charter"},
+       {dep:"EDJA",arr:"LFMN",std:17*60,   dur:55, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"F04",name:"Italian Peninsula",desc:"Milan – Rome – Naples – Salerno",
+ legs:[{dep:"LFMN",arr:"LIML",std:7*60+30,dur:40, type:"charter"},
+       {dep:"LIML",arr:"LIRF",std:10*60,   dur:65, type:"charter"},
+       {dep:"LIRF",arr:"LIRN",std:14*60+30,dur:45, type:"charter"},
+       {dep:"LIRN",arr:"LIRI",std:18*60,   dur:20, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"F05",name:"Italian Peninsula return",desc:"Milan – Rome – Naples – Nice",
+ legs:[{dep:"LFMN",arr:"LIML",std:7*60,    dur:40, type:"charter"},
+       {dep:"LIML",arr:"LIRF",std:9*60+30, dur:65, type:"charter"},
+       {dep:"LIRF",arr:"LIRN",std:14*60,   dur:45, type:"charter"},
+       {dep:"LIRN",arr:"LFMN",std:18*60,   dur:90, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"F06",name:"Austria + Swiss",desc:"Vienna – Salzburg – Innsbruck – Nice",
+ legs:[{dep:"LFMN",arr:"LOWW",std:7*60,    dur:95, type:"charter"},
+       {dep:"LOWW",arr:"LOWS",std:11*60+30,dur:35, type:"charter"},
+       {dep:"LOWS",arr:"LOWI",std:15*60,   dur:35, type:"charter"},
+       {dep:"LOWI",arr:"LFMN",std:19*60,   dur:55, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"F07",name:"Adriatic & Alps",desc:"Portorož – Salzburg – Samedan – Nice",
+ legs:[{dep:"LFMN",arr:"LJPZ",std:8*60,    dur:80, type:"charter"},
+       {dep:"LJPZ",arr:"LOWS",std:11*60+30,dur:55, type:"charter"},
+       {dep:"LOWS",arr:"LSZS",std:15*60,   dur:35, type:"charter"},
+       {dep:"LSZS",arr:"LFMN",std:18*60,   dur:45, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"F08",name:"UK Circuit",desc:"Oxford – Biggin Hill – Stansted – Nice",
+ legs:[{dep:"LFMN",arr:"EGTK",std:7*60+30,dur:105,type:"charter"},
+       {dep:"EGTK",arr:"EGKB",std:12*60,  dur:20,  type:"charter"},
+       {dep:"EGKB",arr:"EGSS",std:15*60,  dur:20,  type:"charter"},
+       {dep:"EGSS",arr:"LFMN",std:18*60,  dur:110, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"F09",name:"Iberia Full Day",desc:"Madrid – Palma – Ibiza – Nice",
+ legs:[{dep:"LFMN",arr:"LEMD",std:7*60,   dur:130, type:"charter"},
+       {dep:"LEMD",arr:"LEPA",std:11*60,  dur:80,  type:"charter"},
+       {dep:"LEPA",arr:"LEIB",std:15*60,  dur:25,  type:"charter"},
+       {dep:"LEIB",arr:"LFMN",std:18*60,  dur:65,  type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"F10",name:"Sylt via Germany",desc:"Egelsbach – Friedrichshafen – Sylt – Nice",
+ legs:[{dep:"LFMN",arr:"EDFE",std:7*60,    dur:95, type:"reposit"},
+       {dep:"EDFE",arr:"EDNY",std:11*60,   dur:55, type:"charter"},
+       {dep:"EDNY",arr:"EDXW",std:14*60,   dur:85, type:"charter"},
+       {dep:"EDXW",arr:"LFMN",std:18*60,  dur:155, type:"reposit"}],
+ weekday:true,weekend:false},
+
+// ══════════════════════════════
+//  5-LEG PAIRINGS
+// ══════════════════════════════
+
+{id:"V01",name:"Full Swiss Alpine",desc:"Geneva – Samedan – Altenrhein – Zurich – Nice",
+ legs:[{dep:"LFMN",arr:"LSGG",std:6*60+30,dur:30, type:"charter"},
+       {dep:"LSGG",arr:"LSZS",std:8*60+30, dur:35, type:"charter"},
+       {dep:"LSZS",arr:"LSZR",std:12*60,   dur:30, type:"charter"},
+       {dep:"LSZR",arr:"LSZH",std:15*60,   dur:30, type:"charter"},
+       {dep:"LSZH",arr:"LFMN",std:18*60,   dur:60, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"V02",name:"Deep Austria Circuit",desc:"Vienna – Salzburg – Innsbruck – Samedan – Nice",
+ legs:[{dep:"LFMN",arr:"LOWW",std:6*60+30, dur:95, type:"charter"},
+       {dep:"LOWW",arr:"LOWS",std:11*60,   dur:35, type:"charter"},
+       {dep:"LOWS",arr:"LOWI",std:14*60,   dur:35, type:"charter"},
+       {dep:"LOWI",arr:"LSZS",std:17*60,   dur:30, type:"charter"},
+       {dep:"LSZS",arr:"LFMN",std:20*60,   dur:45, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"V03",name:"Bavaria to Italian Coast",desc:"FDH – EDMA – EDJA – Milan – Nice",
+ legs:[{dep:"LFMN",arr:"EDNY",std:6*60+30, dur:50, type:"charter"},
+       {dep:"EDNY",arr:"EDMA",std:9*60,    dur:25, type:"charter"},
+       {dep:"EDMA",arr:"EDJA",std:12*60,   dur:20, type:"charter"},
+       {dep:"EDJA",arr:"LIML",std:15*60,   dur:35, type:"charter"},
+       {dep:"LIML",arr:"LFMN",std:18*60,   dur:40, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"V04",name:"Adriatic – Alpine – Riviera",desc:"LJPZ – Vienna – Innsbruck – Samedan – Nice",
+ legs:[{dep:"LFMN",arr:"LJPZ",std:7*60,    dur:80, type:"charter"},
+       {dep:"LJPZ",arr:"LOWW",std:10*60+30,dur:70, type:"charter"},
+       {dep:"LOWW",arr:"LOWI",std:14*60,   dur:35, type:"charter"},
+       {dep:"LOWI",arr:"LSZS",std:17*60,   dur:30, type:"charter"},
+       {dep:"LSZS",arr:"LFMN",std:20*60,   dur:45, type:"charter"}],
+ weekday:false,weekend:true},
+
+{id:"V05",name:"Italian Grand Slam",desc:"Milan – Rome – Naples – Salerno – Nice",
+ legs:[{dep:"LFMN",arr:"LIML",std:6*60+30, dur:40, type:"charter"},
+       {dep:"LIML",arr:"LIRF",std:9*60,    dur:65, type:"charter"},
+       {dep:"LIRF",arr:"LIRN",std:13*60+30,dur:45, type:"charter"},
+       {dep:"LIRN",arr:"LIRI",std:17*60,   dur:20, type:"charter"},
+       {dep:"LIRI",arr:"LFMN",std:20*60,   dur:95, type:"charter"}],
+ weekday:true,weekend:false},
+
+{id:"V06",name:"Iberia & France",desc:"Madrid – Palma – Ibiza – Cannes – Nice",
+ legs:[{dep:"LFMN",arr:"LEMD",std:7*60,   dur:130, type:"charter"},
+       {dep:"LEMD",arr:"LEPA",std:11*60,  dur:80,  type:"charter"},
+       {dep:"LEPA",arr:"LEIB",std:15*60,  dur:25,  type:"charter"},
+       {dep:"LEIB",arr:"LFMD",std:18*60,  dur:65,  type:"charter"},
+       {dep:"LFMD",arr:"LFMN",std:21*60+30,dur:10, type:"reposit"}],
+ weekday:false,weekend:true},
+
+{id:"V07",name:"UK & France",desc:"Oxford – Biggin Hill – Stansted – Paris LBG – Nice",
+ legs:[{dep:"LFMN",arr:"EGTK",std:6*60+30,dur:105,type:"charter"},
+       {dep:"EGTK",arr:"EGKB",std:11*60,  dur:20,  type:"charter"},
+       {dep:"EGKB",arr:"EGSS",std:14*60,  dur:20,  type:"charter"},
+       {dep:"EGSS",arr:"LFPB",std:17*60,  dur:50,  type:"charter"},
+       {dep:"LFPB",arr:"LFMN",std:21*60,  dur:75,  type:"charter"}],
+ weekday:true,weekend:false},
+
+];
+
+// ═══════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════
+const BASE = 'LFMN';
+const SB_AC = 'E55P', NJ_AIRLINE = 'NJE', NJ_REG = 'N87CG';
+
+function minToHHMM(m){return`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;}
+function durStr(m){if(!m||m<=0)return'—';return m<60?`${m}m`:`${Math.floor(m/60)}h${String(m%60).padStart(2,'0')}m`;}
+
+function simbriefURL(dep,arr,dur,pid){
+  const flt=Math.floor(100+Math.random()*900);
+  let u=`https://dispatch.simbrief.com/options/custom?airline=${NJ_AIRLINE}&fltnum=${flt}&type=${SB_AC}&orig=${dep}&dest=${arr}&steh=${Math.floor(dur/60)}&stem=${dur%60}&reg=${NJ_REG}&planformat=LIDO&navlog=1&find_sidstar=1&units=KGS`;
+  if(pid)u+=`&pid=${encodeURIComponent(pid)}`;
+  return u;
+}
+
+function pairingStats(p){
+  const rl=p.legs.filter(l=>l.dur>0);
+  if(!rl.length)return{firstDep:0,lastArr:0,fdp:0,block:0,endAp:p.legs[p.legs.length-1].arr};
+  const fd=rl[0].std,last=rl[rl.length-1];
+  return{firstDep:fd,lastArr:last.std+last.dur,fdp:(last.std+last.dur)-fd,
+    block:rl.reduce((s,l)=>s+l.dur,0),endAp:last.arr};
+}
+
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+let schedType='weekday', filterLegs='all', filterRegion='all', filterEnd='all';
+let selectedIdx=null, selectedData=null;
+let pilotId=localStorage.getItem('sb_pid_lfmn')||'';
+
+// ═══════════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════════
+function filterPairings(){
+  const isWeekend=schedType==='weekend';
+  return PAIRINGS.filter(p=>{
+    if(isWeekend&&!p.weekend) return false;
+    if(!isWeekend&&!p.weekday) return false;
+    const rl=p.legs.filter(l=>l.dur>0);
+    if(filterLegs!=='all'&&rl.length!==parseInt(filterLegs)) return false;
+    const stats=pairingStats(p);
+    if(filterEnd==='base'&&stats.endAp!==BASE) return false;
+    if(filterEnd==='away'&&stats.endAp===BASE) return false;
+    if(filterRegion!=='all'){
+      const hit=p.legs.some(l=>{
+        const d=AP[l.dep],a=AP[l.arr];
+        return(d&&d.region===filterRegion)||(a&&a.region===filterRegion);
+      });
+      if(!hit) return false;
+    }
+    return true;
+  });
+}
+
+function renderAll(){
+  const pairings=filterPairings();
+  document.getElementById('m-sub').textContent=`LFMN · Phenom 300E · N87CG · ${pairings.length} pairing${pairings.length!==1?'s':''} available`;
+
+  if(pairings.length){
+    const rc=pairings.map(p=>p.legs.filter(l=>l.dur>0).length);
+    document.getElementById('st-pairings').textContent=pairings.length;
+    document.getElementById('st-legs').textContent=(rc.reduce((a,b)=>a+b,0)/rc.length).toFixed(1);
+    const bl=pairings.map(p=>pairingStats(p).block).filter(b=>b>0);
+    const fd=pairings.map(p=>pairingStats(p).fdp).filter(f=>f>0);
+    document.getElementById('st-flt').textContent=bl.length?durStr(Math.min(...bl)):'—';
+    document.getElementById('st-fdp').textContent=fd.length?durStr(Math.max(...fd)):'—';
+    const ds=new Set(pairings.flatMap(p=>p.legs.filter(l=>l.dur>0).map(l=>l.arr)));
+    document.getElementById('st-dest').textContent=ds.size;
+  } else {
+    ['st-pairings','st-legs','st-flt','st-fdp','st-dest'].forEach(id=>document.getElementById(id).textContent='—');
+  }
+
+  const grid=document.getElementById('pairingsGrid');
+  grid.innerHTML='';
+  if(!pairings.length){
+    grid.innerHTML='<div class="empty-msg">No pairings match the selected filters.</div>';return;
+  }
+
+  pairings.forEach((p,idx)=>{
+    const stats=pairingStats(p);
+    const rl=p.legs.filter(l=>l.dur>0);
+    const isSel=selectedIdx===idx;
+    const endsAtBase=stats.endAp===BASE;
+    const card=document.createElement('div');
+    card.className='p-card'+(isSel?' selected':'');
+    card.style.animationDelay=`${Math.min(idx,25)*0.022}s`;
+
+    let legsHTML='';
+    rl.forEach((l,li)=>{
+      const dAP=AP[l.dep]||{name:l.dep,city:'',country:''};
+      const aAP=AP[l.arr]||{name:l.arr,city:'',country:''};
+      const isBaseD=l.dep===BASE,isBaseA=l.arr===BASE;
+      if(li>0){
+        const prev=rl[li-1];const gnd=l.std-(prev.std+prev.dur);
+        if(gnd>0)legsHTML+=`<div class="gnd-row"><span>GND ${durStr(gnd)} at ${l.dep}</span><div class="gnd-bar"></div></div>`;
+      }
+      const sbURL=simbriefURL(l.dep,l.arr,l.dur,pilotId);
+      legsHTML+=`
+        <div class="leg-row">
+          <div class="leg-connector">
+            <div class="leg-dot dep${isBaseD?' base':''}"></div>
+            <div class="leg-line"></div>
+            <div class="leg-dot arr${isBaseA?' base':''}"></div>
+          </div>
+          <div class="leg-info">
+            <div class="leg-row-top">
+              <div><span class="leg-ap">${l.dep}</span><span class="leg-city"> ${dAP.country} ${dAP.name}</span></div>
+            </div>
+            <div class="leg-times">${minToHHMM(l.std)} → ${minToHHMM(l.std+l.dur)} · ${durStr(l.dur)}</div>
+            <div class="leg-row-bot">
+              <div><span class="leg-ap">${l.arr}</span><span class="leg-city"> ${aAP.country} ${aAP.name}</span></div>
+              <div class="leg-tags">
+                <span class="leg-type-tag ${l.type}">${l.type}</span>
+                <a class="sb-leg-link" href="${sbURL}" target="_blank" onclick="event.stopPropagation()">✈ SimBrief</a>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    });
+
+    card.innerHTML=`
+      <div class="p-check">✓</div>
+      <div class="p-card-head">
+        <div class="p-head-left">
+          <div class="p-name">${p.name}</div>
+          <div class="p-desc">${p.desc}</div>
+        </div>
+        <div class="p-meta">
+          <span class="p-legs-badge">${rl.length} LEG${rl.length!==1?'S':''}</span>
+          <span class="p-end-badge${endsAtBase?'':' away'}">${endsAtBase?'Returns LFMN':'Ends '+stats.endAp}</span>
+          <span class="p-dur">${durStr(stats.block)}</span>
+        </div>
+      </div>
+      <div class="p-timeline">${legsHTML}</div>
+      <div class="p-card-foot">
+        <div class="p-fdp">
+          ${stats.block>0?minToHHMM(stats.firstDep)+'–'+minToHHMM(stats.lastArr):'Overnight away'}
+          ${stats.block>0?`&nbsp;·&nbsp; Block <span>${durStr(stats.block)}</span>`:''}
+          ${stats.fdp>0?`&nbsp;·&nbsp; FDP <span>${durStr(stats.fdp)}</span>`:''}
+        </div>
+        <button class="p-select-btn">${isSel?'✓ Selected':'Select'}</button>
+      </div>`;
+
+    card.addEventListener('click',()=>{
+      selectedIdx=selectedIdx===idx?null:idx;
+      selectedData=selectedIdx!==null?p:null;
+      updateSelSummary(selectedData);renderAll();
+    });
+    grid.appendChild(card);
+  });
+}
+
+function updateSelSummary(p){
+  const el=document.getElementById('sel-summary');
+  const btn=document.getElementById('sb-all-btn');
+  if(!p){el.innerHTML='<span class="sel-none">No pairing selected</span>';btn.classList.add('hidden');return;}
+  const stats=pairingStats(p);
+  const rl=p.legs.filter(l=>l.dur>0);
+  let html=`<div style="color:var(--gold);margin-bottom:6px;font-size:11px">${p.name}</div>`;
+  rl.forEach(l=>{
+    const d=AP[l.dep]||{name:l.dep,country:''},a=AP[l.arr]||{name:l.arr,country:''};
+    html+=`<div style="color:var(--text)">${l.dep}→${l.arr} <span style="color:var(--muted)">${durStr(l.dur)}</span></div>`;
+    html+=`<div style="color:var(--muted);font-size:8px;padding-left:6px;margin-bottom:3px">${d.country}${d.name} → ${a.country}${a.name}</div>`;
+  });
+  if(stats.block>0)html+=`<div style="color:var(--gold);margin-top:5px;border-top:1px solid var(--line);padding-top:5px">Block ${durStr(stats.block)} · FDP ${durStr(stats.fdp)}</div>`;
+  el.innerHTML=html;
+  btn.href=simbriefURL(rl[0].dep,rl[0].arr,rl[0].dur,pilotId);
+  btn.classList.remove('hidden');
+}
+
+function clearSelection(){selectedIdx=null;selectedData=null;updateSelSummary(null);renderAll();}
+function savePid(){
+  pilotId=document.getElementById('pid-input').value.trim();
+  localStorage.setItem('sb_pid_lfmn',pilotId);
+  const b=document.querySelector('.pid-save');b.textContent='✓';setTimeout(()=>b.textContent='Save',1500);
+}
+
+// ── BINDINGS ──
+document.querySelectorAll('.sched-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.sched-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');schedType=btn.dataset.sched;
+  selectedIdx=null;selectedData=null;updateSelSummary(null);renderAll();
+}));
+document.querySelectorAll('.leg-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.leg-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');filterLegs=btn.dataset.legs;
+  selectedIdx=null;selectedData=null;updateSelSummary(null);renderAll();
+}));
+document.querySelectorAll('.sf-btn[data-region]').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.sf-btn[data-region]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');filterRegion=btn.dataset.region;
+  selectedIdx=null;selectedData=null;updateSelSummary(null);renderAll();
+}));
+document.querySelectorAll('.sf-btn[data-end]').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.sf-btn[data-end]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');filterEnd=btn.dataset.end;
+  selectedIdx=null;selectedData=null;updateSelSummary(null);renderAll();
+}));
+
+window.addEventListener('DOMContentLoaded',()=>{
+  const saved=localStorage.getItem('sb_pid_lfmn');
+  if(saved){pilotId=saved;document.getElementById('pid-input').value=saved;}
+  renderAll();
+});
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw_nj_lfmn.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
