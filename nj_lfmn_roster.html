@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>NJ Europe · Phenom 300E · LFMN Base</title>
+<title>NJ Europe · Phenom 300E · LFMN</title>
 <link rel="manifest" href="manifest_nj_lfmn.json">
 <meta name="theme-color" content="#05080D">
 <meta name="mobile-web-app-capable" content="yes">
@@ -17,185 +17,254 @@
   --nj:#1a3a6b;--nj-dim:rgba(26,58,107,0.18);
   --gold:#D4AF37;--gold-dim:rgba(212,175,55,0.14);
   --sky:#4a9eff;--sky-dim:rgba(74,158,255,0.11);
-  --green:#2ecc71;--amber:#f39c12;--rose:#e74c3c;
-  --bg:#05080D;--bg1:#0A0F18;--bg2:#101723;--bg3:#16213a;
-  --line:rgba(255,255,255,0.055);
-  --text:#d8e4f0;--muted:#4a5a72;
+  --green:#2ecc71;--green-dim:rgba(46,204,113,0.1);
+  --amber:#f39c12;--amber-dim:rgba(243,156,18,0.1);
+  --rose:#e74c3c;--violet:#9b59b6;
+  --bg:#05080D;--bg1:#0A0F18;--bg2:#101723;--bg3:#16213a;--bg4:#1c2a42;
+  --line:rgba(255,255,255,0.055);--line2:rgba(255,255,255,0.03);
+  --text:#d8e4f0;--muted:#4a5a72;--muted2:#3a4a60;
   --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:300;min-height:100vh;}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);}
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.025) 2px,rgba(0,0,0,0.025) 4px);}
 
+/* ── LAYOUT ── */
 .shell{display:flex;min-height:100vh;}
-.sidebar{width:275px;flex-shrink:0;background:var(--bg1);border-right:1px solid var(--line);
+.sidebar{width:268px;flex-shrink:0;background:var(--bg1);border-right:1px solid var(--line);
   display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
-.main{flex:1;padding:36px 40px 80px;overflow-x:hidden;}
+.main{flex:1;padding:32px 36px 80px;overflow-x:hidden;min-width:0;}
 
-/* SIDEBAR */
-.s-header{padding:22px 20px 16px;border-bottom:1px solid var(--line);}
-.s-logo{display:flex;align-items:center;gap:11px;margin-bottom:10px;}
-.nj-badge{width:40px;height:40px;border-radius:50%;background:var(--nj);
+/* ── SIDEBAR ── */
+.s-header{padding:20px 18px 14px;border-bottom:1px solid var(--line);}
+.s-logo{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.nj-badge{width:38px;height:38px;border-radius:50%;background:var(--nj);flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:13px;font-weight:600;color:var(--gold);
-  box-shadow:0 0 14px rgba(26,58,107,0.5),0 0 0 1px rgba(212,175,55,0.2);flex-shrink:0;}
+  font-family:var(--mono);font-size:12px;font-weight:600;color:var(--gold);
+  box-shadow:0 0 14px rgba(26,58,107,0.5),0 0 0 1px rgba(212,175,55,0.18);}
 .s-title{font-family:var(--mono);font-size:11px;color:#fff;letter-spacing:0.04em;line-height:1.5;}
 .s-title .small{font-size:8px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:2px;}
-.base-pill{display:inline-block;margin-top:6px;padding:3px 9px;border-radius:4px;
-  border:1px solid rgba(212,175,55,0.35);background:rgba(212,175,55,0.1);
-  font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:0.08em;}
+.base-pill{display:inline-flex;align-items:center;gap:5px;margin-top:5px;padding:3px 8px;border-radius:4px;
+  border:1px solid rgba(212,175,55,0.3);background:rgba(212,175,55,0.07);
+  font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:0.08em;}
 
-.s-section{padding:14px 20px;border-bottom:1px solid var(--line);}
-.s-label{font-family:var(--mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;}
+.s-section{padding:12px 18px;border-bottom:1px solid var(--line);}
+.s-label{font-family:var(--mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
 
-/* SCHED TOGGLE */
-.sched-toggle{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
-.sched-btn{padding:8px 4px;border-radius:5px;border:1px solid var(--line);background:var(--bg2);
-  color:var(--muted);font-family:var(--mono);font-size:11px;cursor:pointer;text-align:center;transition:all 0.15s;}
+/* VIEW TOGGLE */
+.view-toggle{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:0;}
+.view-btn{padding:9px 6px;border-radius:5px;border:1px solid var(--line);background:var(--bg2);
+  color:var(--muted);font-family:var(--mono);font-size:10px;cursor:pointer;text-align:center;
+  transition:all 0.15s;line-height:1.4;letter-spacing:0.03em;}
+.view-btn:hover{border-color:var(--gold);color:#fff;}
+.view-btn.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold);}
+.view-btn .vb-icon{display:block;font-size:14px;margin-bottom:2px;}
+
+/* SCHED */
+.sched-toggle{display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+.sched-btn{padding:7px 4px;border-radius:4px;border:1px solid var(--line);background:var(--bg2);
+  color:var(--muted);font-family:var(--mono);font-size:10px;cursor:pointer;text-align:center;transition:all 0.15s;}
 .sched-btn:hover{border-color:var(--sky);color:#fff;}
 .sched-btn.active{background:var(--sky-dim);border-color:var(--sky);color:var(--sky);}
 
 /* LEGS */
 .leg-btns{display:flex;gap:3px;}
-.leg-btn{flex:1;padding:7px 2px;border-radius:4px;border:1px solid var(--line);background:var(--bg2);
-  color:var(--muted);font-family:var(--mono);font-size:11px;cursor:pointer;text-align:center;transition:all 0.15s;}
+.leg-btn{flex:1;padding:6px 2px;border-radius:4px;border:1px solid var(--line);background:var(--bg2);
+  color:var(--muted);font-family:var(--mono);font-size:10px;cursor:pointer;text-align:center;transition:all 0.15s;}
 .leg-btn:hover{border-color:var(--sky);color:#fff;}
 .leg-btn.active{background:var(--sky-dim);border-color:var(--sky);color:var(--sky);}
 
 /* FILTERS */
-.s-filters{display:flex;flex-direction:column;gap:3px;}
-.sf-btn{padding:6px 9px;border-radius:4px;border:1px solid var(--line);background:transparent;
-  color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:0.04em;
+.s-filters{display:flex;flex-direction:column;gap:2px;}
+.sf-btn{padding:5px 8px;border-radius:4px;border:1px solid var(--line);background:transparent;
+  color:var(--muted);font-family:var(--mono);font-size:9px;letter-spacing:0.04em;
   cursor:pointer;text-align:left;transition:all 0.15s;}
 .sf-btn:hover{color:#fff;background:rgba(255,255,255,0.03);}
-.sf-btn.active{color:#fff;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.13);}
+.sf-btn.active{color:#fff;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.12);}
 
-/* PILOT ID */
-.pid-wrap{display:flex;gap:5px;}
-.pid-wrap input{flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:5px;
-  color:var(--text);font-family:var(--mono);font-size:11px;padding:6px 9px;outline:none;transition:border-color 0.2s;}
+/* PID */
+.pid-wrap{display:flex;gap:4px;}
+.pid-wrap input{flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:4px;
+  color:var(--text);font-family:var(--mono);font-size:10px;padding:5px 8px;outline:none;transition:border-color 0.2s;}
 .pid-wrap input:focus{border-color:var(--sky);}
 .pid-wrap input::placeholder{color:var(--muted);}
-.pid-save{padding:6px 9px;border-radius:5px;border:1px solid var(--line);background:var(--bg2);
-  color:var(--muted);font-family:var(--mono);font-size:10px;cursor:pointer;transition:all 0.15s;}
+.pid-save{padding:5px 8px;border-radius:4px;border:1px solid var(--line);background:var(--bg2);
+  color:var(--muted);font-family:var(--mono);font-size:9px;cursor:pointer;transition:all 0.15s;}
 .pid-save:hover{border-color:var(--sky);color:var(--sky);}
-.pid-note{font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:5px;line-height:1.5;}
+.pid-note{font-family:var(--mono);font-size:7px;color:var(--muted);margin-top:4px;line-height:1.5;}
 
-/* SELECTED */
-.s-selected{margin-top:auto;padding:14px 20px;border-top:1px solid var(--line);}
-.sel-label{font-family:var(--mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-#sel-summary{font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.7;}
+/* SELECTED SUMMARY */
+.s-selected{margin-top:auto;padding:12px 18px;border-top:1px solid var(--line);}
+.sel-label{font-family:var(--mono);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+#sel-summary{font-family:var(--mono);font-size:9px;color:var(--muted);line-height:1.8;max-height:180px;overflow-y:auto;}
 .sel-none{font-style:italic;}
-.sb-all-btn{display:block;width:100%;margin-top:8px;padding:8px;border-radius:5px;
-  border:1px solid rgba(74,158,255,0.3);background:rgba(74,158,255,0.09);
-  color:var(--sky);font-family:var(--mono);font-size:10px;cursor:pointer;
-  text-align:center;letter-spacing:0.06em;transition:all 0.2s;text-decoration:none;}
-.sb-all-btn:hover{background:rgba(74,158,255,0.18);border-color:var(--sky);}
-.sb-all-btn.hidden{display:none;}
-.clear-btn{margin-top:5px;width:100%;padding:6px;border-radius:4px;border:1px solid var(--line);
-  background:transparent;color:var(--muted);font-family:var(--mono);font-size:10px;
-  cursor:pointer;transition:all 0.15s;letter-spacing:0.05em;}
+.sb-btn{display:block;width:100%;margin-top:6px;padding:7px;border-radius:4px;
+  border:1px solid rgba(74,158,255,0.28);background:rgba(74,158,255,0.08);
+  color:var(--sky);font-family:var(--mono);font-size:9px;cursor:pointer;
+  text-align:center;letter-spacing:0.05em;transition:all 0.2s;text-decoration:none;}
+.sb-btn:hover{background:rgba(74,158,255,0.16);border-color:var(--sky);}
+.sb-btn.hidden{display:none;}
+.clear-btn{margin-top:4px;width:100%;padding:5px;border-radius:4px;border:1px solid var(--line);
+  background:transparent;color:var(--muted);font-family:var(--mono);font-size:9px;
+  cursor:pointer;transition:all 0.15s;}
 .clear-btn:hover{border-color:var(--rose);color:var(--rose);}
 
-/* MAIN */
-.m-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;}
-.m-title{font-family:var(--mono);font-size:20px;color:#fff;letter-spacing:0.04em;}
-.m-sub{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:0.07em;}
-.m-badge-wrap{text-align:right;}
-.base-badge{font-family:var(--mono);font-size:16px;color:var(--gold);letter-spacing:0.1em;font-weight:600;}
-.base-full{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:3px;letter-spacing:0.06em;}
+/* ── MAIN HEADER ── */
+.m-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;}
+.m-title{font-family:var(--mono);font-size:19px;color:#fff;letter-spacing:0.04em;}
+.m-sub{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:4px;letter-spacing:0.07em;}
+.m-right{text-align:right;}
+.base-badge{font-family:var(--mono);font-size:15px;color:var(--gold);letter-spacing:0.1em;font-weight:600;}
+.base-full{font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:2px;}
 
-/* STATS */
-.duty-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;margin-bottom:20px;}
-.db-cell{background:var(--bg1);border:1px solid var(--line);padding:11px 12px;}
-.db-cell:first-child{border-radius:8px 0 0 8px;}
-.db-cell:last-child{border-radius:0 8px 8px 0;}
+/* ── STATS BAR ── */
+.duty-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;margin-bottom:18px;}
+.db-cell{background:var(--bg1);border:1px solid var(--line);padding:10px 12px;}
+.db-cell:first-child{border-radius:7px 0 0 7px;}
+.db-cell:last-child{border-radius:0 7px 7px 0;}
 .db-val{font-family:var(--mono);font-size:15px;color:#fff;font-weight:500;}
-.db-lbl{font-size:8px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:3px;}
+.db-lbl{font-size:8px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;}
 
-/* GRID */
-.pairings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(355px,1fr));gap:12px;}
+/* ══════════════════════════════════════
+   SINGLE-DAY PAIRING CARDS
+══════════════════════════════════════ */
+.pairings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px;}
 
-/* CARD */
-.p-card{background:var(--bg1);border:1px solid var(--line);border-radius:10px;overflow:hidden;
-  cursor:pointer;transition:all 0.2s;position:relative;animation:cardIn 0.28s ease both;}
-.p-card:hover{border-color:rgba(255,255,255,0.11);transform:translateY(-1px);box-shadow:0 8px 28px rgba(0,0,0,0.5);}
-.p-card.selected{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 8px 28px rgba(212,175,55,0.12);}
+.p-card{background:var(--bg1);border:1px solid var(--line);border-radius:9px;overflow:hidden;
+  cursor:pointer;transition:all 0.2s;position:relative;animation:cardIn 0.25s ease both;}
+.p-card:hover{border-color:rgba(255,255,255,0.1);transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,0,0,0.45);}
+.p-card.selected{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 6px 24px rgba(212,175,55,0.1);}
 
-.p-card-head{padding:11px 14px 9px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--line);}
+.p-card-head{padding:10px 13px 8px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--line);}
 .p-head-left{flex:1;min-width:0;}
-.p-name{font-family:var(--mono);font-size:11px;color:#fff;letter-spacing:0.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.p-desc{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;letter-spacing:0.04em;}
-.p-meta{display:flex;align-items:center;gap:5px;flex-shrink:0;margin-left:8px;flex-wrap:wrap;justify-content:flex-end;}
-.p-legs-badge{font-family:var(--mono);font-size:8px;padding:2px 6px;border-radius:3px;
+.p-name{font-family:var(--mono);font-size:10px;color:#fff;letter-spacing:0.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.p-desc{font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:2px;}
+.p-meta{display:flex;align-items:center;gap:4px;flex-shrink:0;margin-left:6px;flex-wrap:wrap;justify-content:flex-end;}
+.p-legs-badge{font-family:var(--mono);font-size:7px;padding:2px 5px;border-radius:2px;
   background:var(--bg3);border:1px solid var(--line);color:var(--muted);}
-.p-dur{font-family:var(--mono);font-size:11px;color:var(--gold);}
-.p-end-badge{font-family:var(--mono);font-size:8px;padding:2px 7px;border-radius:3px;
-  border:1px solid rgba(212,175,55,0.28);background:rgba(212,175,55,0.07);color:var(--gold);}
-.p-end-badge.away{border-color:rgba(243,156,18,0.28);background:rgba(243,156,18,0.07);color:var(--amber);}
+.p-dur{font-family:var(--mono);font-size:10px;color:var(--gold);}
+.p-end-badge{font-family:var(--mono);font-size:7px;padding:2px 6px;border-radius:2px;
+  border:1px solid rgba(212,175,55,0.25);background:rgba(212,175,55,0.06);color:var(--gold);}
+.p-end-badge.away{border-color:rgba(243,156,18,0.25);background:rgba(243,156,18,0.06);color:var(--amber);}
 
-/* TIMELINE */
-.p-timeline{padding:12px 14px;}
+/* TIMELINE (shared) */
+.p-timeline{padding:10px 13px;}
 .leg-row{display:flex;align-items:stretch;margin-bottom:5px;}
 .leg-row:last-child{margin-bottom:0;}
-.leg-connector{display:flex;flex-direction:column;align-items:center;width:22px;flex-shrink:0;margin-right:9px;}
-.leg-dot{width:8px;height:8px;border-radius:50%;background:var(--bg3);border:1.5px solid var(--muted);flex-shrink:0;margin-top:3px;}
+.leg-connector{display:flex;flex-direction:column;align-items:center;width:20px;flex-shrink:0;margin-right:8px;}
+.leg-dot{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--muted);flex-shrink:0;margin-top:3px;background:var(--bg3);}
 .leg-dot.dep{border-color:var(--sky);background:var(--sky-dim);}
-.leg-dot.arr{border-color:var(--green);background:rgba(46,204,113,0.12);}
+.leg-dot.arr{border-color:var(--green);background:var(--green-dim);}
 .leg-dot.base{border-color:var(--gold);background:var(--gold-dim);}
-.leg-line{flex:1;width:1px;background:var(--line);margin:3px 0;}
+.leg-dot.away-night{border-color:var(--amber);background:var(--amber-dim);}
+.leg-line{flex:1;width:1px;background:var(--line);margin:2px 0;}
 .leg-info{flex:1;min-width:0;}
-.leg-ap{font-family:var(--mono);font-size:13px;font-weight:500;color:#fff;letter-spacing:0.04em;}
-.leg-city{font-size:10px;color:var(--muted);}
-.leg-times{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:1px;}
-.leg-row-top{display:flex;align-items:center;justify-content:space-between;padding:3px 0;}
-.leg-row-bot{display:flex;align-items:center;justify-content:space-between;padding:3px 0;margin-top:2px;}
-.leg-tags{display:flex;align-items:center;gap:4px;}
-.leg-type-tag{font-family:var(--mono);font-size:8px;padding:2px 5px;border-radius:2px;
-  border:1px solid var(--line);background:var(--bg3);color:var(--muted);letter-spacing:0.04em;}
-.leg-type-tag.reposit{border-color:rgba(243,156,18,0.22);color:var(--amber);}
-.leg-type-tag.charter{border-color:rgba(46,204,113,0.22);color:var(--green);}
-.leg-type-tag.positioning{border-color:rgba(74,158,255,0.22);color:var(--sky);}
-.sb-leg-link{display:inline-flex;align-items:center;gap:3px;font-family:var(--mono);font-size:8px;
-  letter-spacing:0.05em;padding:2px 6px;border-radius:3px;
-  border:1px solid rgba(74,158,255,0.28);background:rgba(74,158,255,0.07);
-  color:var(--sky);text-decoration:none;transition:all 0.15s;white-space:nowrap;}
-.sb-leg-link:hover{background:rgba(74,158,255,0.18);border-color:var(--sky);}
+.leg-ap{font-family:var(--mono);font-size:12px;font-weight:500;color:#fff;letter-spacing:0.04em;}
+.leg-city{font-size:9px;color:var(--muted);}
+.leg-times{font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:1px;}
+.leg-rt{display:flex;align-items:center;justify-content:space-between;padding:3px 0;}
+.leg-rb{display:flex;align-items:center;justify-content:space-between;padding:3px 0;margin-top:1px;}
+.leg-tags{display:flex;align-items:center;gap:3px;}
+.tt{font-family:var(--mono);font-size:7px;padding:1px 4px;border-radius:2px;
+  border:1px solid var(--line);background:var(--bg3);color:var(--muted);letter-spacing:0.03em;}
+.tt.reposit{border-color:rgba(243,156,18,0.2);color:var(--amber);}
+.tt.charter{border-color:rgba(46,204,113,0.2);color:var(--green);}
+.tt.positioning{border-color:rgba(74,158,255,0.2);color:var(--sky);}
+.tt.commute{border-color:rgba(155,89,182,0.25);color:var(--violet);}
+.sb-link{display:inline-flex;align-items:center;gap:2px;font-family:var(--mono);font-size:7px;
+  padding:2px 5px;border-radius:2px;border:1px solid rgba(74,158,255,0.25);
+  background:rgba(74,158,255,0.06);color:var(--sky);text-decoration:none;transition:all 0.15s;white-space:nowrap;}
+.sb-link:hover{background:rgba(74,158,255,0.16);border-color:var(--sky);}
+.gnd-row{display:flex;align-items:center;gap:6px;padding:2px 0 2px 28px;
+  font-family:var(--mono);font-size:7px;color:var(--muted2);letter-spacing:0.04em;}
+.gnd-bar{height:1px;flex:1;background:repeating-linear-gradient(90deg,var(--muted2) 0,var(--muted2) 2px,transparent 2px,transparent 5px);opacity:0.3;}
+.night-marker{display:flex;align-items:center;gap:6px;padding:3px 0 3px 28px;
+  font-family:var(--mono);font-size:7px;color:var(--amber);letter-spacing:0.04em;}
+.night-bar{height:1px;flex:1;background:repeating-linear-gradient(90deg,var(--amber) 0,var(--amber) 2px,transparent 2px,transparent 5px);opacity:0.25;}
 
-.gnd-row{display:flex;align-items:center;gap:7px;padding:3px 0 3px 31px;
-  font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:0.05em;}
-.gnd-bar{height:1px;flex:1;
-  background:repeating-linear-gradient(90deg,var(--muted) 0,var(--muted) 3px,transparent 3px,transparent 6px);
-  opacity:0.18;}
-
-.p-card-foot{padding:8px 14px;border-top:1px solid var(--line);background:var(--bg2);
-  display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
-.p-fdp{font-family:var(--mono);font-size:9px;color:var(--muted);}
+.p-card-foot{padding:7px 13px;border-top:1px solid var(--line);background:var(--bg2);
+  display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;}
+.p-fdp{font-family:var(--mono);font-size:8px;color:var(--muted);}
 .p-fdp span{color:var(--text);}
-.p-select-btn{font-family:var(--mono);font-size:8px;letter-spacing:0.06em;padding:4px 10px;
-  border-radius:4px;border:1px solid var(--line);background:transparent;color:var(--muted);
+.p-select-btn{font-family:var(--mono);font-size:8px;letter-spacing:0.05em;padding:3px 9px;
+  border-radius:3px;border:1px solid var(--line);background:transparent;color:var(--muted);
   cursor:pointer;transition:all 0.15s;text-transform:uppercase;}
 .p-card.selected .p-select-btn{background:var(--nj);border-color:var(--gold);color:var(--gold);}
 .p-card:not(.selected) .p-select-btn:hover{border-color:var(--gold);color:var(--gold);}
-.p-check{position:absolute;top:9px;right:9px;width:16px;height:16px;border-radius:50%;
+.p-check{position:absolute;top:8px;right:8px;width:15px;height:15px;border-radius:50%;
   background:var(--nj);border:1px solid var(--gold);display:none;align-items:center;
   justify-content:center;font-size:8px;color:var(--gold);}
 .p-card.selected .p-check{display:flex;}
 
-.empty-msg{grid-column:1/-1;text-align:center;padding:60px;
-  font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:0.08em;}
+/* ══════════════════════════════════════
+   5-DAY CHAIN CARDS
+══════════════════════════════════════ */
+.chains-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:14px;}
 
-@keyframes cardIn{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
+.chain-card{background:var(--bg1);border:1px solid var(--line);border-radius:10px;overflow:hidden;
+  cursor:pointer;transition:all 0.2s;position:relative;animation:cardIn 0.25s ease both;}
+.chain-card:hover{border-color:rgba(255,255,255,0.1);transform:translateY(-1px);box-shadow:0 8px 28px rgba(0,0,0,0.5);}
+.chain-card.selected{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 8px 28px rgba(212,175,55,0.1);}
+
+.chain-head{padding:12px 16px 10px;display:flex;align-items:flex-start;justify-content:space-between;
+  border-bottom:1px solid var(--line);background:var(--bg2);}
+.chain-name{font-family:var(--mono);font-size:12px;color:#fff;letter-spacing:0.04em;}
+.chain-desc{font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:3px;line-height:1.5;}
+.chain-meta{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;margin-left:10px;}
+.chain-days-badge{font-family:var(--mono);font-size:8px;padding:2px 7px;border-radius:3px;
+  background:var(--bg3);border:1px solid var(--line);color:var(--muted);}
+.chain-legs-total{font-family:var(--mono);font-size:10px;color:var(--gold);}
+.chain-end{font-family:var(--mono);font-size:8px;padding:2px 6px;border-radius:3px;}
+.chain-end.returns{border:1px solid rgba(212,175,55,0.25);background:rgba(212,175,55,0.06);color:var(--gold);}
+.chain-end.away{border:1px solid rgba(243,156,18,0.25);background:rgba(243,156,18,0.06);color:var(--amber);}
+
+/* DAY BLOCKS within chain */
+.chain-days{padding:0;}
+.day-block{border-bottom:1px solid var(--line2);}
+.day-block:last-child{border-bottom:none;}
+.day-header{display:flex;align-items:center;gap:8px;padding:8px 16px 6px;background:var(--bg3);
+  border-bottom:1px solid var(--line2);}
+.day-num{font-family:var(--mono);font-size:8px;color:var(--gold);letter-spacing:0.1em;
+  padding:2px 6px;border-radius:3px;border:1px solid rgba(212,175,55,0.2);background:rgba(212,175,55,0.06);}
+.day-theme{font-family:var(--mono);font-size:9px;color:#fff;letter-spacing:0.04em;}
+.day-night{margin-left:auto;font-family:var(--mono);font-size:8px;color:var(--amber);
+  display:flex;align-items:center;gap:4px;}
+.day-legs{padding:8px 16px;}
+
+.chain-foot{padding:8px 16px;border-top:1px solid var(--line);background:var(--bg2);
+  display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;}
+.chain-summary{font-family:var(--mono);font-size:8px;color:var(--muted);}
+.chain-summary span{color:var(--text);}
+.chain-select-btn{font-family:var(--mono);font-size:8px;letter-spacing:0.05em;padding:3px 9px;
+  border-radius:3px;border:1px solid var(--line);background:transparent;color:var(--muted);
+  cursor:pointer;transition:all 0.15s;text-transform:uppercase;}
+.chain-card.selected .chain-select-btn{background:var(--nj);border-color:var(--gold);color:var(--gold);}
+.chain-card:not(.selected) .chain-select-btn:hover{border-color:var(--gold);color:var(--gold);}
+.chain-check{position:absolute;top:10px;right:10px;width:15px;height:15px;border-radius:50%;
+  background:var(--nj);border:1px solid var(--gold);display:none;align-items:center;
+  justify-content:center;font-size:8px;color:var(--gold);}
+.chain-card.selected .chain-check{display:flex;}
+
+.commute-banner{display:flex;align-items:center;gap:8px;padding:6px 16px;
+  background:rgba(155,89,182,0.07);border-bottom:1px solid rgba(155,89,182,0.15);
+  font-family:var(--mono);font-size:8px;color:var(--violet);}
+.commute-banner .cb-icon{font-size:11px;}
+
+.empty-msg{grid-column:1/-1;text-align:center;padding:50px;
+  font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:0.08em;}
+
+@keyframes cardIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
 @supports(padding:max(0px)){
   .sidebar{padding-top:max(0px,env(safe-area-inset-top));}
-  .main{padding-bottom:max(80px,calc(60px + env(safe-area-inset-bottom)));}
+  .main{padding-bottom:max(70px,calc(60px + env(safe-area-inset-bottom)));}
 }
 @media(max-width:820px){
   .shell{flex-direction:column;}
   .sidebar{width:100%;height:auto;position:static;}
-  .main{padding:16px 12px 60px;}
-  .pairings-grid{grid-template-columns:1fr;}
+  .main{padding:14px 12px 50px;}
+  .pairings-grid,.chains-grid{grid-template-columns:1fr;}
   .duty-bar{grid-template-columns:repeat(3,1fr);}
   .duty-bar .db-cell:nth-child(4),.duty-bar .db-cell:nth-child(5){display:none;}
 }
@@ -213,71 +282,42 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
         <div class="small">Phenom 300E · Duty Planner</div>
       </div>
     </div>
-    <div class="base-pill">⌂ LFMN · Nice Côte d'Azur</div>
+    <div class="base-pill">⌂ LFMN · Nice Côte d'Azur · N87CG</div>
   </div>
 
   <div class="s-section">
-    <div class="s-label">Schedule</div>
-    <div class="sched-toggle">
-      <button class="sched-btn active" data-sched="weekday">Weekday<br><span style="font-size:8px;opacity:0.6">Mon–Fri</span></button>
-      <button class="sched-btn" data-sched="weekend">Weekend<br><span style="font-size:8px;opacity:0.6">Sat–Sun</span></button>
-    </div>
-  </div>
-
-  <div class="s-section">
-    <div class="s-label">Duty Legs</div>
-    <div class="leg-btns">
-      <button class="leg-btn active" data-legs="all">All</button>
-      <button class="leg-btn" data-legs="2">2</button>
-      <button class="leg-btn" data-legs="3">3</button>
-      <button class="leg-btn" data-legs="4">4</button>
-      <button class="leg-btn" data-legs="5">5</button>
-    </div>
-  </div>
-
-  <div class="s-section">
-    <div class="s-label">End of Duty</div>
+    <div class="s-label">Commute</div>
     <div class="s-filters">
-      <button class="sf-btn active" data-end="all">◈  All</button>
-      <button class="sf-btn" data-end="base">⌂  Returns to LFMN</button>
-      <button class="sf-btn" data-end="away">✈  Ends Away</button>
+      <button class="sf-btn active" data-commute="all">◈ All</button>
+      <button class="sf-btn" data-commute="yes">✈ Commute Required</button>
+      <button class="sf-btn" data-commute="no">⌂ Starts at LFMN</button>
     </div>
   </div>
-
   <div class="s-section">
-    <div class="s-label">Region</div>
+    <div class="s-label">Chain Theme</div>
     <div class="s-filters">
-      <button class="sf-btn active" data-region="all">◈  All</button>
-      <button class="sf-btn" data-region="Alps">◈  Alps &amp; Switzerland</button>
-      <button class="sf-btn" data-region="Germany">◈  Germany GA</button>
-      <button class="sf-btn" data-region="Italy">◈  Italy</button>
-      <button class="sf-btn" data-region="Austria">◈  Austria</button>
-      <button class="sf-btn" data-region="UK">◈  UK &amp; Ireland</button>
-      <button class="sf-btn" data-region="Iberia">◈  Iberia &amp; Portugal</button>
-      <button class="sf-btn" data-region="France">◈  France</button>
-      <button class="sf-btn" data-region="Greece">◈  Greece</button>
-      <button class="sf-btn" data-region="Scandinavia">◈  Scandinavia</button>
-      <button class="sf-btn" data-region="Eastern Europe">◈  Eastern Europe</button>
-      <button class="sf-btn" data-region="Adriatic">◈  Adriatic &amp; Balkans</button>
-      <button class="sf-btn" data-region="Med & East">◈  Med &amp; Turkey</button>
-      <button class="sf-btn" data-region="Western Europe">◈  Benelux</button>
+      <button class="sf-btn active" data-theme="all">◈ All</button>
+      <button class="sf-btn" data-theme="finance">💼 Finance &amp; Legal</button>
+      <button class="sf-btn" data-theme="lifestyle">🏖 Lifestyle &amp; Leisure</button>
+      <button class="sf-btn" data-theme="industry">🏭 Industry &amp; Tech</button>
+      <button class="sf-btn" data-theme="mixed">✈ Mixed</button>
     </div>
   </div>
 
   <div class="s-section">
     <div class="s-label">SimBrief Pilot ID</div>
     <div class="pid-wrap">
-      <input type="text" id="pid-input" placeholder="e.g. 123456" maxlength="12">
+      <input type="text" id="pid-input" placeholder="123456" maxlength="12">
       <button class="pid-save" onclick="savePid()">Save</button>
     </div>
-    <div class="pid-note">Pre-fills your SimBrief preferences.<br>Reg N87CG pre-loaded.</div>
+    <div class="pid-note">Reg N87CG pre-loaded on all SimBrief links.</div>
   </div>
 
   <div class="s-selected">
-    <div class="sel-label">Selected Pairing</div>
-    <div id="sel-summary"><span class="sel-none">No pairing selected</span></div>
-    <a class="sb-all-btn hidden" id="sb-all-btn" href="#" target="_blank">⟶ Open Leg 1 in SimBrief</a>
-    <button class="clear-btn" onclick="clearSelection()">✕  Clear</button>
+    <div class="sel-label">Selected</div>
+    <div id="sel-summary"><span class="sel-none">Nothing selected</span></div>
+    <a class="sb-btn hidden" id="sb-all-btn" href="#" target="_blank">⟶ Open Leg 1 SimBrief</a>
+    <button class="clear-btn" onclick="clearSelection()">✕ Clear</button>
   </div>
 </aside>
 
@@ -285,1075 +325,1210 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
 <main class="main">
   <div class="m-header">
     <div>
-      <div class="m-title">Duty Pairings</div>
-      <div class="m-sub" id="m-sub">LFMN · Phenom 300E · N87CG</div>
+      <div class="m-title">5-Day Chains</div>
+      <div class="m-sub" id="m-sub">LFMN · Phenom 300E · N87CG · 30 chains</div>
     </div>
-    <div class="m-badge-wrap">
+    <div class="m-right">
       <div class="base-badge">LFMN</div>
       <div class="base-full">Nice Côte d'Azur · Phenom 300E · N87CG</div>
     </div>
   </div>
 
   <div class="duty-bar">
-    <div class="db-cell"><div class="db-val" id="st-pairings">—</div><div class="db-lbl">Pairings</div></div>
-    <div class="db-cell"><div class="db-val" id="st-legs">—</div><div class="db-lbl">Avg Legs</div></div>
-    <div class="db-cell"><div class="db-val" id="st-flt">—</div><div class="db-lbl">Min Block</div></div>
+    <div class="db-cell"><div class="db-val" id="st-count">—</div><div class="db-lbl" id="st-count-lbl">Pairings</div></div>
+    <div class="db-cell"><div class="db-val" id="st-b">—</div><div class="db-lbl">Min Block</div></div>
     <div class="db-cell"><div class="db-val" id="st-fdp">—</div><div class="db-lbl">Max FDP</div></div>
     <div class="db-cell"><div class="db-val" id="st-dest">—</div><div class="db-lbl">Destinations</div></div>
+    <div class="db-cell"><div class="db-val" id="st-legs">—</div><div class="db-lbl">Avg Legs</div></div>
   </div>
 
-  <div class="pairings-grid" id="pairingsGrid">
-    <div class="empty-msg">← Select schedule to load pairings</div>
+  <div id="content-grid" class="pairings-grid">
+    <div class="empty-msg">← Select view mode</div>
   </div>
 </main>
 </div>
 
 <script>
 // ═══════════════════════════════════════════════════════════
-//  AIRPORT DATA
-//  Block times from LFMN at 464 kt cruise (Phenom 300E)
-//  All distances and times are realistic great-circle estimates
+//  AIRPORT DATA  (from apt.txt)
 // ═══════════════════════════════════════════════════════════
 const AP = {
-  LFMN:{name:"Nice Côte d'Azur",city:"Nice",country:"🇫🇷",region:"France"},
+  LFMN:{name:"Nice Côte d'Azur",     city:"Nice",              country:"🇫🇷",region:"France"},
+  LFMD:{name:"Cannes Mandelieu",      city:"Cannes",            country:"🇫🇷",region:"France"},
+  LFPB:{name:"Paris Le Bourget",      city:"Paris",             country:"🇫🇷",region:"France"},
   // Austria
-  LOWW:{name:"Vienna Int'l",city:"Vienna",country:"🇦🇹",region:"Austria"},
-  LOWS:{name:"Salzburg",city:"Salzburg",country:"🇦🇹",region:"Austria"},
-  LOWI:{name:"Innsbruck",city:"Innsbruck",country:"🇦🇹",region:"Austria"},
-  // Germany GA
-  EDNY:{name:"Friedrichshafen",city:"Bodensee",country:"🇩🇪",region:"Germany"},
-  EDMA:{name:"Augsburg",city:"Augsburg/Munich",country:"🇩🇪",region:"Germany"},
-  EDJA:{name:"Memmingen",city:"Allgäu",country:"🇩🇪",region:"Germany"},
-  EDFE:{name:"Frankfurt Egelsbach",city:"Frankfurt",country:"🇩🇪",region:"Germany"},
-  EDXW:{name:"Sylt / Westerland",city:"Sylt Island",country:"🇩🇪",region:"Germany"},
-  EGSS:{name:"London Stansted",city:"London",country:"🇬🇧",region:"UK"},
-  // Italy
-  LIML:{name:"Milan Linate",city:"Milan",country:"🇮🇹",region:"Italy"},
-  LIRF:{name:"Rome Fiumicino",city:"Rome",country:"🇮🇹",region:"Italy"},
-  LIRN:{name:"Naples",city:"Naples",country:"🇮🇹",region:"Italy"},
-  LIRI:{name:"Salerno Costa d'Amalfi",city:"Salerno/Amalfi",country:"🇮🇹",region:"Italy"},
-  // Slovenia
-  LJPZ:{name:"Portorož",city:"Portorož/Piran",country:"🇸🇮",region:"Italy"},
+  LOAN:{name:"Wiener Neustadt East",  city:"Wiener Neustadt",   country:"🇦🇹",region:"Austria"},
+  LOWW:{name:"Vienna Int'l",          city:"Vienna",            country:"🇦🇹",region:"Austria"},
+  LOWS:{name:"Salzburg",              city:"Salzburg",          country:"🇦🇹",region:"Austria"},
+  LOWL:{name:"Linz / Hörsching",      city:"Linz",              country:"🇦🇹",region:"Austria"},
+  LOWG:{name:"Graz",                  city:"Graz",              country:"🇦🇹",region:"Austria"},
+  LOWK:{name:"Klagenfurt",            city:"Klagenfurt",        country:"🇦🇹",region:"Austria"},
   // Switzerland
-  LSZS:{name:"Samedan / St Moritz",city:"Engadin",country:"🇨🇭",region:"Alps"},
-  LSZR:{name:"St Gallen-Altenrhein",city:"St Gallen/Bodensee",country:"🇨🇭",region:"Alps"},
-  LSZH:{name:"Zurich",city:"Zurich",country:"🇨🇭",region:"Alps"},
-  LSGG:{name:"Geneva",city:"Geneva",country:"🇨🇭",region:"Alps"},
-  // UK
-  EGTK:{name:"Oxford (Kidlington)",city:"Oxford",country:"🇬🇧",region:"UK"},
-  EGKB:{name:"London Biggin Hill",city:"London",country:"🇬🇧",region:"UK"},
-  // France
-  LFPB:{name:"Paris Le Bourget",city:"Paris",country:"🇫🇷",region:"France"},
-  LFMD:{name:"Cannes Mandelieu",city:"Cannes",country:"🇫🇷",region:"France"},
-  // Iberia
-  LEMD:{name:"Madrid Barajas",city:"Madrid",country:"🇪🇸",region:"Iberia"},
-  LEIB:{name:"Ibiza",city:"Ibiza",country:"🇪🇸",region:"Iberia"},
-  LEPA:{name:"Palma de Mallorca",city:"Palma",country:"🇪🇸",region:"Iberia"},
-  LECO:{name:"A Coruña",city:"A Coruña",country:"🇪🇸",region:"Iberia"},
-  LESU:{name:"La Seu d'Urgell",city:"Andorra region",country:"🇪🇸",region:"Iberia"},
-  // Austria extra
-  LOWG:{name:"Graz",city:"Graz",country:"🇦🇹",region:"Austria"},
-  LOWL:{name:"Linz / Hörsching",city:"Linz",country:"🇦🇹",region:"Austria"},
-  LOWK:{name:"Klagenfurt",city:"Klagenfurt",country:"🇦🇹",region:"Austria"},
-  // Germany extra
-  EDDM:{name:"Munich",city:"Munich",country:"🇩🇪",region:"Germany"},
-  EDDF:{name:"Frankfurt",city:"Frankfurt",country:"🇩🇪",region:"Germany"},
-  EDDL:{name:"Düsseldorf",city:"Düsseldorf",country:"🇩🇪",region:"Germany"},
-  EDDK:{name:"Cologne / Bonn",city:"Cologne",country:"🇩🇪",region:"Germany"},
-  EDDS:{name:"Stuttgart",city:"Stuttgart",country:"🇩🇪",region:"Germany"},
-  EDHL:{name:"Lübeck Blankensee",city:"Lübeck",country:"🇩🇪",region:"Germany"},
-  EDHK:{name:"Kiel Holtenau",city:"Kiel",country:"🇩🇪",region:"Germany"},
-  // UK extra
-  EGFF:{name:"Cardiff",city:"Cardiff",country:"🇬🇧",region:"UK"},
-  EGSS:{name:"London Stansted",city:"London",country:"🇬🇧",region:"UK"},
-  EGLF:{name:"Farnborough",city:"Hampshire",country:"🇬🇧",region:"UK"},
-  EGCB:{name:"Manchester Barton",city:"Manchester",country:"🇬🇧",region:"UK"},
-  EGPK:{name:"Glasgow Prestwick",city:"Glasgow",country:"🇬🇧",region:"UK"},
-  EGGP:{name:"Liverpool John Lennon",city:"Liverpool",country:"🇬🇧",region:"UK"},
-  // Ireland
-  EICK:{name:"Cork",city:"Cork",country:"🇮🇪",region:"UK"},
-  // Netherlands
-  EHRD:{name:"Rotterdam The Hague",city:"Rotterdam",country:"🇳🇱",region:"Western Europe"},
-  // Belgium
-  EBBR:{name:"Brussels",city:"Brussels",country:"🇧🇪",region:"Western Europe"},
-  // Portugal
-  LPPT:{name:"Lisbon",city:"Lisbon",country:"🇵🇹",region:"Iberia"},
-  LPFR:{name:"Faro (Algarve)",city:"Faro",country:"🇵🇹",region:"Iberia"},
-  // Scandinavia
-  EFHK:{name:"Helsinki",city:"Helsinki",country:"🇫🇮",region:"Scandinavia"},
-  ENGM:{name:"Oslo Gardermoen",city:"Oslo",country:"🇳🇴",region:"Scandinavia"},
-  ESSA:{name:"Stockholm Arlanda",city:"Stockholm",country:"🇸🇪",region:"Scandinavia"},
-  EKCH:{name:"Copenhagen",city:"Copenhagen",country:"🇩🇰",region:"Scandinavia"},
-  EKRN:{name:"Bornholm (Rønne)",city:"Bornholm",country:"🇩🇰",region:"Scandinavia"},
-  // Eastern Europe
-  LYBE:{name:"Belgrade",city:"Belgrade",country:"🇷🇸",region:"Eastern Europe"},
-  LBSF:{name:"Sofia",city:"Sofia",country:"🇧🇬",region:"Eastern Europe"},
-  EPKK:{name:"Kraków",city:"Kraków",country:"🇵🇱",region:"Eastern Europe"},
-  LZTT:{name:"Poprad-Tatry",city:"High Tatras",country:"🇸🇰",region:"Eastern Europe"},
-  EYVI:{name:"Vilnius",city:"Vilnius",country:"🇱🇹",region:"Eastern Europe"},
-  LKCS:{name:"České Budějovice",city:"South Bohemia",country:"🇨🇿",region:"Eastern Europe"},
-  // Slovenia
-  LJMB:{name:"Maribor",city:"Maribor",country:"🇸🇮",region:"Adriatic"},
-  // Croatia
-  LDRI:{name:"Rijeka",city:"Rijeka",country:"🇭🇷",region:"Adriatic"},
-  // Turkey
-  LTFM:{name:"Istanbul",city:"Istanbul",country:"🇹🇷",region:"Med & East"},
-  LTAI:{name:"Antalya",city:"Antalya",country:"🇹🇷",region:"Med & East"},
-  // Greece extra
-  LGKO:{name:"Kos",city:"Kos",country:"🇬🇷",region:"Greece"},
-  // Italy extra
-  LIEO:{name:"Olbia (Sardinia)",city:"Olbia",country:"🇮🇹",region:"Italy"},
-  LICC:{name:"Catania (Sicily)",city:"Catania",country:"🇮🇹",region:"Italy"},
-  LICJ:{name:"Palermo (Sicily)",city:"Palermo",country:"🇮🇹",region:"Italy"},
-  LILO:{name:"Sondrio",city:"Sondrio / Valtellina",country:"🇮🇹",region:"Italy"},
-  LIPB:{name:"Bolzano",city:"Bolzano / South Tyrol",country:"🇮🇹",region:"Italy"},
-  LIRJ:{name:"Marina di Campo (Elba)",city:"Elba Island",country:"🇮🇹",region:"Italy"},
-};
-
-// ═══════════════════════════════════════════════════════════
-//  BLOCK TIMES FROM LFMN (minutes, Phenom 300E 464 kt)
-//  Realistic great-circle routing + 10-15% routing penalty
-//  GND minimum 20 min between legs
-// ═══════════════════════════════════════════════════════════
-const BLK = {
-  // Austria
-  LOWW: 95, LOWS: 70, LOWI: 55, LOWG: 80, LOWL: 90, LOWK: 75,
+  LSZS:{name:"Samedan / St Moritz",   city:"Engadin",           country:"🇨🇭",region:"Alps"},
+  LSZR:{name:"St Gallen-Altenrhein",  city:"St Gallen",         country:"🇨🇭",region:"Alps"},
+  LSZH:{name:"Zurich",                city:"Zurich",            country:"🇨🇭",region:"Alps"},
+  LSGG:{name:"Geneva",                city:"Geneva",            country:"🇨🇭",region:"Alps"},
   // Germany
-  EDNY: 50, EDMA: 60, EDJA: 55, EDFE: 95, EDXW:155,
-  EDDM: 65, EDDF:100, EDDL:120, EDDK:115, EDDS: 80, EDHL:145, EDHK:150,
+  EDDM:{name:"Munich",                city:"Munich",            country:"🇩🇪",region:"Germany"},
+  EDDF:{name:"Frankfurt",             city:"Frankfurt",         country:"🇩🇪",region:"Germany"},
+  EDFE:{name:"Frankfurt Egelsbach",   city:"Frankfurt",         country:"🇩🇪",region:"Germany"},
+  EDDS:{name:"Stuttgart",             city:"Stuttgart",         country:"🇩🇪",region:"Germany"},
+  EDDL:{name:"Düsseldorf",            city:"Düsseldorf",        country:"🇩🇪",region:"Germany"},
+  EDDK:{name:"Cologne / Bonn",        city:"Cologne",           country:"🇩🇪",region:"Germany"},
+  EDNY:{name:"Friedrichshafen",       city:"Bodensee",          country:"🇩🇪",region:"Germany"},
+  EDMA:{name:"Augsburg",              city:"Augsburg",          country:"🇩🇪",region:"Germany"},
+  EDJA:{name:"Memmingen",             city:"Allgäu",            country:"🇩🇪",region:"Germany"},
+  EDHL:{name:"Lübeck Blankensee",     city:"Lübeck",            country:"🇩🇪",region:"Germany"},
+  EDHK:{name:"Kiel Holtenau",         city:"Kiel",              country:"🇩🇪",region:"Germany"},
+  EDXW:{name:"Sylt / Westerland",     city:"Sylt Island",       country:"🇩🇪",region:"Germany"},
   // Italy
-  LIML: 40, LIRF: 75, LIRN: 90, LIRI: 95, LIEO:100,
-  LICC:110, LICJ:115, LILO: 45, LIPB: 35, LIRJ: 55,
-  // Slovenia
-  LJPZ: 80, LJMB: 85,
-  // Switzerland
-  LSZS: 45, LSZR: 65, LSZH: 60, LSGG: 30,
-  // UK & Ireland
-  EGSS:110, EGTK:105, EGKB:100, EGFF:110, EGLF:105,
-  EGCB:130, EGPK:145, EGGP:125, EICK:130,
-  // France
-  LFPB: 75, LFMD: 10,
-  // Iberia
-  LEMD:130, LEIB: 65, LEPA: 70, LECO:175, LESU: 55,
-  LPPT:175, LPFR:185,
-  // Benelux
-  EHRD:125, EBBR:120,
-  // Scandinavia
-  EFHK:210, ENGM:195, ESSA:185, EKCH:165, EKRN:175,
-  // Eastern Europe
-  LYBE:110, LBSF:130, EPKK:155, LZTT:160, EYVI:205, LKCS:130,
-  // Croatia
-  LDRI: 85,
-  // Turkey & Med
-  LTFM:185, LTAI:185,
+  LIML:{name:"Milan Linate",          city:"Milan",             country:"🇮🇹",region:"Italy"},
+  LIRF:{name:"Rome Fiumicino",        city:"Rome",              country:"🇮🇹",region:"Italy"},
+  LIRN:{name:"Naples",                city:"Naples",            country:"🇮🇹",region:"Italy"},
+  LIRI:{name:"Salerno / Amalfi",      city:"Salerno",           country:"🇮🇹",region:"Italy"},
+  LIRJ:{name:"Marina di Campo (Elba)",city:"Elba Island",       country:"🇮🇹",region:"Italy"},
+  LIEO:{name:"Olbia (Sardinia)",      city:"Olbia",             country:"🇮🇹",region:"Italy"},
+  LICC:{name:"Catania (Sicily)",      city:"Catania",           country:"🇮🇹",region:"Italy"},
+  LICJ:{name:"Palermo (Sicily)",      city:"Palermo",           country:"🇮🇹",region:"Italy"},
+  LILO:{name:"Sondrio",               city:"Sondrio",           country:"🇮🇹",region:"Italy"},
+  LIPB:{name:"Bolzano",               city:"Bolzano",           country:"🇮🇹",region:"Italy"},
+  // Slovenia / Croatia
+  LJPZ:{name:"Portorož",              city:"Portorož",          country:"🇸🇮",region:"Adriatic"},
+  LJMB:{name:"Maribor",               city:"Maribor",           country:"🇸🇮",region:"Adriatic"},
+  LDRI:{name:"Rijeka",                city:"Rijeka",            country:"🇭🇷",region:"Adriatic"},
   // Greece
-  LGAV:130, LGIR:145, LGKO:150, LGKR:120, LGRP:150, LGSM:140,
+  LGAV:{name:"Athens",                city:"Athens",            country:"🇬🇷",region:"Greece"},
+  LGIR:{name:"Heraklion (Crete)",     city:"Crete",             country:"🇬🇷",region:"Greece"},
+  LGKO:{name:"Kos",                   city:"Kos",               country:"🇬🇷",region:"Greece"},
+  LGKR:{name:"Corfu",                 city:"Corfu",             country:"🇬🇷",region:"Greece"},
+  LGRP:{name:"Rhodes",                city:"Rhodes",            country:"🇬🇷",region:"Greece"},
+  LGSM:{name:"Samos",                 city:"Samos",             country:"🇬🇷",region:"Greece"},
+  // UK / Ireland
+  EGSS:{name:"London Stansted",       city:"London",            country:"🇬🇧",region:"UK"},
+  EGTK:{name:"Oxford Kidlington",     city:"Oxford",            country:"🇬🇧",region:"UK"},
+  EGKB:{name:"London Biggin Hill",    city:"London",            country:"🇬🇧",region:"UK"},
+  EGLF:{name:"Farnborough",           city:"Hampshire",         country:"🇬🇧",region:"UK"},
+  EGFF:{name:"Cardiff",               city:"Cardiff",           country:"🇬🇧",region:"UK"},
+  EGCB:{name:"Manchester Barton",     city:"Manchester",        country:"🇬🇧",region:"UK"},
+  EGGP:{name:"Liverpool John Lennon", city:"Liverpool",         country:"🇬🇧",region:"UK"},
+  EICK:{name:"Cork",                  city:"Cork",              country:"🇮🇪",region:"UK"},
+  // Benelux
+  EBBR:{name:"Brussels",              city:"Brussels",          country:"🇧🇪",region:"Western Europe"},
+  EHRD:{name:"Rotterdam The Hague",   city:"Rotterdam",         country:"🇳🇱",region:"Western Europe"},
+  // Scandinavia
+  EKCH:{name:"Copenhagen",            city:"Copenhagen",        country:"🇩🇰",region:"Scandinavia"},
+  EKRN:{name:"Bornholm (Rønne)",      city:"Bornholm",          country:"🇩🇰",region:"Scandinavia"},
+  ENGM:{name:"Oslo Gardermoen",       city:"Oslo",              country:"🇳🇴",region:"Scandinavia"},
+  ESSA:{name:"Stockholm Arlanda",     city:"Stockholm",         country:"🇸🇪",region:"Scandinavia"},
+  EFHK:{name:"Helsinki",              city:"Helsinki",          country:"🇫🇮",region:"Scandinavia"},
+  // Eastern Europe
+  LYBE:{name:"Belgrade",              city:"Belgrade",          country:"🇷🇸",region:"Eastern Europe"},
+  LBSF:{name:"Sofia",                 city:"Sofia",             country:"🇧🇬",region:"Eastern Europe"},
+  EPKK:{name:"Kraków",                city:"Kraków",            country:"🇵🇱",region:"Eastern Europe"},
+  LZTT:{name:"Poprad-Tatry",          city:"High Tatras",       country:"🇸🇰",region:"Eastern Europe"},
+  EYVI:{name:"Vilnius",               city:"Vilnius",           country:"🇱🇹",region:"Eastern Europe"},
+  LKCS:{name:"České Budějovice",      city:"South Bohemia",     country:"🇨🇿",region:"Eastern Europe"},
+  // Additional airports used in chains
+  EHAM:{name:"Amsterdam Schiphol",   city:"Amsterdam",         country:"🇳🇱",region:"Western Europe"},
+  EDDB:{name:"Berlin Brandenburg",   city:"Berlin",            country:"🇩🇪",region:"Germany"},
+  LEBL:{name:"Barcelona",            city:"Barcelona",         country:"🇪🇸",region:"Iberia"},
+  LOWI:{name:"Innsbruck",            city:"Innsbruck",         country:"🇦🇹",region:"Austria"},
+  // Further airports needed for chains 11-30
+  EGPH:{name:"Edinburgh",            city:"Edinburgh",         country:"🇬🇧",region:"UK"},
+  ELLX:{name:"Luxembourg Findel",    city:"Luxembourg",        country:"🇱🇺",region:"Western Europe"},
+  LDDU:{name:"Dubrovnik",            city:"Dubrovnik",         country:"🇭🇷",region:"Adriatic"},
+  LYTV:{name:"Tivat",                city:"Kotor Bay",         country:"🇲🇪",region:"Adriatic"},
+  LMML:{name:"Malta Int'l",          city:"Valletta",          country:"🇲🇹",region:"Med & East"},
+  LFBD:{name:"Bordeaux Mérignac",    city:"Bordeaux",          country:"🇫🇷",region:"France"},
+  LFBO:{name:"Toulouse Blagnac",     city:"Toulouse",          country:"🇫🇷",region:"France"},
+  LFLL:{name:"Lyon Saint-Exupéry",   city:"Lyon",              country:"🇫🇷",region:"France"},
+  LSGS:{name:"Sion",                 city:"Sion / Valais",     country:"🇨🇭",region:"Alps"},
+  LSZB:{name:"Bern Belp",            city:"Bern",              country:"🇨🇭",region:"Alps"},
+  LIPE:{name:"Bologna Guglielmo Marconi",city:"Bologna",       country:"🇮🇹",region:"Italy"},
+  LIRA:{name:"Rome Ciampino",        city:"Rome",              country:"🇮🇹",region:"Italy"},
+  LHBP:{name:"Budapest Ferenc Liszt",city:"Budapest",          country:"🇭🇺",region:"Eastern Europe"},
+  // Iberia / Portugal
+  LEMD:{name:"Madrid Barajas",        city:"Madrid",            country:"🇪🇸",region:"Iberia"},
+  LEIB:{name:"Ibiza",                 city:"Ibiza",             country:"🇪🇸",region:"Iberia"},
+  LEPA:{name:"Palma de Mallorca",     city:"Palma",             country:"🇪🇸",region:"Iberia"},
+  LECO:{name:"A Coruña",              city:"A Coruña",          country:"🇪🇸",region:"Iberia"},
+  LESU:{name:"La Seu d'Urgell",       city:"Andorra region",    country:"🇪🇸",region:"Iberia"},
+  LPPT:{name:"Lisbon",                city:"Lisbon",            country:"🇵🇹",region:"Iberia"},
+  LPFR:{name:"Faro (Algarve)",        city:"Faro",              country:"🇵🇹",region:"Iberia"},
+  // Turkey / Med
+  LTFM:{name:"Istanbul",              city:"Istanbul",          country:"🇹🇷",region:"Med & East"},
+  LTAI:{name:"Antalya",               city:"Antalya",           country:"🇹🇷",region:"Med & East"},
 };
 
 // ═══════════════════════════════════════════════════════════
-//  CURATED PAIRINGS
-//  All depart from LFMN. std = local departure (minutes).
-//  dur = block time. type: charter|reposit|positioning
+//  BLOCK TIMES FROM/BETWEEN AIRPORTS (minutes, P300E 464kt)
+//  Key: "DEP-ARR". Symmetric unless stated.
 // ═══════════════════════════════════════════════════════════
-const PAIRINGS = [
-
-// ══════════════════════════════
-//  2-LEG – SIMPLE DAY RETURNS
-// ══════════════════════════════
-
-{id:"R01",name:"Nice → Geneva",desc:"30-min Riviera–Lac Léman hop, return",
- legs:[{dep:"LFMN",arr:"LSGG",std:8*60,   dur:30, type:"charter"},
-       {dep:"LSGG",arr:"LFMN",std:13*60,  dur:30, type:"charter"}],
- weekday:true,weekend:true},
-
-{id:"R02",name:"Nice → Cannes",desc:"Coastal repositioning, 10-min run",
- legs:[{dep:"LFMN",arr:"LFMD",std:7*60+30,dur:10, type:"reposit"},
-       {dep:"LFMD",arr:"LFMN",std:18*60,  dur:10, type:"reposit"}],
- weekday:true,weekend:true},
-
-{id:"R03",name:"Nice → Zurich",desc:"Swiss finance day trip",
- legs:[{dep:"LFMN",arr:"LSZH",std:7*60+30,dur:60, type:"charter"},
-       {dep:"LSZH",arr:"LFMN",std:19*60,  dur:60, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"R04",name:"Nice → Samedan",desc:"Ski charter Engadin, return",
- legs:[{dep:"LFMN",arr:"LSZS",std:8*60,   dur:45, type:"charter"},
-       {dep:"LSZS",arr:"LFMN",std:16*60,  dur:45, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"R05",name:"Nice → Milan Linate",desc:"City-centre Milan exec",
- legs:[{dep:"LFMN",arr:"LIML",std:8*60,   dur:40, type:"charter"},
-       {dep:"LIML",arr:"LFMN",std:18*60,  dur:40, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"R06",name:"Nice → Innsbruck",desc:"Alpine ski connect",
- legs:[{dep:"LFMN",arr:"LOWI",std:8*60,   dur:55, type:"charter"},
-       {dep:"LOWI",arr:"LFMN",std:17*60,  dur:55, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"R07",name:"Nice → Friedrichshafen",desc:"Bodensee business run",
- legs:[{dep:"LFMN",arr:"EDNY",std:8*60,   dur:50, type:"charter"},
-       {dep:"EDNY",arr:"LFMN",std:17*60,  dur:50, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"R08",name:"Nice → Augsburg",desc:"Munich area GA field",
- legs:[{dep:"LFMN",arr:"EDMA",std:8*60,   dur:60, type:"charter"},
-       {dep:"EDMA",arr:"LFMN",std:18*60,  dur:60, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"R09",name:"Nice → Memmingen",desc:"Allgäu / Southern Bavaria",
- legs:[{dep:"LFMN",arr:"EDJA",std:8*60,   dur:55, type:"charter"},
-       {dep:"EDJA",arr:"LFMN",std:17*60,  dur:55, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"R10",name:"Nice → Altenrhein",desc:"Bodensee / St Gallen bizjet",
- legs:[{dep:"LFMN",arr:"LSZR",std:8*60,   dur:65, type:"charter"},
-       {dep:"LSZR",arr:"LFMN",std:17*60,  dur:65, type:"charter"}],
- weekday:true,weekend:true},
-
-{id:"R11",name:"Nice → Salzburg",desc:"Mozart city charter",
- legs:[{dep:"LFMN",arr:"LOWS",std:8*60,   dur:70, type:"charter"},
-       {dep:"LOWS",arr:"LFMN",std:18*60,  dur:70, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"R12",name:"Nice → Vienna",desc:"Austrian capital day trip",
- legs:[{dep:"LFMN",arr:"LOWW",std:7*60+30,dur:95, type:"charter"},
-       {dep:"LOWW",arr:"LFMN",std:19*60,  dur:95, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"R13",name:"Nice → Paris Le Bourget",desc:"VIP terminal Paris",
- legs:[{dep:"LFMN",arr:"LFPB",std:8*60,   dur:75, type:"charter"},
-       {dep:"LFPB",arr:"LFMN",std:19*60,  dur:75, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"R14",name:"Nice → Rome Fiumicino",desc:"Eternal city business",
- legs:[{dep:"LFMN",arr:"LIRF",std:8*60,   dur:75, type:"charter"},
-       {dep:"LIRF",arr:"LFMN",std:18*60,  dur:75, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"R15",name:"Nice → Ibiza",desc:"Balearic island charter",
- legs:[{dep:"LFMN",arr:"LEIB",std:8*60+30,dur:65, type:"charter"},
-       {dep:"LEIB",arr:"LFMN",std:18*60,  dur:65, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"R16",name:"Nice → Palma",desc:"Mallorca VIP run",
- legs:[{dep:"LFMN",arr:"LEPA",std:8*60+30,dur:70, type:"charter"},
-       {dep:"LEPA",arr:"LFMN",std:18*60,  dur:70, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"R17",name:"Nice → Biggin Hill",desc:"South London bizjet GA",
- legs:[{dep:"LFMN",arr:"EGKB",std:8*60,  dur:100, type:"charter"},
-       {dep:"EGKB",arr:"LFMN",std:19*60, dur:100, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"R18",name:"Nice → Egelsbach",desc:"Frankfurt GA field, slot-free",
- legs:[{dep:"LFMN",arr:"EDFE",std:8*60,   dur:95, type:"charter"},
-       {dep:"EDFE",arr:"LFMN",std:19*60,  dur:95, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"R19",name:"Nice → Portorož ends away",desc:"Slovenian Adriatic overnight",
- legs:[{dep:"LFMN",arr:"LJPZ",std:9*60,   dur:80, type:"charter"},
-       {dep:"LJPZ",arr:"LJPZ",std:0,       dur:0,  type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"R20",name:"Nice → Naples ends away",desc:"Southern Italy overnight",
- legs:[{dep:"LFMN",arr:"LIRN",std:9*60,   dur:90, type:"charter"},
-       {dep:"LIRN",arr:"LIRN",std:0,       dur:0,  type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"R21",name:"Nice → Salerno ends away",desc:"Amalfi Coast overnight",
- legs:[{dep:"LFMN",arr:"LIRI",std:9*60,   dur:95, type:"charter"},
-       {dep:"LIRI",arr:"LIRI",std:0,       dur:0,  type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"R22",name:"Nice → Oxford",desc:"Oxford bizjet day trip",
- legs:[{dep:"LFMN",arr:"EGTK",std:8*60,  dur:105, type:"charter"},
-       {dep:"EGTK",arr:"LFMN",std:19*60, dur:105, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"R23",name:"Nice → Stansted ends away",desc:"London Stansted overnight",
- legs:[{dep:"LFMN",arr:"EGSS",std:8*60,  dur:110, type:"charter"},
-       {dep:"EGSS",arr:"EGSS",std:0,      dur:0,   type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"R24",name:"Nice → Madrid ends away",desc:"Spanish capital overnight",
- legs:[{dep:"LFMN",arr:"LEMD",std:8*60,  dur:130, type:"charter"},
-       {dep:"LEMD",arr:"LEMD",std:0,      dur:0,   type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"R25",name:"Nice → Sylt ends away",desc:"North Sea island overnight",
- legs:[{dep:"LFMN",arr:"EDXW",std:7*60+30,dur:155,type:"charter"},
-       {dep:"EDXW",arr:"EDXW",std:0,       dur:0,  type:"charter"}],
- weekday:false,weekend:true},
-
-// ══════════════════════════════
-//  3-LEG PAIRINGS
-// ══════════════════════════════
-
-{id:"T01",name:"Geneva – Zurich – Nice",desc:"Swiss dual-city circuit",
- legs:[{dep:"LFMN",arr:"LSGG",std:7*60+30,dur:30, type:"charter"},
-       {dep:"LSGG",arr:"LSZH",std:9*60+30, dur:30, type:"charter"},
-       {dep:"LSZH",arr:"LFMN",std:16*60,   dur:60, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"T02",name:"Geneva – Samedan – Nice",desc:"Geneva drop, ski collect",
- legs:[{dep:"LFMN",arr:"LSGG",std:8*60,    dur:30, type:"charter"},
-       {dep:"LSGG",arr:"LSZS",std:11*60,   dur:35, type:"charter"},
-       {dep:"LSZS",arr:"LFMN",std:15*60,   dur:45, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"T03",name:"Zurich – Altenrhein – Nice",desc:"Swiss loop via Bodensee",
- legs:[{dep:"LFMN",arr:"LSZH",std:7*60+30,dur:60, type:"charter"},
-       {dep:"LSZH",arr:"LSZR",std:11*60,   dur:30, type:"charter"},
-       {dep:"LSZR",arr:"LFMN",std:15*60,   dur:65, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"T04",name:"Samedan – Innsbruck – Nice",desc:"Alpine ski circuit",
- legs:[{dep:"LFMN",arr:"LSZS",std:8*60,    dur:45, type:"charter"},
-       {dep:"LSZS",arr:"LOWI",std:11*60,   dur:30, type:"charter"},
-       {dep:"LOWI",arr:"LFMN",std:15*60,   dur:55, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"T05",name:"Friedrichshafen – Memmingen – Nice",desc:"Bavarian GA double",
- legs:[{dep:"LFMN",arr:"EDNY",std:8*60,    dur:50, type:"charter"},
-       {dep:"EDNY",arr:"EDJA",std:10*60+30,dur:20, type:"charter"},
-       {dep:"EDJA",arr:"LFMN",std:15*60,   dur:55, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"T06",name:"Augsburg – Friedrichshafen – Nice",desc:"South Bavaria loop",
- legs:[{dep:"LFMN",arr:"EDMA",std:7*60+30,dur:60, type:"charter"},
-       {dep:"EDMA",arr:"EDNY",std:11*60,   dur:25, type:"charter"},
-       {dep:"EDNY",arr:"LFMN",std:15*60,   dur:50, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"T07",name:"Milan – Rome – Nice",desc:"Italian capital diagonal",
- legs:[{dep:"LFMN",arr:"LIML",std:8*60,    dur:40, type:"charter"},
-       {dep:"LIML",arr:"LIRF",std:11*60,   dur:65, type:"charter"},
-       {dep:"LIRF",arr:"LFMN",std:17*60,   dur:75, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"T08",name:"Rome – Naples – Nice",desc:"Southern Italy return arc",
- legs:[{dep:"LFMN",arr:"LIRF",std:8*60,    dur:75, type:"charter"},
-       {dep:"LIRF",arr:"LIRN",std:12*60,   dur:45, type:"charter"},
-       {dep:"LIRN",arr:"LFMN",std:17*60,   dur:90, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"T09",name:"Naples – Salerno – Nice",desc:"Campania coast circuit",
- legs:[{dep:"LFMN",arr:"LIRN",std:8*60,    dur:90, type:"charter"},
-       {dep:"LIRN",arr:"LIRI",std:12*60,   dur:20, type:"charter"},
-       {dep:"LIRI",arr:"LFMN",std:16*60,   dur:95, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"T10",name:"Portorož – Milan – Nice",desc:"Adriatic–Lombardy return",
- legs:[{dep:"LFMN",arr:"LJPZ",std:8*60,    dur:80, type:"charter"},
-       {dep:"LJPZ",arr:"LIML",std:11*60+30,dur:55, type:"charter"},
-       {dep:"LIML",arr:"LFMN",std:16*60,   dur:40, type:"charter"}],
- weekday:true,weekend:true},
-
-{id:"T11",name:"Ibiza – Palma – Nice",desc:"Balearic island hop return",
- legs:[{dep:"LFMN",arr:"LEIB",std:8*60+30,dur:65, type:"charter"},
-       {dep:"LEIB",arr:"LEPA",std:12*60,   dur:25, type:"charter"},
-       {dep:"LEPA",arr:"LFMN",std:16*60,   dur:70, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"T12",name:"Vienna – Innsbruck – Nice",desc:"Austrian circuit via Alps",
- legs:[{dep:"LFMN",arr:"LOWW",std:7*60+30,dur:95, type:"charter"},
-       {dep:"LOWW",arr:"LOWI",std:12*60,   dur:35, type:"charter"},
-       {dep:"LOWI",arr:"LFMN",std:16*60,   dur:55, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"T13",name:"Salzburg – Samedan – Nice",desc:"Austrian ski to Engadin",
- legs:[{dep:"LFMN",arr:"LOWS",std:8*60,    dur:70, type:"charter"},
-       {dep:"LOWS",arr:"LSZS",std:11*60+30,dur:35, type:"charter"},
-       {dep:"LSZS",arr:"LFMN",std:15*60,   dur:45, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"T14",name:"Biggin Hill – Paris LBG – Nice",desc:"London–Paris VIP arc",
- legs:[{dep:"LFMN",arr:"EGKB",std:8*60,   dur:100, type:"charter"},
-       {dep:"EGKB",arr:"LFPB",std:12*60,  dur:50,  type:"charter"},
-       {dep:"LFPB",arr:"LFMN",std:17*60,  dur:75,  type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"T15",name:"Oxford – Stansted – Nice",desc:"UK dual-airport day",
- legs:[{dep:"LFMN",arr:"EGTK",std:8*60,   dur:105, type:"charter"},
-       {dep:"EGTK",arr:"EGSS",std:12*60+30,dur:20, type:"charter"},
-       {dep:"EGSS",arr:"LFMN",std:17*60,  dur:110, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"T16",name:"Nice → Madrid – Ibiza ends away",desc:"Iberia two-stop overnight",
- legs:[{dep:"LFMN",arr:"LEMD",std:8*60,   dur:130, type:"charter"},
-       {dep:"LEMD",arr:"LEIB",std:13*60,  dur:80,  type:"charter"},
-       {dep:"LEIB",arr:"LEIB",std:0,       dur:0,   type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"T17",name:"Egelsbach – Altenrhein – Nice",desc:"Frankfurt GA to Bodensee",
- legs:[{dep:"LFMN",arr:"EDFE",std:7*60+30,dur:95, type:"charter"},
-       {dep:"EDFE",arr:"LSZR",std:12*60,   dur:55, type:"charter"},
-       {dep:"LSZR",arr:"LFMN",std:17*60,   dur:65, type:"charter"}],
- weekday:true,weekend:false},
-
-// ══════════════════════════════
-//  4-LEG PAIRINGS
-// ══════════════════════════════
-
-{id:"F01",name:"Swiss Grand Circuit",desc:"Geneva – Samedan – Altenrhein – Zurich",
- legs:[{dep:"LFMN",arr:"LSGG",std:7*60+30,dur:30, type:"charter"},
-       {dep:"LSGG",arr:"LSZS",std:9*60+30, dur:35, type:"charter"},
-       {dep:"LSZS",arr:"LSZR",std:13*60,   dur:30, type:"charter"},
-       {dep:"LSZR",arr:"LFMN",std:17*60,   dur:65, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"F02",name:"Alpine Ski Day",desc:"Samedan – Innsbruck – Salzburg – Nice",
- legs:[{dep:"LFMN",arr:"LSZS",std:7*60+30,dur:45, type:"charter"},
-       {dep:"LSZS",arr:"LOWI",std:10*60,   dur:30, type:"charter"},
-       {dep:"LOWI",arr:"LOWS",std:13*60,   dur:35, type:"charter"},
-       {dep:"LOWS",arr:"LFMN",std:17*60,   dur:70, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"F03",name:"Bavaria GA Loop",desc:"Friedrichshafen – Augsburg – Memmingen – Nice",
- legs:[{dep:"LFMN",arr:"EDNY",std:7*60+30,dur:50, type:"charter"},
-       {dep:"EDNY",arr:"EDMA",std:10*60,   dur:25, type:"charter"},
-       {dep:"EDMA",arr:"EDJA",std:13*60,   dur:20, type:"charter"},
-       {dep:"EDJA",arr:"LFMN",std:17*60,   dur:55, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"F04",name:"Italian Peninsula",desc:"Milan – Rome – Naples – Salerno",
- legs:[{dep:"LFMN",arr:"LIML",std:7*60+30,dur:40, type:"charter"},
-       {dep:"LIML",arr:"LIRF",std:10*60,   dur:65, type:"charter"},
-       {dep:"LIRF",arr:"LIRN",std:14*60+30,dur:45, type:"charter"},
-       {dep:"LIRN",arr:"LIRI",std:18*60,   dur:20, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"F05",name:"Italian Peninsula return",desc:"Milan – Rome – Naples – Nice",
- legs:[{dep:"LFMN",arr:"LIML",std:7*60,    dur:40, type:"charter"},
-       {dep:"LIML",arr:"LIRF",std:9*60+30, dur:65, type:"charter"},
-       {dep:"LIRF",arr:"LIRN",std:14*60,   dur:45, type:"charter"},
-       {dep:"LIRN",arr:"LFMN",std:18*60,   dur:90, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"F06",name:"Austria + Swiss",desc:"Vienna – Salzburg – Innsbruck – Nice",
- legs:[{dep:"LFMN",arr:"LOWW",std:7*60,    dur:95, type:"charter"},
-       {dep:"LOWW",arr:"LOWS",std:11*60+30,dur:35, type:"charter"},
-       {dep:"LOWS",arr:"LOWI",std:15*60,   dur:35, type:"charter"},
-       {dep:"LOWI",arr:"LFMN",std:19*60,   dur:55, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"F07",name:"Adriatic & Alps",desc:"Portorož – Salzburg – Samedan – Nice",
- legs:[{dep:"LFMN",arr:"LJPZ",std:8*60,    dur:80, type:"charter"},
-       {dep:"LJPZ",arr:"LOWS",std:11*60+30,dur:55, type:"charter"},
-       {dep:"LOWS",arr:"LSZS",std:15*60,   dur:35, type:"charter"},
-       {dep:"LSZS",arr:"LFMN",std:18*60,   dur:45, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"F08",name:"UK Circuit",desc:"Oxford – Biggin Hill – Stansted – Nice",
- legs:[{dep:"LFMN",arr:"EGTK",std:7*60+30,dur:105,type:"charter"},
-       {dep:"EGTK",arr:"EGKB",std:12*60,  dur:20,  type:"charter"},
-       {dep:"EGKB",arr:"EGSS",std:15*60,  dur:20,  type:"charter"},
-       {dep:"EGSS",arr:"LFMN",std:18*60,  dur:110, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"F09",name:"Iberia Full Day",desc:"Madrid – Palma – Ibiza – Nice",
- legs:[{dep:"LFMN",arr:"LEMD",std:7*60,   dur:130, type:"charter"},
-       {dep:"LEMD",arr:"LEPA",std:11*60,  dur:80,  type:"charter"},
-       {dep:"LEPA",arr:"LEIB",std:15*60,  dur:25,  type:"charter"},
-       {dep:"LEIB",arr:"LFMN",std:18*60,  dur:65,  type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"F10",name:"Sylt via Germany",desc:"Egelsbach – Friedrichshafen – Sylt – Nice",
- legs:[{dep:"LFMN",arr:"EDFE",std:7*60,    dur:95, type:"reposit"},
-       {dep:"EDFE",arr:"EDNY",std:11*60,   dur:55, type:"charter"},
-       {dep:"EDNY",arr:"EDXW",std:14*60,   dur:85, type:"charter"},
-       {dep:"EDXW",arr:"LFMN",std:18*60,  dur:155, type:"reposit"}],
- weekday:true,weekend:false},
-
-// ══════════════════════════════
-//  5-LEG PAIRINGS
-// ══════════════════════════════
-
-{id:"V01",name:"Full Swiss Alpine",desc:"Geneva – Samedan – Altenrhein – Zurich – Nice",
- legs:[{dep:"LFMN",arr:"LSGG",std:6*60+30,dur:30, type:"charter"},
-       {dep:"LSGG",arr:"LSZS",std:8*60+30, dur:35, type:"charter"},
-       {dep:"LSZS",arr:"LSZR",std:12*60,   dur:30, type:"charter"},
-       {dep:"LSZR",arr:"LSZH",std:15*60,   dur:30, type:"charter"},
-       {dep:"LSZH",arr:"LFMN",std:18*60,   dur:60, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"V02",name:"Deep Austria Circuit",desc:"Vienna – Salzburg – Innsbruck – Samedan – Nice",
- legs:[{dep:"LFMN",arr:"LOWW",std:6*60+30, dur:95, type:"charter"},
-       {dep:"LOWW",arr:"LOWS",std:11*60,   dur:35, type:"charter"},
-       {dep:"LOWS",arr:"LOWI",std:14*60,   dur:35, type:"charter"},
-       {dep:"LOWI",arr:"LSZS",std:17*60,   dur:30, type:"charter"},
-       {dep:"LSZS",arr:"LFMN",std:20*60,   dur:45, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"V03",name:"Bavaria to Italian Coast",desc:"FDH – EDMA – EDJA – Milan – Nice",
- legs:[{dep:"LFMN",arr:"EDNY",std:6*60+30, dur:50, type:"charter"},
-       {dep:"EDNY",arr:"EDMA",std:9*60,    dur:25, type:"charter"},
-       {dep:"EDMA",arr:"EDJA",std:12*60,   dur:20, type:"charter"},
-       {dep:"EDJA",arr:"LIML",std:15*60,   dur:35, type:"charter"},
-       {dep:"LIML",arr:"LFMN",std:18*60,   dur:40, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"V04",name:"Adriatic – Alpine – Riviera",desc:"LJPZ – Vienna – Innsbruck – Samedan – Nice",
- legs:[{dep:"LFMN",arr:"LJPZ",std:7*60,    dur:80, type:"charter"},
-       {dep:"LJPZ",arr:"LOWW",std:10*60+30,dur:70, type:"charter"},
-       {dep:"LOWW",arr:"LOWI",std:14*60,   dur:35, type:"charter"},
-       {dep:"LOWI",arr:"LSZS",std:17*60,   dur:30, type:"charter"},
-       {dep:"LSZS",arr:"LFMN",std:20*60,   dur:45, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"V05",name:"Italian Grand Slam",desc:"Milan – Rome – Naples – Salerno – Nice",
- legs:[{dep:"LFMN",arr:"LIML",std:6*60+30, dur:40, type:"charter"},
-       {dep:"LIML",arr:"LIRF",std:9*60,    dur:65, type:"charter"},
-       {dep:"LIRF",arr:"LIRN",std:13*60+30,dur:45, type:"charter"},
-       {dep:"LIRN",arr:"LIRI",std:17*60,   dur:20, type:"charter"},
-       {dep:"LIRI",arr:"LFMN",std:20*60,   dur:95, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"V06",name:"Iberia & France",desc:"Madrid – Palma – Ibiza – Cannes – Nice",
- legs:[{dep:"LFMN",arr:"LEMD",std:7*60,   dur:130, type:"charter"},
-       {dep:"LEMD",arr:"LEPA",std:11*60,  dur:80,  type:"charter"},
-       {dep:"LEPA",arr:"LEIB",std:15*60,  dur:25,  type:"charter"},
-       {dep:"LEIB",arr:"LFMD",std:18*60,  dur:65,  type:"charter"},
-       {dep:"LFMD",arr:"LFMN",std:21*60+30,dur:10, type:"reposit"}],
- weekday:false,weekend:true},
-
-{id:"V07",name:"UK & France",desc:"Oxford – Biggin Hill – Stansted – Paris LBG – Nice",
- legs:[{dep:"LFMN",arr:"EGTK",std:6*60+30,dur:105,type:"charter"},
-       {dep:"EGTK",arr:"EGKB",std:11*60,  dur:20,  type:"charter"},
-       {dep:"EGKB",arr:"EGSS",std:14*60,  dur:20,  type:"charter"},
-       {dep:"EGSS",arr:"LFPB",std:17*60,  dur:50,  type:"charter"},
-       {dep:"LFPB",arr:"LFMN",std:21*60,  dur:75,  type:"charter"}],
- weekday:true,weekend:false},
-
-// ══════════════════════════════════════════════
-//  NEW PAIRINGS – FULL apt.txt AIRPORT SET
-// ══════════════════════════════════════════════
-
-// ── Austria expanded ──
-{id:"X01",name:"Nice → Graz",desc:"Styrian capital charter",
- legs:[{dep:"LFMN",arr:"LOWG",std:8*60,   dur:80, type:"charter"},
-       {dep:"LOWG",arr:"LFMN",std:18*60,  dur:80, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X02",name:"Nice → Klagenfurt",desc:"Carinthia / Wörthersee",
- legs:[{dep:"LFMN",arr:"LOWK",std:8*60,   dur:75, type:"charter"},
-       {dep:"LOWK",arr:"LFMN",std:18*60,  dur:75, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"X03",name:"Nice → Linz",desc:"Upper Austria industrial hub",
- legs:[{dep:"LFMN",arr:"LOWL",std:8*60,   dur:90, type:"charter"},
-       {dep:"LOWL",arr:"LFMN",std:19*60,  dur:90, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X04",name:"Vienna – Salzburg – Innsbruck – Nice",desc:"Full Austrian arc return",
- legs:[{dep:"LFMN",arr:"LOWW",std:7*60,   dur:95, type:"charter"},
-       {dep:"LOWW",arr:"LOWS",std:11*60+30,dur:35,type:"charter"},
-       {dep:"LOWS",arr:"LOWI",std:14*60+30,dur:35,type:"charter"},
-       {dep:"LOWI",arr:"LFMN",std:18*60,  dur:55, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"X05",name:"Graz – Klagenfurt – Nice",desc:"Southern Austria double",
- legs:[{dep:"LFMN",arr:"LOWG",std:8*60,   dur:80, type:"charter"},
-       {dep:"LOWG",arr:"LOWK",std:11*60,  dur:30, type:"charter"},
-       {dep:"LOWK",arr:"LFMN",std:14*60+30,dur:75,type:"charter"}],
- weekday:true,weekend:false},
-
-// ── Italy: Elba, Sondrio, Bolzano, Sardinia, Sicily ──
-{id:"X10",name:"Nice → Elba (Marina di Campo)",desc:"Tuscan island GA hop",
- legs:[{dep:"LFMN",arr:"LIRJ",std:9*60,   dur:55, type:"charter"},
-       {dep:"LIRJ",arr:"LFMN",std:16*60,  dur:55, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"X11",name:"Nice → Bolzano",desc:"South Tyrol / Dolomites charter",
- legs:[{dep:"LFMN",arr:"LIPB",std:8*60+30,dur:35, type:"charter"},
-       {dep:"LIPB",arr:"LFMN",std:15*60,  dur:35, type:"charter"}],
- weekday:true,weekend:true},
-
-{id:"X12",name:"Bolzano – Samedan – Nice",desc:"Dolomites to Engadin ski",
- legs:[{dep:"LFMN",arr:"LIPB",std:8*60,   dur:35, type:"charter"},
-       {dep:"LIPB",arr:"LSZS",std:11*60,  dur:30, type:"charter"},
-       {dep:"LSZS",arr:"LFMN",std:15*60,  dur:45, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"X13",name:"Nice → Sondrio",desc:"Valtellina valley GA field",
- legs:[{dep:"LFMN",arr:"LILO",std:9*60,   dur:45, type:"charter"},
-       {dep:"LILO",arr:"LFMN",std:16*60,  dur:45, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X14",name:"Nice → Olbia (Sardinia)",desc:"Costa Smeralda VIP",
- legs:[{dep:"LFMN",arr:"LIEO",std:8*60,   dur:100,type:"charter"},
-       {dep:"LIEO",arr:"LFMN",std:18*60,  dur:100,type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"X15",name:"Nice → Catania",desc:"Sicily eastern charter",
- legs:[{dep:"LFMN",arr:"LICC",std:8*60,   dur:110,type:"charter"},
-       {dep:"LICC",arr:"LFMN",std:19*60,  dur:110,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X16",name:"Nice → Palermo",desc:"Sicily western charter",
- legs:[{dep:"LFMN",arr:"LICJ",std:8*60,   dur:115,type:"charter"},
-       {dep:"LICJ",arr:"LFMN",std:19*60+30,dur:115,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X17",name:"Catania – Palermo – Nice",desc:"Sicily twin-city return",
- legs:[{dep:"LFMN",arr:"LICC",std:8*60,   dur:110,type:"charter"},
-       {dep:"LICC",arr:"LICJ",std:12*60,  dur:25, type:"charter"},
-       {dep:"LICJ",arr:"LFMN",std:16*60,  dur:115,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X18",name:"Elba – Rome – Naples – Nice",desc:"Tuscan island to southern Italy arc",
- legs:[{dep:"LFMN",arr:"LIRJ",std:8*60,   dur:55, type:"charter"},
-       {dep:"LIRJ",arr:"LIRF",std:11*60,  dur:50, type:"charter"},
-       {dep:"LIRF",arr:"LIRN",std:14*60+30,dur:45,type:"charter"},
-       {dep:"LIRN",arr:"LFMN",std:18*60+30,dur:90,type:"charter"}],
- weekday:false,weekend:true},
-
-// ── Germany expanded ──
-{id:"X20",name:"Nice → Munich",desc:"Bavarian capital charter",
- legs:[{dep:"LFMN",arr:"EDDM",std:8*60,   dur:65, type:"charter"},
-       {dep:"EDDM",arr:"LFMN",std:18*60,  dur:65, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X21",name:"Nice → Frankfurt",desc:"Financial capital charter",
- legs:[{dep:"LFMN",arr:"EDDF",std:8*60,   dur:100,type:"charter"},
-       {dep:"EDDF",arr:"LFMN",std:19*60,  dur:100,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X22",name:"Nice → Stuttgart",desc:"Baden-Württemberg run",
- legs:[{dep:"LFMN",arr:"EDDS",std:8*60,   dur:80, type:"charter"},
-       {dep:"EDDS",arr:"LFMN",std:18*60,  dur:80, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X23",name:"Nice → Düsseldorf",desc:"NRW charter",
- legs:[{dep:"LFMN",arr:"EDDL",std:8*60,   dur:120,type:"charter"},
-       {dep:"EDDL",arr:"LFMN",std:19*60+30,dur:120,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X24",name:"Nice → Cologne / Bonn",desc:"Rheinland executive",
- legs:[{dep:"LFMN",arr:"EDDK",std:8*60,   dur:115,type:"charter"},
-       {dep:"EDDK",arr:"LFMN",std:19*60,  dur:115,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X25",name:"Nice → Lübeck",desc:"Northern German port city",
- legs:[{dep:"LFMN",arr:"EDHL",std:8*60,   dur:145,type:"charter"},
-       {dep:"EDHL",arr:"LFMN",std:19*60+30,dur:145,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X26",name:"Nice → Kiel",desc:"Schleswig-Holstein charter",
- legs:[{dep:"LFMN",arr:"EDHK",std:8*60,   dur:150,type:"charter"},
-       {dep:"EDHK",arr:"LFMN",std:19*60+30,dur:150,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X27",name:"Munich – Düsseldorf – Sylt – Nice",desc:"German north–south sweep",
- legs:[{dep:"LFMN",arr:"EDDM",std:7*60,   dur:65, type:"charter"},
-       {dep:"EDDM",arr:"EDDL",std:10*60,  dur:65, type:"charter"},
-       {dep:"EDDL",arr:"EDXW",std:13*60+30,dur:55,type:"charter"},
-       {dep:"EDXW",arr:"LFMN",std:17*60,  dur:155,type:"reposit"}],
- weekday:true,weekend:false},
-
-{id:"X28",name:"Kiel – Lübeck – Nice",desc:"North German ports double",
- legs:[{dep:"LFMN",arr:"EDHK",std:7*60,   dur:150,type:"charter"},
-       {dep:"EDHK",arr:"EDHL",std:11*60+30,dur:20,type:"charter"},
-       {dep:"EDHL",arr:"LFMN",std:15*60+30,dur:145,type:"charter"}],
- weekday:true,weekend:false},
-
-// ── UK expanded ──
-{id:"X30",name:"Nice → Cardiff",desc:"Welsh capital charter",
- legs:[{dep:"LFMN",arr:"EGFF",std:8*60,   dur:110,type:"charter"},
-       {dep:"EGFF",arr:"LFMN",std:19*60,  dur:110,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X31",name:"Nice → Farnborough",desc:"Hampshire VIP GA",
- legs:[{dep:"LFMN",arr:"EGLF",std:8*60,   dur:105,type:"charter"},
-       {dep:"EGLF",arr:"LFMN",std:19*60,  dur:105,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X32",name:"Nice → Manchester Barton",desc:"Manchester GA bizjet field",
- legs:[{dep:"LFMN",arr:"EGCB",std:8*60,   dur:130,type:"charter"},
-       {dep:"EGCB",arr:"LFMN",std:19*60+30,dur:130,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X33",name:"Nice → Liverpool ends away",desc:"Liverpool John Lennon overnight",
- legs:[{dep:"LFMN",arr:"EGGP",std:8*60,   dur:125,type:"charter"},
-       {dep:"EGGP",arr:"EGGP",std:0,       dur:0,  type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X34",name:"Cardiff – Farnborough – Nice",desc:"Welsh–English arc return",
- legs:[{dep:"LFMN",arr:"EGFF",std:8*60,   dur:110,type:"charter"},
-       {dep:"EGFF",arr:"EGLF",std:11*60+30,dur:30, type:"charter"},
-       {dep:"EGLF",arr:"LFMN",std:16*60,  dur:105,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X35",name:"Cork – Oxford – Nice",desc:"Ireland–UK–Riviera arc",
- legs:[{dep:"LFMN",arr:"EICK",std:8*60,   dur:130,type:"charter"},
-       {dep:"EICK",arr:"EGTK",std:12*60,  dur:60, type:"charter"},
-       {dep:"EGTK",arr:"LFMN",std:17*60,  dur:105,type:"charter"}],
- weekday:true,weekend:false},
-
-// ── Iberia & Portugal ──
-{id:"X40",name:"Nice → A Coruña ends away",desc:"Galicia, northwest Spain overnight",
- legs:[{dep:"LFMN",arr:"LECO",std:8*60,   dur:175,type:"charter"},
-       {dep:"LECO",arr:"LECO",std:0,       dur:0,  type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X41",name:"Nice → La Seu d'Urgell",desc:"Andorra gateway, Pyrenean approach",
- legs:[{dep:"LFMN",arr:"LESU",std:9*60,   dur:55, type:"charter"},
-       {dep:"LESU",arr:"LFMN",std:16*60,  dur:55, type:"charter"}],
- weekday:true,weekend:true},
-
-{id:"X42",name:"Nice → Lisbon",desc:"Atlantic capital day trip",
- legs:[{dep:"LFMN",arr:"LPPT",std:8*60,   dur:175,type:"charter"},
-       {dep:"LPPT",arr:"LFMN",std:19*60+30,dur:175,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X43",name:"Nice → Faro ends away",desc:"Algarve overnight",
- legs:[{dep:"LFMN",arr:"LPFR",std:8*60,   dur:185,type:"charter"},
-       {dep:"LPFR",arr:"LPFR",std:0,       dur:0,  type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"X44",name:"La Seu – Palma – Ibiza – Nice",desc:"Pyrenees to Balearics circuit",
- legs:[{dep:"LFMN",arr:"LESU",std:8*60,   dur:55, type:"charter"},
-       {dep:"LESU",arr:"LEPA",std:11*60,  dur:55, type:"charter"},
-       {dep:"LEPA",arr:"LEIB",std:14*60+30,dur:25,type:"charter"},
-       {dep:"LEIB",arr:"LFMN",std:17*60+30,dur:65,type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"X45",name:"Lisbon – Faro – Nice",desc:"Portugal coast return arc",
- legs:[{dep:"LFMN",arr:"LPPT",std:7*60+30,dur:175,type:"charter"},
-       {dep:"LPPT",arr:"LPFR",std:12*60,  dur:55, type:"charter"},
-       {dep:"LPFR",arr:"LFMN",std:16*60+30,dur:185,type:"charter"}],
- weekday:true,weekend:false},
-
-// ── Benelux ──
-{id:"X50",name:"Nice → Rotterdam",desc:"Port city / finance run",
- legs:[{dep:"LFMN",arr:"EHRD",std:8*60,   dur:125,type:"charter"},
-       {dep:"EHRD",arr:"LFMN",std:19*60+30,dur:125,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X51",name:"Nice → Brussels",desc:"EU institutions charter",
- legs:[{dep:"LFMN",arr:"EBBR",std:8*60,   dur:120,type:"charter"},
-       {dep:"EBBR",arr:"LFMN",std:19*60,  dur:120,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X52",name:"Rotterdam – Brussels – Nice",desc:"Benelux dual-city return",
- legs:[{dep:"LFMN",arr:"EHRD",std:8*60,   dur:125,type:"charter"},
-       {dep:"EHRD",arr:"EBBR",std:12*60,  dur:35, type:"charter"},
-       {dep:"EBBR",arr:"LFMN",std:16*60,  dur:120,type:"charter"}],
- weekday:true,weekend:false},
-
-// ── Scandinavia ──
-{id:"X60",name:"Nice → Copenhagen ends away",desc:"Danish capital overnight",
- legs:[{dep:"LFMN",arr:"EKCH",std:8*60,   dur:165,type:"charter"},
-       {dep:"EKCH",arr:"EKCH",std:0,       dur:0,  type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X61",name:"Nice → Bornholm ends away",desc:"Baltic island overnight",
- legs:[{dep:"LFMN",arr:"EKRN",std:8*60,   dur:175,type:"charter"},
-       {dep:"EKRN",arr:"EKRN",std:0,       dur:0,  type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"X62",name:"Nice → Oslo ends away",desc:"Norwegian capital overnight",
- legs:[{dep:"LFMN",arr:"ENGM",std:8*60,   dur:195,type:"charter"},
-       {dep:"ENGM",arr:"ENGM",std:0,       dur:0,  type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X63",name:"Copenhagen – Bornholm – Nice",desc:"Baltic island hop return",
- legs:[{dep:"LFMN",arr:"EKCH",std:7*60+30,dur:165,type:"charter"},
-       {dep:"EKCH",arr:"EKRN",std:13*60,  dur:35, type:"charter"},
-       {dep:"EKRN",arr:"LFMN",std:17*60,  dur:175,type:"charter"}],
- weekday:false,weekend:true},
-
-// ── Greece extra ──
-{id:"X70",name:"Nice → Kos ends away",desc:"Dodecanese island overnight",
- legs:[{dep:"LFMN",arr:"LGKO",std:8*60,   dur:150,type:"charter"},
-       {dep:"LGKO",arr:"LGKO",std:0,       dur:0,  type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"X71",name:"Athens – Corfu – Nice",desc:"Greek arc: capital to Ionian",
- legs:[{dep:"LFMN",arr:"LGAV",std:8*60,   dur:130,type:"charter"},
-       {dep:"LGAV",arr:"LGKR",std:12*60,  dur:60, type:"charter"},
-       {dep:"LGKR",arr:"LFMN",std:16*60,  dur:120,type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"X72",name:"Rhodes – Kos – Heraklion – Nice",desc:"Aegean island hop return",
- legs:[{dep:"LFMN",arr:"LGRP",std:7*60+30,dur:150,type:"charter"},
-       {dep:"LGRP",arr:"LGKO",std:12*60,  dur:25, type:"charter"},
-       {dep:"LGKO",arr:"LGIR",std:15*60,  dur:40, type:"charter"},
-       {dep:"LGIR",arr:"LFMN",std:19*60,  dur:145,type:"charter"}],
- weekday:false,weekend:true},
-
-// ── Eastern Europe ──
-{id:"X80",name:"Nice → Belgrade ends away",desc:"Serbian capital overnight",
- legs:[{dep:"LFMN",arr:"LYBE",std:8*60,   dur:110,type:"charter"},
-       {dep:"LYBE",arr:"LYBE",std:0,       dur:0,  type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X81",name:"Nice → Kraków ends away",desc:"Polish cultural capital overnight",
- legs:[{dep:"LFMN",arr:"EPKK",std:8*60,   dur:155,type:"charter"},
-       {dep:"EPKK",arr:"EPKK",std:0,       dur:0,  type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X82",name:"Nice → Poprad-Tatry",desc:"High Tatras ski charter, return",
- legs:[{dep:"LFMN",arr:"LZTT",std:8*60,   dur:160,type:"charter"},
-       {dep:"LZTT",arr:"LFMN",std:19*60+30,dur:160,type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"X83",name:"Nice → Vilnius ends away",desc:"Lithuanian capital overnight",
- legs:[{dep:"LFMN",arr:"EYVI",std:8*60,   dur:205,type:"charter"},
-       {dep:"EYVI",arr:"EYVI",std:0,       dur:0,  type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X84",name:"Nice → České Budějovice",desc:"South Bohemia day trip",
- legs:[{dep:"LFMN",arr:"LKCS",std:8*60,   dur:130,type:"charter"},
-       {dep:"LKCS",arr:"LFMN",std:17*60,  dur:130,type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X85",name:"Belgrade – Sofia – Nice",desc:"Balkan dual-city return",
- legs:[{dep:"LFMN",arr:"LYBE",std:7*60+30,dur:110,type:"charter"},
-       {dep:"LYBE",arr:"LBSF",std:11*60,  dur:55, type:"charter"},
-       {dep:"LBSF",arr:"LFMN",std:15*60,  dur:130,type:"charter"}],
- weekday:true,weekend:false},
-
-// ── Adriatic ──
-{id:"X90",name:"Nice → Rijeka",desc:"Croatian port city charter",
- legs:[{dep:"LFMN",arr:"LDRI",std:8*60+30,dur:85, type:"charter"},
-       {dep:"LDRI",arr:"LFMN",std:16*60,  dur:85, type:"charter"}],
- weekday:false,weekend:true},
-
-{id:"X91",name:"Nice → Maribor",desc:"Slovenian Styrian charter",
- legs:[{dep:"LFMN",arr:"LJMB",std:8*60+30,dur:85, type:"charter"},
-       {dep:"LJMB",arr:"LFMN",std:16*60,  dur:85, type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X92",name:"Rijeka – Portorož – Maribor – Nice",desc:"Slovenian–Croatian Adriatic arc",
- legs:[{dep:"LFMN",arr:"LDRI",std:8*60,   dur:85, type:"charter"},
-       {dep:"LDRI",arr:"LJPZ",std:11*60,  dur:30, type:"charter"},
-       {dep:"LJPZ",arr:"LJMB",std:14*60,  dur:40, type:"charter"},
-       {dep:"LJMB",arr:"LFMN",std:17*60+30,dur:85,type:"charter"}],
- weekday:false,weekend:true},
-
-// ── Turkey & Med ──
-{id:"X95",name:"Nice → Istanbul ends away",desc:"Bosphorus overnight",
- legs:[{dep:"LFMN",arr:"LTFM",std:8*60,   dur:185,type:"charter"},
-       {dep:"LTFM",arr:"LTFM",std:0,       dur:0,  type:"charter"}],
- weekday:true,weekend:false},
-
-{id:"X96",name:"Nice → Antalya ends away",desc:"Turkish Riviera overnight",
- legs:[{dep:"LFMN",arr:"LTAI",std:8*60,   dur:185,type:"charter"},
-       {dep:"LTAI",arr:"LTAI",std:0,       dur:0,  type:"charter"}],
- weekday:false,weekend:true},
+const BLK_FROM_LFMN = {
+  LFMD:10,LFPB:75,
+  LOAN:100,LOWW:95,LOWS:70,LOWL:90,LOWG:80,LOWK:75,
+  LSZS:45,LSZR:65,LSZH:60,LSGG:30,
+  EDDM:65,EDDF:100,EDFE:95,EDDS:80,EDDL:120,EDDK:115,EDNY:50,EDMA:60,EDJA:55,EDHL:145,EDHK:150,EDXW:155,
+  LIML:40,LIRF:75,LIRN:90,LIRI:95,LIRJ:55,LIEO:100,LICC:110,LICJ:115,LILO:45,LIPB:35,
+  LJPZ:80,LJMB:85,LDRI:85,
+  LGAV:130,LGIR:145,LGKO:150,LGKR:120,LGRP:150,LGSM:140,
+  EGSS:110,EGTK:105,EGKB:100,EGLF:105,EGFF:110,EGCB:130,EGGP:125,EICK:130,
+  EBBR:120,EHRD:125,
+  EKCH:165,EKRN:175,ENGM:195,ESSA:185,EFHK:210,
+  LYBE:110,LBSF:130,EPKK:155,LZTT:160,EYVI:205,LKCS:130,
+  LEMD:130,LEIB:65,LEPA:70,LECO:175,LESU:55,LPPT:175,LPFR:185,
+  LTFM:185,LTAI:185,
+};
+
+// Inter-airport blocks (not via LFMN) — key format "A-B"
+const BLK_INTER = {
+  // Swiss
+  "LSGG-LSZH":30,"LSZH-LSGG":30,"LSGG-LSZS":35,"LSZS-LSGG":35,
+  "LSZH-LSZS":25,"LSZS-LSZH":25,"LSZH-LSZR":30,"LSZR-LSZH":30,
+  "LSZR-LSGG":45,"LSGG-LSZR":45,"LSZS-LSZR":30,"LSZR-LSZS":30,
+  // Swiss–Austria
+  "LSZH-LOWW":55,"LOWW-LSZH":55,"LSGG-LOWW":65,"LOWW-LSGG":65,
+  "LSZS-LOWI":25,"LOWI-LSZS":25,"LSZS-LOWW":70,"LOWW-LSZS":70,
+  "LSGG-LOWS":55,"LOWS-LSGG":55,"LSZH-LOWS":40,"LOWS-LSZH":40,
+  "LSZR-LOWI":30,"LOWI-LSZR":30,"LSZR-LOWW":60,"LOWW-LSZR":60,
+  // Austria domestic
+  "LOWW-LOWS":35,"LOWS-LOWW":35,"LOWW-LOWG":30,"LOWG-LOWW":30,
+  "LOWW-LOWK":35,"LOWK-LOWW":35,"LOWW-LOWL":35,"LOWL-LOWW":35,
+  "LOWS-LOWG":35,"LOWG-LOWS":35,"LOWS-LOWK":30,"LOWK-LOWS":30,
+  "LOWW-LOAN":15,"LOAN-LOWW":15,
+  // Austria–Italy
+  "LOWW-LIML":70,"LIML-LOWW":70,"LOWS-LIML":60,"LIML-LOWS":60,
+  "LOWW-LIPB":50,"LIPB-LOWW":50,"LOWS-LIPB":40,"LIPB-LOWS":40,
+  "LOWW-LIRF":90,"LIRF-LOWW":90,"LOWW-LJPZ":65,"LJPZ-LOWW":65,
+  // Austria–Germany
+  "LOWW-EDDM":50,"EDDM-LOWW":50,"LOWW-EDDF":65,"EDDF-LOWW":65,
+  "LOWW-EDNY":50,"EDNY-LOWW":50,"LOWW-LSZH":55,"LSZH-LOWW":55,
+  // Germany–Germany
+  "EDDM-EDDF":45,"EDDF-EDDM":45,"EDDM-EDDS":40,"EDDS-EDDM":40,
+  "EDDM-EDNY":25,"EDNY-EDDM":25,"EDDM-EDMA":20,"EDMA-EDDM":20,
+  "EDDM-EDJA":25,"EDJA-EDDM":25,"EDNY-EDJA":20,"EDJA-EDNY":20,
+  "EDNY-EDMA":25,"EDMA-EDNY":25,"EDNY-LSZR":20,"LSZR-EDNY":20,
+  "EDDF-EDDL":40,"EDDL-EDDF":40,"EDDF-EDDK":35,"EDDK-EDDF":35,
+  "EDDF-EDDS":35,"EDDS-EDDF":35,"EDDF-EDFE":10,"EDFE-EDDF":10,
+  "EDDL-EDDK":25,"EDDK-EDDL":25,"EDDL-EDHK":55,"EDHK-EDDL":55,
+  "EDHK-EDHL":20,"EDHL-EDHK":20,"EDHK-EDXW":35,"EDXW-EDHK":35,
+  "EDHL-EDXW":40,"EDXW-EDHL":40,"EDXW-EKCH":60,"EKCH-EDXW":60,
+  "EDXW-EDDH":25,"EDDH-EDXW":25,
+  // Germany–UK
+  "EDDF-EGSS":70,"EGSS-EDDF":70,"EDDF-EGLF":65,"EGLF-EDDF":65,
+  "EDDM-EGKB":90,"EGKB-EDDM":90,
+  // UK–UK
+  "EGKB-EGSS":20,"EGSS-EGKB":20,"EGKB-EGLF":20,"EGLF-EGKB":20,
+  "EGTK-EGKB":25,"EGKB-EGTK":25,"EGTK-EGLF":25,"EGLF-EGTK":25,
+  "EGSS-EGFF":40,"EGFF-EGSS":40,"EGSS-EGCB":40,"EGCB-EGSS":40,
+  "EGLF-EGFF":30,"EGFF-EGLF":30,"EGCB-EGGP":35,"EGGP-EGCB":35,
+  "EGSS-EGGP":40,"EGGP-EGSS":40,"EGFF-EICK":50,"EICK-EGFF":50,
+  "EGKB-LFPB":50,"LFPB-EGKB":50,"EGLF-LFPB":50,"LFPB-EGLF":50,
+  "EGSS-LFPB":55,"LFPB-EGSS":55,
+  // Italy–Italy
+  "LIML-LIRF":65,"LIRF-LIML":65,"LIML-LIRN":80,"LIRN-LIML":80,
+  "LIRF-LIRN":45,"LIRN-LIRF":45,"LIRN-LIRI":20,"LIRI-LIRN":20,
+  "LIRJ-LIRF":50,"LIRF-LIRJ":50,"LIRJ-LIRN":65,"LIRN-LIRJ":65,
+  "LIML-LIRJ":60,"LIRJ-LIML":60,"LIML-LIPB":35,"LIPB-LIML":35,
+  "LIML-LILO":30,"LILO-LIML":30,"LIML-LIEO":70,"LIEO-LIML":70,
+  "LIRF-LICC":60,"LICC-LIRF":60,"LIRF-LICJ":65,"LICJ-LIRF":65,
+  "LICC-LICJ":25,"LICJ-LICC":25,"LIRN-LICC":55,"LICC-LIRN":55,
+  "LIRF-LIEO":60,"LIEO-LIRF":60,
+  // Italy–Switzerland/France
+  "LIML-LSGG":55,"LSGG-LIML":55,"LIML-LSZH":60,"LSZH-LIML":60,
+  "LIML-LFMD":40,"LFMD-LIML":40,"LIRF-LFMD":75,"LFMD-LIRF":75,
+  "LIPB-LSZS":30,"LSZS-LIPB":30,
+  // Adriatic
+  "LJPZ-LJMB":40,"LJMB-LJPZ":40,"LJPZ-LDRI":30,"LDRI-LJPZ":30,
+  "LJMB-LOWW":65,"LOWW-LJMB":65,"LJPZ-LOWW":65,"LOWW-LJPZ":65,
+  "LJPZ-LYBE":80,"LYBE-LJPZ":80,"LJMB-LYBE":75,"LYBE-LJMB":75,
+  "LDRI-LOWW":70,"LOWW-LDRI":70,"LDRI-LJMB":35,"LJMB-LDRI":35,
+  // Greece
+  "LGAV-LGKR":60,"LGKR-LGAV":60,"LGAV-LGIR":50,"LGIR-LGAV":50,
+  "LGAV-LGRP":45,"LGRP-LGAV":45,"LGAV-LGKO":45,"LGKO-LGAV":45,
+  "LGAV-LGSM":40,"LGSM-LGAV":40,"LGIR-LGKO":35,"LGKO-LGIR":35,
+  "LGRP-LGKO":25,"LGKO-LGRP":25,"LGRP-LGSM":35,"LGSM-LGRP":35,
+  "LGKR-LGRP":55,"LGRP-LGKR":55,
+  "LGAV-LTFM":60,"LTFM-LGAV":60,"LGAV-LTAI":70,"LTAI-LGAV":70,
+  // Scandinavia
+  "EKCH-ESSA":55,"ESSA-EKCH":55,"EKCH-ENGM":60,"ENGM-EKCH":60,
+  "EKCH-EFHK":75,"EFHK-EKCH":75,"EKCH-EKRN":35,"EKRN-EKCH":35,
+  "ESSA-ENGM":55,"ENGM-ESSA":55,"ESSA-EFHK":60,"EFHK-ESSA":60,
+  // Eastern Europe
+  "LOWW-LYBE":55,"LYBE-LOWW":55,"LOWW-LBSF":75,"LBSF-LOWW":75,
+  "LYBE-LBSF":55,"LBSF-LYBE":55,"LOWW-EPKK":60,"EPKK-LOWW":60,
+  "LOWW-LKCS":50,"LKCS-LOWW":50,"LOWW-LZTT":60,"LZTT-LOWW":60,
+  "LZTT-EPKK":30,"EPKK-LZTT":30,"LOWW-EYVI":95,"EYVI-LOWW":95,
+  // Iberia inter
+  "LEMD-LEPA":65,"LEPA-LEMD":65,"LEMD-LEIB":70,"LEIB-LEMD":70,
+  "LEPA-LEIB":25,"LEIB-LEPA":25,"LEMD-LECO":70,"LECO-LEMD":70,
+  "LEMD-LPPT":50,"LPPT-LEMD":50,"LPPT-LPFR":45,"LPFR-LPPT":45,
+  "LEMD-LESU":60,"LESU-LEMD":60,"LESU-LEPA":55,"LEPA-LESU":55,
+  "LEMD-LFPB":80,"LFPB-LEMD":80,
+  // Benelux
+  "EBBR-EHRD":30,"EHRD-EBBR":30,"EBBR-LFPB":45,"LFPB-EBBR":45,
+  "EHRD-EDDF":50,"EDDF-EHRD":50,"EBBR-EDDF":45,"EDDF-EBBR":45,
+  "EBBR-EGKB":45,"EGKB-EBBR":45,"EBBR-EGSS":50,"EGSS-EBBR":50,
+};
+
+function blk(dep, arr){
+  if(dep===arr) return 0;
+  const k=`${dep}-${arr}`;
+  if(BLK_INTER[k]) return BLK_INTER[k];
+  if(dep==='LFMN') return BLK_FROM_LFMN[arr]||99;
+  if(arr==='LFMN') return BLK_FROM_LFMN[dep]||99;
+  // fallback: via LFMN estimate
+  const a=BLK_FROM_LFMN[dep]||120, b=BLK_FROM_LFMN[arr]||120;
+  return Math.round((a+b)*0.6);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  SINGLE-DAY PAIRINGS
+//  Each leg: {dep, arr, std (local min from midnight), dur (block min), type}
+//  type: 'charter'|'reposit'|'positioning'|'commute'
+// ═══════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════
+//  5-DAY CHAINS
+//
+//  Structure:
+//  {
+//    id, name, desc, theme,
+//    commute: null | {dep, arr, std, dur, type}  // day-0 positioning
+//    days: [
+//      { day:1, theme:"...", overnight:"ICAO", legs:[...] },
+//      ...
+//      { day:5, theme:"...", overnight:"LFMN"|other, legs:[...] }
+//    ],
+//    returnsToBase: bool
+//  }
+//
+//  All std times are local approx. GND ≥ 20 min assumed.
+//  FDP target ≤ 10h per day for realistic biz-av.
+// ═══════════════════════════════════════════════════════════
+
+const CHAINS = [
+
+// C01 – THE FUND WEEK
+{id:"C01",name:"The Fund Week",
+ desc:"PE fund closing week. Lawyers Vienna, LPs Warsaw, fund admin London, banking Frankfurt & Zurich, beneficial owner Palma, closing dinner Milan.",
+ theme:"finance",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"Legal Vienna, LP meeting Warsaw",overnight:"EPKK",
+   legs:[{dep:"LFMN",arr:"LOWW",std:7*60,   dur:95,  type:"charter"},
+         {dep:"LOWW",arr:"EPKK",std:12*60,  dur:60,  type:"charter"}]},
+  {day:2,theme:"London fund admin, Rotterdam port asset",overnight:"EHRD",
+   legs:[{dep:"EPKK",arr:"EGSS",std:8*60,   dur:110, type:"charter"},
+         {dep:"EGSS",arr:"EHRD",std:15*60,  dur:60,  type:"charter"}]},
+  {day:3,theme:"Frankfurt banking, Brussels LP debrief",overnight:"EBBR",
+   legs:[{dep:"EHRD",arr:"EDFE",std:8*60,   dur:50,  type:"charter"},
+         {dep:"EDFE",arr:"EBBR",std:14*60,  dur:45,  type:"charter"}]},
+  {day:4,theme:"Zurich custody bank, Palma beneficial owner",overnight:"LEPA",
+   legs:[{dep:"EBBR",arr:"LSZH",std:8*60+30,dur:90,  type:"charter"},
+         {dep:"LSZH",arr:"LEPA",std:14*60,  dur:95,  type:"charter"}]},
+  {day:5,theme:"Milan closing dinner, Nice home",overnight:"LFMN",
+   legs:[{dep:"LEPA",arr:"LIML",std:9*60,   dur:70,  type:"charter"},
+         {dep:"LIML",arr:"LFMN",std:15*60,  dur:40,  type:"charter"}]},
+ ]},
+
+// C02 – TECH ROADSHOW (commute ESSA)
+{id:"C02",name:"Tech Roadshow",
+ desc:"Series B fundraising. Nordic VCs, Stuttgart & Frankfurt angels, London deeptech, Düsseldorf industrial tech, Paris & Zurich family offices.",
+ theme:"industry",
+ commute:{dep:"LFMN",arr:"ESSA",std:15*60,dur:185,type:"reposit"},
+ returnsToBase:true,
+ days:[
+  {day:1,theme:"Nordic VC sweep – Helsinki then Copenhagen",overnight:"EKCH",
+   legs:[{dep:"ESSA",arr:"EFHK",std:9*60,   dur:60,  type:"charter"},
+         {dep:"EFHK",arr:"EKCH",std:14*60,  dur:75,  type:"charter"}]},
+  {day:2,theme:"Stuttgart pitch, Düsseldorf industrial tech, Frankfurt institutional",overnight:"EDDF",
+   legs:[{dep:"EKCH",arr:"EDDS",std:8*60+30,dur:90,  type:"charter"},
+         {dep:"EDDS",arr:"EDDL",std:12*60,  dur:40,  type:"charter"},
+         {dep:"EDDL",arr:"EDDF",std:15*60,  dur:40,  type:"charter"}]},
+  {day:3,theme:"Rotterdam, London deeptech VC",overnight:"EGKB",
+   legs:[{dep:"EDDF",arr:"EHRD",std:8*60,   dur:50,  type:"charter"},
+         {dep:"EHRD",arr:"EGKB",std:13*60,  dur:45,  type:"charter"}]},
+  {day:4,theme:"Paris family office, Zurich sovereign",overnight:"LSZH",
+   legs:[{dep:"EGKB",arr:"LFPB",std:8*60+30,dur:50,  type:"charter"},
+         {dep:"LFPB",arr:"LSZH",std:14*60,  dur:90,  type:"charter"}]},
+  {day:5,theme:"Zurich debrief, Nice home",overnight:"LFMN",
+   legs:[{dep:"LSZH",arr:"LFMN",std:11*60,  dur:60,  type:"charter"}]},
+ ]},
+
+// C03 – SUPERYACHT WEEK
+{id:"C03",name:"Superyacht Week",
+ desc:"Owner following the yacht from Corfu through Turkish waters to the Aegean. Marine lawyers, crew changes, insurance Geneva.",
+ theme:"lifestyle",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"Yacht pickup Corfu, marine lawyer Athens",overnight:"LGAV",
+   legs:[{dep:"LFMN",arr:"LGKR",std:8*60,   dur:120, type:"charter"},
+         {dep:"LGKR",arr:"LGAV",std:13*60,  dur:60,  type:"charter"}]},
+  {day:2,theme:"Istanbul chandlery, Rhodes crew change",overnight:"LGRP",
+   legs:[{dep:"LGAV",arr:"LTFM",std:9*60,   dur:60,  type:"charter"},
+         {dep:"LTFM",arr:"LGRP",std:14*60,  dur:75,  type:"charter"}]},
+  {day:3,theme:"Kos stop, Samos island provisions",overnight:"LGSM",
+   legs:[{dep:"LGRP",arr:"LGKO",std:9*60,   dur:25,  type:"charter"},
+         {dep:"LGKO",arr:"LGSM",std:13*60,  dur:35,  type:"charter"}]},
+  {day:4,theme:"Owner home Milan via Sondrio estate, insurance Geneva",overnight:"LSGG",
+   legs:[{dep:"LGSM",arr:"LILO",std:9*60,   dur:115, type:"charter"},
+         {dep:"LILO",arr:"LIML",std:13*60,  dur:30,  type:"charter"},
+         {dep:"LIML",arr:"LSGG",std:17*60,  dur:55,  type:"charter"}]},
+  {day:5,theme:"Geneva wrap, Nice home",overnight:"LFMN",
+   legs:[{dep:"LSGG",arr:"LFMN",std:11*60,  dur:30,  type:"charter"}]},
+ ]},
+
+// C04 – ENERGY SECTOR TOUR (commute EDDF)
+{id:"C04",name:"Energy Sector Tour",
+ desc:"Offshore wind Copenhagen, Equinor Oslo, Baltic grid Vilnius, gas interconnector Sofia, transmission Belgrade, IAEA Vienna, investor Zurich.",
+ theme:"industry",
+ commute:{dep:"LFMN",arr:"EDDF",std:16*60,dur:100,type:"reposit"},
+ returnsToBase:true,
+ days:[
+  {day:1,theme:"Offshore wind Copenhagen, Equinor Oslo",overnight:"ENGM",
+   legs:[{dep:"EDDF",arr:"EKCH",std:8*60,   dur:100, type:"charter"},
+         {dep:"EKCH",arr:"ENGM",std:14*60,  dur:60,  type:"charter"}]},
+  {day:2,theme:"Baltic energy grid Vilnius, Warsaw debrief",overnight:"EYVI",
+   legs:[{dep:"ENGM",arr:"EPKK",std:8*60+30,dur:130, type:"charter"},
+         {dep:"EPKK",arr:"EYVI",std:14*60,  dur:65,  type:"charter"}]},
+  {day:3,theme:"Gas interconnector Sofia, transmission Belgrade",overnight:"LYBE",
+   legs:[{dep:"EYVI",arr:"LBSF",std:8*60,   dur:145, type:"charter"},
+         {dep:"LBSF",arr:"LYBE",std:14*60,  dur:55,  type:"charter"}]},
+  {day:4,theme:"IAEA Vienna, Zurich investor meeting",overnight:"LSZH",
+   legs:[{dep:"LYBE",arr:"LOWW",std:8*60,   dur:55,  type:"charter"},
+         {dep:"LOWW",arr:"LSZH",std:14*60,  dur:55,  type:"charter"}]},
+  {day:5,theme:"Zurich close, Nice home",overnight:"LFMN",
+   legs:[{dep:"LSZH",arr:"LFMN",std:12*60,  dur:60,  type:"charter"}]},
+ ]},
+
+// C05 – THE SPORTS OWNER
+{id:"C05",name:"The Sports Owner",
+ desc:"Multi-club football. PL London, Liverpool academy, UEFA Brussels, Austrian partner Vienna, Serbian expansion, Greek Super League Athens, Serie A Rome.",
+ theme:"lifestyle",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"Premier League London, Liverpool academy",overnight:"EGGP",
+   legs:[{dep:"LFMN",arr:"EGKB",std:8*60,   dur:100, type:"charter"},
+         {dep:"EGKB",arr:"EGGP",std:13*60,  dur:40,  type:"charter"}]},
+  {day:2,theme:"UEFA Brussels, Austrian partner Vienna",overnight:"LOWW",
+   legs:[{dep:"EGGP",arr:"EBBR",std:8*60+30,dur:55,  type:"charter"},
+         {dep:"EBBR",arr:"LOWW",std:13*60,  dur:110, type:"charter"}]},
+  {day:3,theme:"Serbian expansion Belgrade, Greek Super League Athens",overnight:"LGAV",
+   legs:[{dep:"LOWW",arr:"LYBE",std:8*60+30,dur:55,  type:"charter"},
+         {dep:"LYBE",arr:"LGAV",std:13*60,  dur:80,  type:"charter"}]},
+  {day:4,theme:"Roma committee meeting, Nice home",overnight:"LFMN",
+   legs:[{dep:"LGAV",arr:"LIRF",std:8*60+30,dur:90,  type:"charter"},
+         {dep:"LIRF",arr:"LFMN",std:15*60,  dur:75,  type:"charter"}]},
+  {day:5,theme:"UEFA committee Milan, back for dinner",overnight:"LFMN",
+   legs:[{dep:"LFMN",arr:"LIML",std:9*60,   dur:40,  type:"charter"},
+         {dep:"LIML",arr:"LFMN",std:17*60,  dur:40,  type:"charter"}]},
+ ]},
+
+// C06 – REAL ESTATE PORTFOLIO (commute LSZH)
+{id:"C06",name:"Real Estate Portfolio Tour",
+ desc:"Vilnius Baltic waterfront, Kiel marina, Lübeck port, Mayfair London, Farnborough, Lisbon Atlantic, Algarve villas, Ibiza island estate.",
+ theme:"finance",
+ commute:{dep:"LFMN",arr:"LSZH",std:15*60,dur:60,type:"reposit"},
+ returnsToBase:true,
+ days:[
+  {day:1,theme:"Vilnius Baltic waterfront, Kiel marina project",overnight:"EDHK",
+   legs:[{dep:"LSZH",arr:"EYVI",std:8*60+30,dur:165, type:"charter"},
+         {dep:"EYVI",arr:"EDHK",std:14*60,  dur:120, type:"charter"}]},
+  {day:2,theme:"Lübeck port asset, Mayfair London",overnight:"EGKB",
+   legs:[{dep:"EDHK",arr:"EDHL",std:9*60,   dur:20,  type:"charter"},
+         {dep:"EDHL",arr:"EGKB",std:12*60,  dur:110, type:"charter"}]},
+  {day:3,theme:"Farnborough client, Lisbon Atlantic portfolio",overnight:"LPPT",
+   legs:[{dep:"EGKB",arr:"EGLF",std:9*60,   dur:20,  type:"charter"},
+         {dep:"EGLF",arr:"LPPT",std:12*60+30,dur:155,type:"charter"}]},
+  {day:4,theme:"Algarve villas, Ibiza island estate",overnight:"LEIB",
+   legs:[{dep:"LPPT",arr:"LPFR",std:9*60,   dur:45,  type:"charter"},
+         {dep:"LPFR",arr:"LEIB",std:13*60,  dur:120, type:"charter"}]},
+  {day:5,theme:"Ibiza morning, Nice home",overnight:"LFMN",
+   legs:[{dep:"LEIB",arr:"LFMN",std:11*60,  dur:65,  type:"charter"}]},
+ ]},
+
+// C07 – FASHION & LUXURY WEEK
+{id:"C07",name:"Fashion & Luxury Week",
+ desc:"Milan fittings, Vienna retail, Paris creative review, Liverpool textiles, Copenhagen retail, Frankfurt logistics, Barcelona leather, Madrid flagship, A Coruña artisan.",
+ theme:"lifestyle",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"Milan fitting, Vienna retail flagship",overnight:"LOWW",
+   legs:[{dep:"LFMN",arr:"LIML",std:8*60,   dur:40,  type:"charter"},
+         {dep:"LIML",arr:"LOWW",std:12*60+30,dur:70, type:"charter"}]},
+  {day:2,theme:"Paris creative review, Liverpool textile supplier",overnight:"EGGP",
+   legs:[{dep:"LOWW",arr:"LFPB",std:8*60,   dur:110, type:"charter"},
+         {dep:"LFPB",arr:"EGGP",std:14*60,  dur:80,  type:"charter"}]},
+  {day:3,theme:"Copenhagen Scandinavian retail, Frankfurt logistics",overnight:"EDFE",
+   legs:[{dep:"EGGP",arr:"EKCH",std:8*60+30,dur:100, type:"charter"},
+         {dep:"EKCH",arr:"EDFE",std:14*60,  dur:100, type:"charter"}]},
+  {day:4,theme:"Barcelona leather supplier, Madrid flagship opening",overnight:"LEMD",
+   legs:[{dep:"EDFE",arr:"LEBL",std:8*60+30,dur:120, type:"charter"},
+         {dep:"LEBL",arr:"LEMD",std:14*60,  dur:65,  type:"charter"}]},
+  {day:5,theme:"A Coruña artisan supplier, Nice home",overnight:"LFMN",
+   legs:[{dep:"LEMD",arr:"LECO",std:9*60,   dur:70,  type:"charter"},
+         {dep:"LECO",arr:"LFMN",std:14*60,  dur:175, type:"charter"}]},
+ ]},
+
+// C08 – THE LEGAL CIRCUIT (commute EGKB)
+{id:"C08",name:"The Legal Circuit",
+ desc:"Paris arbitration, EU Brussels, Austrian court Vienna, Balkan treaty Belgrade, Athens ICC, Istanbul arbitration, Zurich ICC wrap.",
+ theme:"finance",
+ commute:{dep:"LFMN",arr:"EGKB",std:16*60,dur:100,type:"reposit"},
+ returnsToBase:true,
+ days:[
+  {day:1,theme:"Farnborough client pickup, Paris arbitration",overnight:"LFPB",
+   legs:[{dep:"EGKB",arr:"EGLF",std:9*60,   dur:20,  type:"reposit"},
+         {dep:"EGLF",arr:"LFPB",std:12*60,  dur:50,  type:"charter"}]},
+  {day:2,theme:"EU competition Brussels, Austrian court Vienna",overnight:"LOWW",
+   legs:[{dep:"LFPB",arr:"EBBR",std:8*60,   dur:45,  type:"charter"},
+         {dep:"EBBR",arr:"LOWW",std:13*60,  dur:110, type:"charter"}]},
+  {day:3,theme:"Balkan treaty Belgrade, signing Athens",overnight:"LGAV",
+   legs:[{dep:"LOWW",arr:"LYBE",std:8*60+30,dur:55,  type:"charter"},
+         {dep:"LYBE",arr:"LGAV",std:13*60,  dur:80,  type:"charter"}]},
+  {day:4,theme:"Istanbul arbitration, ICC Zurich",overnight:"LSZH",
+   legs:[{dep:"LGAV",arr:"LTFM",std:8*60+30,dur:60,  type:"charter"},
+         {dep:"LTFM",arr:"LSZH",std:13*60,  dur:150, type:"charter"}]},
+  {day:5,theme:"Zurich ICC debrief, Nice home",overnight:"LFMN",
+   legs:[{dep:"LSZH",arr:"LFMN",std:12*60,  dur:60,  type:"charter"}]},
+ ]},
+
+// C09 – PHARMA & HEALTHCARE TOUR
+{id:"C09",name:"Pharma & Healthcare Tour",
+ desc:"Basel pharma, Copenhagen clinical trial, Helsinki biotech, Stockholm debrief, Warsaw sites, EMA Vienna, Roche Zurich, Rome hospital, Milan congress.",
+ theme:"industry",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"Basel pharma cluster, Copenhagen clinical trial",overnight:"EKCH",
+   legs:[{dep:"LFMN",arr:"LSZH",std:8*60,   dur:60,  type:"charter"},
+         {dep:"LSZH",arr:"EKCH",std:12*60,  dur:130, type:"charter"}]},
+  {day:2,theme:"Helsinki biotech partner, Stockholm debrief",overnight:"ESSA",
+   legs:[{dep:"EKCH",arr:"EFHK",std:8*60+30,dur:75,  type:"charter"},
+         {dep:"EFHK",arr:"ESSA",std:14*60,  dur:60,  type:"charter"}]},
+  {day:3,theme:"Warsaw clinical sites, EMA Vienna",overnight:"LOWW",
+   legs:[{dep:"ESSA",arr:"EPKK",std:8*60,   dur:110, type:"charter"},
+         {dep:"EPKK",arr:"LOWW",std:14*60,  dur:60,  type:"charter"}]},
+  {day:4,theme:"Roche Zurich HQ, Nice dinner",overnight:"LFMN",
+   legs:[{dep:"LOWW",arr:"LSZH",std:8*60+30,dur:55,  type:"charter"},
+         {dep:"LSZH",arr:"LFMN",std:14*60,  dur:60,  type:"charter"}]},
+  {day:5,theme:"Rome hospital, Milan congress, home",overnight:"LFMN",
+   legs:[{dep:"LFMN",arr:"LIRF",std:8*60,   dur:75,  type:"charter"},
+         {dep:"LIRF",arr:"LIML",std:13*60,  dur:65,  type:"charter"},
+         {dep:"LIML",arr:"LFMN",std:18*60,  dur:40,  type:"charter"}]},
+ ]},
+
+// C10 – OWNER'S LEISURE WEEK (ends away)
+{id:"C10",name:"The Owner's Leisure Week",
+ desc:"Andorra La Seu gateway, Salzburg Festspiele, Vienna opera, Paris private view, Oxford friend, Cardiff, Cork, Madrid lunch, Ibiza weekend. Ends away.",
+ theme:"lifestyle",commute:null,returnsToBase:false,
+ days:[
+  {day:1,theme:"La Seu d'Urgell Andorra gateway, Salzburg Festspiele",overnight:"LOWS",
+   legs:[{dep:"LFMN",arr:"LESU",std:9*60,   dur:55,  type:"charter"},
+         {dep:"LESU",arr:"LOWS",std:14*60,  dur:85,  type:"charter"}]},
+  {day:2,theme:"Vienna opera evening, Paris private view",overnight:"LFPB",
+   legs:[{dep:"LOWS",arr:"LOWW",std:9*60,   dur:35,  type:"charter"},
+         {dep:"LOWW",arr:"LFPB",std:14*60,  dur:110, type:"charter"}]},
+  {day:3,theme:"Oxford friend's estate, Cardiff Welsh countryside",overnight:"EGFF",
+   legs:[{dep:"LFPB",arr:"EGTK",std:10*60,  dur:80,  type:"charter"},
+         {dep:"EGTK",arr:"EGFF",std:15*60,  dur:30,  type:"charter"}]},
+  {day:4,theme:"Cork Ireland, Madrid lunch",overnight:"LEMD",
+   legs:[{dep:"EGFF",arr:"EICK",std:10*60,  dur:50,  type:"charter"},
+         {dep:"EICK",arr:"LEMD",std:14*60,  dur:130, type:"charter"}]},
+  {day:5,theme:"Ibiza weekend begins – ends away",overnight:"LEIB",
+   legs:[{dep:"LEMD",arr:"LEIB",std:11*60,  dur:70,  type:"charter"}]},
+ ]},
+
+// C11 – THE ART DEALER
+{id:"C11",name:"The Art Dealer",
+ desc:"Zurich gallery, Dorotheum Vienna, Sotheby's London, Oxford private collector, Brussels gallery, Paris Art Basel, Frankfurt MMK, Munich collector dinner.",
+ theme:"lifestyle",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"Zurich gallery opening, Dorotheum Vienna",overnight:"LOWW",
+   legs:[{dep:"LFMN",arr:"LSZH",std:9*60,   dur:60,  type:"charter"},
+         {dep:"LSZH",arr:"LOWW",std:14*60,  dur:55,  type:"charter"}]},
+  {day:2,theme:"Sotheby's London, Oxford private collector",overnight:"EGTK",
+   legs:[{dep:"LOWW",arr:"EGKB",std:8*60+30,dur:130, type:"charter"},
+         {dep:"EGKB",arr:"EGTK",std:15*60,  dur:25,  type:"charter"}]},
+  {day:3,theme:"Brussels gallery, Paris Art Basel satellite",overnight:"LFPB",
+   legs:[{dep:"EGTK",arr:"EBBR",std:9*60,   dur:55,  type:"charter"},
+         {dep:"EBBR",arr:"LFPB",std:14*60,  dur:45,  type:"charter"}]},
+  {day:4,theme:"Frankfurt museum MMK, Munich collector dinner",overnight:"EDDM",
+   legs:[{dep:"LFPB",arr:"EDFE",std:9*60,   dur:95,  type:"charter"},
+         {dep:"EDFE",arr:"EDDM",std:15*60,  dur:45,  type:"charter"}]},
+  {day:5,theme:"Munich final, Nice home",overnight:"LFMN",
+   legs:[{dep:"EDDM",arr:"LFMN",std:12*60,  dur:65,  type:"charter"}]},
+ ]},
+
+// C12 – DEFENCE & AEROSPACE (commute EDDK)
+{id:"C12",name:"Defence & Aerospace Week",
+ desc:"Saab Stockholm, Finnish Defence Helsinki, Polish procurement Warsaw, Geneva DCAF, OSCE Vienna, NATO Rome, Airbus Madrid, Toulouse wrap.",
+ theme:"industry",
+ commute:{dep:"LFMN",arr:"EDDK",std:16*60,dur:115,type:"reposit"},
+ returnsToBase:true,
+ days:[
+  {day:1,theme:"Saab Stockholm, Finnish Defence Helsinki",overnight:"EFHK",
+   legs:[{dep:"EDDK",arr:"ESSA",std:8*60+30,dur:110, type:"charter"},
+         {dep:"ESSA",arr:"EFHK",std:14*60,  dur:60,  type:"charter"}]},
+  {day:2,theme:"Polish procurement Warsaw, Geneva DCAF",overnight:"LSGG",
+   legs:[{dep:"EFHK",arr:"EPKK",std:8*60+30,dur:110, type:"charter"},
+         {dep:"EPKK",arr:"LSGG",std:14*60,  dur:155, type:"charter"}]},
+  {day:3,theme:"OSCE Vienna, NATO Science Rome",overnight:"LIRF",
+   legs:[{dep:"LSGG",arr:"LOWW",std:9*60,   dur:65,  type:"charter"},
+         {dep:"LOWW",arr:"LIRF",std:14*60,  dur:90,  type:"charter"}]},
+  {day:4,theme:"Airbus Defence Madrid, Nice reposition",overnight:"LFMN",
+   legs:[{dep:"LIRF",arr:"LEMD",std:8*60+30,dur:130, type:"charter"},
+         {dep:"LEMD",arr:"LFMN",std:15*60,  dur:130, type:"reposit"}]},
+  {day:5,theme:"Airbus Toulouse briefing, home",overnight:"LFMN",
+   legs:[{dep:"LFMN",arr:"LFBO",std:9*60,   dur:75,  type:"charter"},
+         {dep:"LFBO",arr:"LFMN",std:15*60,  dur:75,  type:"charter"}]},
+ ]},
+
+// C13 – SHIPPING & LOGISTICS EMPEROR
+{id:"C13",name:"Shipping & Logistics Emperor",
+ desc:"Rotterdam port, Hamburg terminal, Kiel feeder, Maersk Copenhagen, Warsaw rail, Vilnius gateway, Danube Belgrade, Portorož Adriatic, Milan, Nice.",
+ theme:"industry",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"Rotterdam port HQ, Hamburg terminal ops",overnight:"EDHL",
+   legs:[{dep:"LFMN",arr:"EHRD",std:8*60,   dur:125, type:"charter"},
+         {dep:"EHRD",arr:"EDHL",std:14*60,  dur:90,  type:"charter"}]},
+  {day:2,theme:"Kiel feeder ops, Maersk Copenhagen HQ",overnight:"EKCH",
+   legs:[{dep:"EDHL",arr:"EDHK",std:9*60,   dur:20,  type:"charter"},
+         {dep:"EDHK",arr:"EKCH",std:12*60+30,dur:80, type:"charter"}]},
+  {day:3,theme:"Warsaw logistics hub, Vilnius rail gateway",overnight:"EYVI",
+   legs:[{dep:"EKCH",arr:"EPKK",std:8*60+30,dur:115, type:"charter"},
+         {dep:"EPKK",arr:"EYVI",std:14*60,  dur:65,  type:"charter"}]},
+  {day:4,theme:"Danube Belgrade, Portorož Adriatic gateway",overnight:"LJPZ",
+   legs:[{dep:"EYVI",arr:"LYBE",std:8*60+30,dur:105, type:"charter"},
+         {dep:"LYBE",arr:"LJPZ",std:14*60,  dur:80,  type:"charter"}]},
+  {day:5,theme:"Milan hub debrief, Nice home",overnight:"LFMN",
+   legs:[{dep:"LJPZ",arr:"LIML",std:9*60,   dur:55,  type:"charter"},
+         {dep:"LIML",arr:"LFMN",std:14*60,  dur:40,  type:"charter"}]},
+ ]},
+
+// C14 – FAMILY OFFICE QUARTERLY (commute LSZH)
+{id:"C14",name:"Family Office Quarterly",
+ desc:"Luxembourg banking, London tax, Dublin trust, Edinburgh estate, Copenhagen foundation, Vienna notary, Liechtenstein via Geneva.",
+ theme:"finance",
+ commute:{dep:"LFMN",arr:"LSZH",std:15*60,dur:60,type:"reposit"},
+ returnsToBase:true,
+ days:[
+  {day:1,theme:"Luxembourg bank HQ, London tax advisor",overnight:"EGLF",
+   legs:[{dep:"LSZH",arr:"ELLX",std:9*60,   dur:75,  type:"charter"},
+         {dep:"ELLX",arr:"EGLF",std:14*60,  dur:60,  type:"charter"}]},
+  {day:2,theme:"Dublin trust structure, Edinburgh estate",overnight:"EGPH",
+   legs:[{dep:"EGLF",arr:"EICK",std:8*60+30,dur:70,  type:"charter"},
+         {dep:"EICK",arr:"EGPH",std:14*60,  dur:55,  type:"charter"}]},
+  {day:3,theme:"Copenhagen foundation board, Vienna notary",overnight:"LOWW",
+   legs:[{dep:"EGPH",arr:"EKCH",std:8*60+30,dur:110, type:"charter"},
+         {dep:"EKCH",arr:"LOWW",std:14*60,  dur:105, type:"charter"}]},
+  {day:4,theme:"Liechtenstein structure via Zurich, Geneva",overnight:"LSGG",
+   legs:[{dep:"LOWW",arr:"LSZH",std:9*60,   dur:55,  type:"charter"},
+         {dep:"LSZH",arr:"LSGG",std:14*60,  dur:30,  type:"charter"}]},
+  {day:5,theme:"Geneva final, Nice home",overnight:"LFMN",
+   legs:[{dep:"LSGG",arr:"LFMN",std:12*60,  dur:30,  type:"charter"}]},
+ ]},
+
+// C15 – MEDIA & STREAMING TOUR
+{id:"C15",name:"Media & Streaming Tour",
+ desc:"Belgrade production, Sofia acquisition, Netflix Stockholm, NRK Oslo, BBC Stansted area, Barcelona content fair, Mediaset Madrid, RAI Rome.",
+ theme:"industry",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"Belgrade production hub, Sofia content acquisition",overnight:"LBSF",
+   legs:[{dep:"LFMN",arr:"LYBE",std:8*60,   dur:110, type:"charter"},
+         {dep:"LYBE",arr:"LBSF",std:14*60,  dur:55,  type:"charter"}]},
+  {day:2,theme:"Netflix Nordic Stockholm, NRK Oslo",overnight:"ENGM",
+   legs:[{dep:"LBSF",arr:"ESSA",std:8*60+30,dur:175, type:"charter"},
+         {dep:"ESSA",arr:"ENGM",std:15*60,  dur:55,  type:"charter"}]},
+  {day:3,theme:"BBC Stansted area, Barcelona content fair",overnight:"LEBL",
+   legs:[{dep:"ENGM",arr:"EGSS",std:8*60+30,dur:120, type:"charter"},
+         {dep:"EGSS",arr:"LEBL",std:14*60,  dur:130, type:"charter"}]},
+  {day:4,theme:"Mediaset Madrid, RAI Rome",overnight:"LIRF",
+   legs:[{dep:"LEBL",arr:"LEMD",std:8*60+30,dur:65,  type:"charter"},
+         {dep:"LEMD",arr:"LIRF",std:14*60,  dur:130, type:"charter"}]},
+  {day:5,theme:"Rome debrief, Nice home",overnight:"LFMN",
+   legs:[{dep:"LIRF",arr:"LFMN",std:12*60,  dur:75,  type:"charter"}]},
+ ]},
+
+// C16 – THE CRISIS MANAGER (commute LYBE)
+{id:"C16",name:"The Crisis Manager",
+ desc:"Aircraft in Belgrade. Baltic regulators, Brussels EC, Zurich creditors, Rome, Athens subsidiary, Sofia, Vienna board. No geographic logic.",
+ theme:"finance",
+ commute:{dep:"LFMN",arr:"LYBE",std:15*60,dur:110,type:"reposit"},
+ returnsToBase:true,
+ days:[
+  {day:1,theme:"Baltic regulator Vilnius, Helsinki crisis firm",overnight:"EFHK",
+   legs:[{dep:"LYBE",arr:"EYVI",std:8*60,   dur:105, type:"charter"},
+         {dep:"EYVI",arr:"EFHK",std:14*60,  dur:65,  type:"charter"}]},
+  {day:2,theme:"London legal, Brussels EC directorate",overnight:"EBBR",
+   legs:[{dep:"EFHK",arr:"EGKB",std:8*60,   dur:155, type:"charter"},
+         {dep:"EGKB",arr:"EBBR",std:15*60,  dur:45,  type:"charter"}]},
+  {day:3,theme:"Zurich bank creditors, Rome regulator",overnight:"LIRF",
+   legs:[{dep:"EBBR",arr:"LSZH",std:8*60+30,dur:90,  type:"charter"},
+         {dep:"LSZH",arr:"LIRF",std:14*60,  dur:90,  type:"charter"}]},
+  {day:4,theme:"Athens subsidiary CEO, Sofia local partner",overnight:"LBSF",
+   legs:[{dep:"LIRF",arr:"LGAV",std:8*60+30,dur:90,  type:"charter"},
+         {dep:"LGAV",arr:"LBSF",std:14*60,  dur:75,  type:"charter"}]},
+  {day:5,theme:"Vienna HQ board, Nice recovery",overnight:"LFMN",
+   legs:[{dep:"LBSF",arr:"LOWW",std:9*60,   dur:75,  type:"charter"},
+         {dep:"LOWW",arr:"LFMN",std:15*60,  dur:95,  type:"charter"}]},
+ ]},
+
+// C17 – THE RACING CIRCUIT
+{id:"C17",name:"The Racing Circuit",
+ desc:"Sponsor Zurich, broadcast Cologne, Friedrichshafen test partner, Augsburg engineering, Memmingen composite supplier, Barcelona circuit, Milan engine, Imola race prep.",
+ theme:"lifestyle",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"Sponsor Zurich, broadcast partner Cologne",overnight:"EDDK",
+   legs:[{dep:"LFMN",arr:"LSZH",std:9*60,   dur:60,  type:"charter"},
+         {dep:"LSZH",arr:"EDDK",std:14*60,  dur:115, type:"charter"}]},
+  {day:2,theme:"Friedrichshafen test rig, Augsburg engineering, Memmingen composites",overnight:"EDJA",
+   legs:[{dep:"EDDK",arr:"EDNY",std:9*60,   dur:80,  type:"charter"},
+         {dep:"EDNY",arr:"EDMA",std:12*60,  dur:25,  type:"charter"},
+         {dep:"EDMA",arr:"EDJA",std:14*60+30,dur:20, type:"charter"}]},
+  {day:3,theme:"Barcelona circuit test day",overnight:"LEBL",
+   legs:[{dep:"EDJA",arr:"LEBL",std:8*60+30,dur:110, type:"charter"}]},
+  {day:4,theme:"Milan engine supplier, Imola race prep",overnight:"LIPE",
+   legs:[{dep:"LEBL",arr:"LIML",std:9*60,   dur:95,  type:"charter"},
+         {dep:"LIML",arr:"LIPE",std:15*60,  dur:50,  type:"charter"}]},
+  {day:5,theme:"Bologna debrief, Nice home",overnight:"LFMN",
+   legs:[{dep:"LIPE",arr:"LFMN",std:12*60,  dur:115, type:"charter"}]},
+ ]},
+
+// C18 – AGRI & FOOD CONGLOMERATE
+{id:"C18",name:"Agri & Food Conglomerate",
+ desc:"Sofia grain trading, Belgrade processing, Vienna commodity, Hamburg grain port, Rotterdam futures, Paris retail buyer, Toulouse cooperative HQ.",
+ theme:"industry",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"Sofia grain trading, Belgrade processing hub",overnight:"LYBE",
+   legs:[{dep:"LFMN",arr:"LBSF",std:8*60,   dur:130, type:"charter"},
+         {dep:"LBSF",arr:"LYBE",std:14*60,  dur:55,  type:"charter"}]},
+  {day:2,theme:"Vienna commodity exchange, Hamburg grain port",overnight:"EDHL",
+   legs:[{dep:"LYBE",arr:"LOWW",std:8*60+30,dur:55,  type:"charter"},
+         {dep:"LOWW",arr:"EDHL",std:12*60,  dur:120, type:"charter"}]},
+  {day:3,theme:"Rotterdam futures exchange, Paris retail buyer",overnight:"LFPB",
+   legs:[{dep:"EDHL",arr:"EHRD",std:9*60,   dur:90,  type:"charter"},
+         {dep:"EHRD",arr:"LFPB",std:14*60,  dur:75,  type:"charter"}]},
+  {day:4,theme:"Toulouse cooperative HQ, Nice evening",overnight:"LFMN",
+   legs:[{dep:"LFPB",arr:"LFBO",std:9*60,   dur:80,  type:"charter"},
+         {dep:"LFBO",arr:"LFMN",std:15*60,  dur:75,  type:"charter"}]},
+  {day:5,theme:"Zurich agri-bank debrief, home",overnight:"LFMN",
+   legs:[{dep:"LFMN",arr:"LSZH",std:9*60,   dur:60,  type:"charter"},
+         {dep:"LSZH",arr:"LFMN",std:15*60,  dur:60,  type:"charter"}]},
+ ]},
+
+// C19 – CELEBRITY PROMO TOUR (ends away)
+{id:"C19",name:"Celebrity Promo Tour",
+ desc:"Label HQ Zurich, Vienna arena, Warsaw festival, Spotify Stockholm, NRK Oslo, BBC London, Dublin brand deal, Madrid finale. Ends away.",
+ theme:"lifestyle",commute:null,returnsToBase:false,
+ days:[
+  {day:1,theme:"Label HQ Zurich, Vienna arena soundcheck",overnight:"LOWW",
+   legs:[{dep:"LFMN",arr:"LSZH",std:10*60,  dur:60,  type:"charter"},
+         {dep:"LSZH",arr:"LOWW",std:15*60,  dur:55,  type:"charter"}]},
+  {day:2,theme:"Warsaw festival keynote, Spotify Stockholm",overnight:"ESSA",
+   legs:[{dep:"LOWW",arr:"EPKK",std:10*60,  dur:60,  type:"charter"},
+         {dep:"EPKK",arr:"ESSA",std:15*60,  dur:110, type:"charter"}]},
+  {day:3,theme:"NRK Oslo press, BBC London shoot",overnight:"EGKB",
+   legs:[{dep:"ESSA",arr:"ENGM",std:9*60,   dur:55,  type:"charter"},
+         {dep:"ENGM",arr:"EGKB",std:14*60,  dur:110, type:"charter"}]},
+  {day:4,theme:"Dublin brand partnership",overnight:"EICK",
+   legs:[{dep:"EGKB",arr:"EICK",std:10*60,  dur:70,  type:"charter"}]},
+  {day:5,theme:"Madrid finale concert – ends away",overnight:"LEMD",
+   legs:[{dep:"EICK",arr:"LEMD",std:11*60,  dur:130, type:"charter"}]},
+ ]},
+
+// C20 – PE PORTFOLIO MONITORING (commute EDDF)
+{id:"C20",name:"PE Portfolio Monitoring",
+ desc:"Sylt founder retreat, Copenhagen SaaS, Vilnius fintech, Warsaw industrial, Vienna LP, Zurich co-investor, Madrid consumer, Lisbon Atlantic fintech.",
+ theme:"finance",
+ commute:{dep:"LFMN",arr:"EDDF",std:16*60,dur:100,type:"reposit"},
+ returnsToBase:true,
+ days:[
+  {day:1,theme:"Sylt founder retreat, Copenhagen SaaS portco",overnight:"EKCH",
+   legs:[{dep:"EDDF",arr:"EDXW",std:9*60,   dur:120, type:"charter"},
+         {dep:"EDXW",arr:"EKCH",std:14*60,  dur:60,  type:"charter"}]},
+  {day:2,theme:"Vilnius fintech portco, Warsaw industrial",overnight:"EPKK",
+   legs:[{dep:"EKCH",arr:"EYVI",std:8*60+30,dur:110, type:"charter"},
+         {dep:"EYVI",arr:"EPKK",std:14*60,  dur:65,  type:"charter"}]},
+  {day:3,theme:"Vienna LP meeting, Zurich co-investor",overnight:"LSZH",
+   legs:[{dep:"EPKK",arr:"LOWW",std:8*60+30,dur:60,  type:"charter"},
+         {dep:"LOWW",arr:"LSZH",std:14*60,  dur:55,  type:"charter"}]},
+  {day:4,theme:"Madrid consumer portco, Lisbon Atlantic fintech",overnight:"LPPT",
+   legs:[{dep:"LSZH",arr:"LEMD",std:8*60+30,dur:130, type:"charter"},
+         {dep:"LEMD",arr:"LPPT",std:15*60,  dur:50,  type:"charter"}]},
+  {day:5,theme:"Lisbon partner debrief, Nice home",overnight:"LFMN",
+   legs:[{dep:"LPPT",arr:"LFMN",std:12*60,  dur:175, type:"charter"}]},
+ ]},
+
+// C21 – WINE & HOSPITALITY EMPIRE
+{id:"C21",name:"Wine & Hospitality Empire",
+ desc:"Bordeaux Médoc château, Cork Irish estate, Edinburgh distillery, Copenhagen restaurant group, Vienna wine auction, Bolzano vineyard, Sion winery, Lyon gastronomy.",
+ theme:"lifestyle",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"Bordeaux Médoc château, Cork Irish estate hotel",overnight:"EICK",
+   legs:[{dep:"LFMN",arr:"LFBD",std:9*60,   dur:100, type:"charter"},
+         {dep:"LFBD",arr:"EICK",std:15*60,  dur:90,  type:"charter"}]},
+  {day:2,theme:"Edinburgh distillery, Copenhagen restaurant group",overnight:"EKCH",
+   legs:[{dep:"EICK",arr:"EGPH",std:9*60,   dur:55,  type:"charter"},
+         {dep:"EGPH",arr:"EKCH",std:14*60,  dur:110, type:"charter"}]},
+  {day:3,theme:"Vienna wine auction, Bolzano Alto Adige vineyard",overnight:"LIPB",
+   legs:[{dep:"EKCH",arr:"LOWW",std:8*60+30,dur:105, type:"charter"},
+         {dep:"LOWW",arr:"LIPB",std:14*60,  dur:50,  type:"charter"}]},
+  {day:4,theme:"Sion Valais winery, Lyon gastronomy",overnight:"LFLL",
+   legs:[{dep:"LIPB",arr:"LSGS",std:9*60,   dur:50,  type:"charter"},
+         {dep:"LSGS",arr:"LFLL",std:14*60,  dur:55,  type:"charter"}]},
+  {day:5,theme:"Lyon debrief, Nice home",overnight:"LFMN",
+   legs:[{dep:"LFLL",arr:"LFMN",std:12*60,  dur:65,  type:"charter"}]},
+ ]},
+
+// C22 – CLIMATE & ESG INVESTOR (commute ENGM)
+{id:"C22",name:"Climate & ESG Investor",
+ desc:"Green hydrogen Copenhagen, Hamburg offshore wind, battery Kiel, ESG Frankfurt, EV Stuttgart, Milan green building, Rome geothermal, Lisbon solar, Algarve offshore.",
+ theme:"industry",
+ commute:{dep:"LFMN",arr:"ENGM",std:15*60,dur:195,type:"reposit"},
+ returnsToBase:true,
+ days:[
+  {day:1,theme:"Green hydrogen Copenhagen, Hamburg offshore wind",overnight:"EDHL",
+   legs:[{dep:"ENGM",arr:"EKCH",std:9*60,   dur:60,  type:"charter"},
+         {dep:"EKCH",arr:"EDHL",std:14*60,  dur:90,  type:"charter"}]},
+  {day:2,theme:"Battery storage Kiel, ESG Frankfurt, EV Stuttgart",overnight:"EDDS",
+   legs:[{dep:"EDHL",arr:"EDHK",std:8*60+30,dur:20,  type:"charter"},
+         {dep:"EDHK",arr:"EDFE",std:11*60+30,dur:130,type:"charter"},
+         {dep:"EDFE",arr:"EDDS",std:16*60,  dur:35,  type:"charter"}]},
+  {day:3,theme:"Milan green building, Rome geothermal project",overnight:"LIRF",
+   legs:[{dep:"EDDS",arr:"LIML",std:8*60+30,dur:80,  type:"charter"},
+         {dep:"LIML",arr:"LIRF",std:14*60,  dur:65,  type:"charter"}]},
+  {day:4,theme:"Lisbon solar farm, Algarve offshore wind",overnight:"LPFR",
+   legs:[{dep:"LIRF",arr:"LPPT",std:8*60+30,dur:165, type:"charter"},
+         {dep:"LPPT",arr:"LPFR",std:15*60,  dur:45,  type:"charter"}]},
+  {day:5,theme:"Faro morning debrief, Nice home",overnight:"LFMN",
+   legs:[{dep:"LPFR",arr:"LFMN",std:12*60,  dur:185, type:"charter"}]},
+ ]},
+
+// C23 – DIPLOMATIC SHUTTLE
+{id:"C23",name:"Diplomatic Shuttle",
+ desc:"OSCE Vienna, NATO Vilnius, Warsaw foreign ministry, Stuttgart bilateral, Brussels EEAS, Paris Élysée, ICRC Geneva, Zurich humanitarian finance, Vatican Ciampino.",
+ theme:"mixed",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"OSCE Vienna, NATO eastern flank Vilnius",overnight:"EYVI",
+   legs:[{dep:"LFMN",arr:"LOWW",std:8*60,   dur:95,  type:"charter"},
+         {dep:"LOWW",arr:"EYVI",std:14*60,  dur:95,  type:"charter"}]},
+  {day:2,theme:"Warsaw foreign ministry, Stuttgart bilateral",overnight:"EDDS",
+   legs:[{dep:"EYVI",arr:"EPKK",std:8*60+30,dur:65,  type:"charter"},
+         {dep:"EPKK",arr:"EDDS",std:13*60,  dur:95,  type:"charter"}]},
+  {day:3,theme:"Brussels EU External Action, Paris Élysée",overnight:"LFPB",
+   legs:[{dep:"EDDS",arr:"EBBR",std:8*60+30,dur:80,  type:"charter"},
+         {dep:"EBBR",arr:"LFPB",std:14*60,  dur:45,  type:"charter"}]},
+  {day:4,theme:"ICRC Geneva, humanitarian finance Zurich",overnight:"LSZH",
+   legs:[{dep:"LFPB",arr:"LSGG",std:9*60,   dur:75,  type:"charter"},
+         {dep:"LSGG",arr:"LSZH",std:14*60,  dur:30,  type:"charter"}]},
+  {day:5,theme:"Vatican Rome Ciampino, Nice home",overnight:"LFMN",
+   legs:[{dep:"LSZH",arr:"LIRA",std:9*60,   dur:90,  type:"charter"},
+         {dep:"LIRA",arr:"LFMN",std:15*60,  dur:75,  type:"charter"}]},
+ ]},
+
+// C24 – LUXURY HOSPITALITY DEVELOPMENT
+{id:"C24",name:"Luxury Hospitality Development",
+ desc:"Dubrovnik opening, Tivat marina, Istanbul pitch, Athens Cyclades, Malta palazzo, Catania Sicily boutique, Sardinia resort, Cannes MIPIM, Geneva investor.",
+ theme:"lifestyle",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"Dubrovnik Adriatic opening, Tivat marina hotel",overnight:"LYTV",
+   legs:[{dep:"LFMN",arr:"LDDU",std:9*60,   dur:90,  type:"charter"},
+         {dep:"LDDU",arr:"LYTV",std:14*60+30,dur:35, type:"charter"}]},
+  {day:2,theme:"Istanbul Bosphorus pitch, Athens Cyclades review",overnight:"LGAV",
+   legs:[{dep:"LYTV",arr:"LTFM",std:9*60,   dur:80,  type:"charter"},
+         {dep:"LTFM",arr:"LGAV",std:14*60,  dur:60,  type:"charter"}]},
+  {day:3,theme:"Malta Mediterranean palazzo, Catania & Palermo Sicily boutiques",overnight:"LICJ",
+   legs:[{dep:"LGAV",arr:"LMML",std:9*60,   dur:90,  type:"charter"},
+         {dep:"LMML",arr:"LICC",std:14*60,  dur:55,  type:"charter"},
+         {dep:"LICC",arr:"LICJ",std:17*60,  dur:25,  type:"charter"}]},
+  {day:4,theme:"Sardinia Costa Smeralda resort site, Nice debrief",overnight:"LFMN",
+   legs:[{dep:"LICJ",arr:"LIEO",std:9*60,   dur:55,  type:"charter"},
+         {dep:"LIEO",arr:"LFMN",std:14*60,  dur:100, type:"charter"}]},
+  {day:5,theme:"Cannes Mandelieu MIPIM follow-up, Geneva investor close, Nice home",overnight:"LFMN",
+   legs:[{dep:"LFMN",arr:"LFMD",std:9*60,   dur:10,  type:"reposit"},
+         {dep:"LFMD",arr:"LSGG",std:12*60,  dur:30,  type:"charter"},
+         {dep:"LSGG",arr:"LFMN",std:17*60,  dur:30,  type:"charter"}]},
+ ]},
+
+// C25 – IPO INVESTOR ROADSHOW (commute EHAM)
+{id:"C25",name:"IPO Investor Roadshow",
+ desc:"Düsseldorf industrial, Frankfurt institutional, Swiss private bank, Paris sovereign, London hedge funds, Edinburgh pension, Stockholm sovereign, Norges Bank Oslo.",
+ theme:"finance",
+ commute:{dep:"LFMN",arr:"EHAM",std:15*60,dur:125,type:"reposit"},
+ returnsToBase:true,
+ days:[
+  {day:1,theme:"Düsseldorf industrial, Frankfurt institutional, Zurich private bank",overnight:"LSZH",
+   legs:[{dep:"EHAM",arr:"EDDL",std:8*60,   dur:45,  type:"charter"},
+         {dep:"EDDL",arr:"EDDF",std:11*60,  dur:40,  type:"charter"},
+         {dep:"EDDF",arr:"LSZH",std:14*60,  dur:55,  type:"charter"}]},
+  {day:2,theme:"Paris sovereign wealth, London hedge funds Farnborough",overnight:"EGLF",
+   legs:[{dep:"LSZH",arr:"LFPB",std:8*60+30,dur:90,  type:"charter"},
+         {dep:"LFPB",arr:"EGLF",std:14*60,  dur:50,  type:"charter"}]},
+  {day:3,theme:"Edinburgh pension fund, Stockholm sovereign wealth",overnight:"ESSA",
+   legs:[{dep:"EGLF",arr:"EGPH",std:8*60+30,dur:90,  type:"charter"},
+         {dep:"EGPH",arr:"ESSA",std:14*60,  dur:110, type:"charter"}]},
+  {day:4,theme:"Copenhagen pension, Norges Bank Oslo",overnight:"ENGM",
+   legs:[{dep:"ESSA",arr:"EKCH",std:8*60+30,dur:55,  type:"charter"},
+         {dep:"EKCH",arr:"ENGM",std:13*60,  dur:60,  type:"charter"}]},
+  {day:5,theme:"Oslo book close, Nice celebration",overnight:"LFMN",
+   legs:[{dep:"ENGM",arr:"LFMN",std:12*60,  dur:195, type:"charter"}]},
+ ]},
+
+// C26 – TECH FOUNDER PIVOT WEEK
+{id:"C26",name:"Tech Founder Pivot Week",
+ desc:"VC Zurich, acquirer Munich, Warsaw talent, Vilnius Baltic startup, US VC London, Dublin tax, Lisbon Web3, Telefónica Madrid, Barcelona team HQ.",
+ theme:"industry",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"VC convertible Zurich, strategic acquirer Munich",overnight:"EDDM",
+   legs:[{dep:"LFMN",arr:"LSZH",std:9*60,   dur:60,  type:"charter"},
+         {dep:"LSZH",arr:"EDDM",std:14*60,  dur:55,  type:"charter"}]},
+  {day:2,theme:"Warsaw talent hub, Vilnius Baltic startup scene",overnight:"EYVI",
+   legs:[{dep:"EDDM",arr:"EPKK",std:8*60+30,dur:90,  type:"charter"},
+         {dep:"EPKK",arr:"EYVI",std:14*60,  dur:65,  type:"charter"}]},
+  {day:3,theme:"US VC London, Dublin tax structure",overnight:"EICK",
+   legs:[{dep:"EYVI",arr:"EGKB",std:8*60+30,dur:145, type:"charter"},
+         {dep:"EGKB",arr:"EICK",std:15*60,  dur:70,  type:"charter"}]},
+  {day:4,theme:"Lisbon Web3 ecosystem, Telefónica Madrid",overnight:"LEMD",
+   legs:[{dep:"EICK",arr:"LPPT",std:9*60,   dur:130, type:"charter"},
+         {dep:"LPPT",arr:"LEMD",std:15*60,  dur:50,  type:"charter"}]},
+  {day:5,theme:"Barcelona team HQ, Nice home",overnight:"LFMN",
+   legs:[{dep:"LEMD",arr:"LEBL",std:9*60,   dur:65,  type:"charter"},
+         {dep:"LEBL",arr:"LFMN",std:14*60,  dur:95,  type:"charter"}]},
+ ]},
+
+// C27 – UHNW PERSONAL AFFAIRS
+{id:"C27",name:"Personal Affairs Week",
+ desc:"Samedan ski house, Zurich bank, Vienna notary, Kraków estate, Copenhagen school, London Biggin Hill, Oxford alumni, Cardiff Welsh estate, Liverpool to Nice.",
+ theme:"lifestyle",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"Samedan ski house handover, Altenrhein Bodensee stop, Zurich bank",overnight:"LSZH",
+   legs:[{dep:"LFMN",arr:"LSZS",std:9*60,   dur:45,  type:"charter"},
+         {dep:"LSZS",arr:"LSZR",std:12*60,  dur:30,  type:"charter"},
+         {dep:"LSZR",arr:"LSZH",std:15*60,  dur:30,  type:"charter"}]},
+  {day:2,theme:"Vienna notary property transfer, Kraków estate manager",overnight:"EPKK",
+   legs:[{dep:"LSZH",arr:"LOWW",std:9*60,   dur:55,  type:"charter"},
+         {dep:"LOWW",arr:"EPKK",std:14*60,  dur:60,  type:"charter"}]},
+  {day:3,theme:"Copenhagen school meeting, London Biggin Hill",overnight:"EGKB",
+   legs:[{dep:"EPKK",arr:"EKCH",std:8*60+30,dur:115, type:"charter"},
+         {dep:"EKCH",arr:"EGKB",std:14*60,  dur:100, type:"charter"}]},
+  {day:4,theme:"Oxford alumni, Cardiff Welsh estate, Liverpool",overnight:"EGGP",
+   legs:[{dep:"EGKB",arr:"EGTK",std:10*60,  dur:25,  type:"charter"},
+         {dep:"EGTK",arr:"EGFF",std:14*60,  dur:30,  type:"charter"},
+         {dep:"EGFF",arr:"EGGP",std:17*60,  dur:35,  type:"charter"}]},
+  {day:5,theme:"Liverpool to Nice, Monaco weekend",overnight:"LFMN",
+   legs:[{dep:"EGGP",arr:"LFMN",std:12*60,  dur:125, type:"charter"}]},
+ ]},
+
+// C28 – MINING & RESOURCES TOUR (commute ESSA)
+{id:"C28",name:"Mining & Resources Tour",
+ desc:"Norsk Hydro Oslo, rare earths Helsinki, Polish copper, Bulgarian mining, Vienna LME bank, Glencore Zurich, Rotterdam metals, London exchange floor.",
+ theme:"industry",
+ commute:{dep:"LFMN",arr:"ESSA",std:15*60,dur:185,type:"reposit"},
+ returnsToBase:true,
+ days:[
+  {day:1,theme:"Norsk Hydro Oslo, rare earths Helsinki",overnight:"EFHK",
+   legs:[{dep:"ESSA",arr:"ENGM",std:9*60,   dur:55,  type:"charter"},
+         {dep:"ENGM",arr:"EFHK",std:14*60,  dur:60,  type:"charter"}]},
+  {day:2,theme:"Polish copper Kraków, Bulgarian mining Sofia",overnight:"LBSF",
+   legs:[{dep:"EFHK",arr:"EPKK",std:8*60+30,dur:110, type:"charter"},
+         {dep:"EPKK",arr:"LBSF",std:14*60,  dur:130, type:"charter"}]},
+  {day:3,theme:"Vienna LME member bank, Glencore Zurich",overnight:"LSZH",
+   legs:[{dep:"LBSF",arr:"LOWW",std:8*60+30,dur:75,  type:"charter"},
+         {dep:"LOWW",arr:"LSZH",std:14*60,  dur:55,  type:"charter"}]},
+  {day:4,theme:"Rotterdam metals port storage, London exchange floor",overnight:"EGSS",
+   legs:[{dep:"LSZH",arr:"EHRD",std:8*60+30,dur:125, type:"charter"},
+         {dep:"EHRD",arr:"EGSS",std:15*60,  dur:60,  type:"charter"}]},
+  {day:5,theme:"London debrief, Nice home",overnight:"LFMN",
+   legs:[{dep:"EGSS",arr:"LFMN",std:12*60,  dur:110, type:"charter"}]},
+ ]},
+
+// C29 – THE ACADEMIC CIRCUIT
+// Covers remaining Austrian domestic airports + Adriatic + Southern Italy
+{id:"C29",name:"The Academic Circuit",
+ desc:"Graz economics, Klagenfurt law, Linz engineering, Wiener Neustadt research, Maribor conference, Rijeka maritime, Rome La Sapienza, Naples, Amalfi coast retreat, Elba.",
+ theme:"mixed",commute:null,returnsToBase:true,
+ days:[
+  {day:1,theme:"Graz economics lecture, Klagenfurt law faculty, Linz engineering",overnight:"LOWL",
+   legs:[{dep:"LFMN",arr:"LOWG",std:8*60,   dur:80,  type:"charter"},
+         {dep:"LOWG",arr:"LOWK",std:11*60,  dur:30,  type:"charter"},
+         {dep:"LOWK",arr:"LOWL",std:14*60,  dur:35,  type:"charter"}]},
+  {day:2,theme:"Wiener Neustadt research institute, Maribor economics conference",overnight:"LJMB",
+   legs:[{dep:"LOWL",arr:"LOAN",std:9*60,   dur:35,  type:"charter"},
+         {dep:"LOAN",arr:"LJMB",std:13*60,  dur:55,  type:"charter"}]},
+  {day:3,theme:"Rijeka maritime faculty, Rome La Sapienza",overnight:"LIRF",
+   legs:[{dep:"LJMB",arr:"LDRI",std:9*60,   dur:35,  type:"charter"},
+         {dep:"LDRI",arr:"LIRF",std:13*60,  dur:95,  type:"charter"}]},
+  {day:4,theme:"Naples Parthenope university, Amalfi retreat",overnight:"LIRI",
+   legs:[{dep:"LIRF",arr:"LIRN",std:9*60,   dur:45,  type:"charter"},
+         {dep:"LIRN",arr:"LIRI",std:14*60,  dur:20,  type:"charter"}]},
+  {day:5,theme:"Elba island marine biology stop, Nice home",overnight:"LFMN",
+   legs:[{dep:"LIRI",arr:"LIRJ",std:9*60,   dur:75,  type:"charter"},
+         {dep:"LIRJ",arr:"LFMN",std:13*60,  dur:55,  type:"charter"}]},
+ ]},
+
+// C30 – THE MARATHON WEEK (ends away)
+// Uses: EDXW EKRN EKCH EYVI LBSF LTFM LTAI LGRP LGKO LGIR + LZTT
+{id:"C30",name:"The Marathon Week",
+ desc:"Sylt island, Bornholm Nordic, Vilnius art, Sofia birthday, Istanbul business, Antalya yacht join, Rhodes crew change, Kos, Heraklion finale. Ends away. Also: Tatry ski via LZTT.",
+ theme:"lifestyle",commute:null,returnsToBase:false,
+ days:[
+  {day:1,theme:"Sylt island house, Bornholm Nordic stopover",overnight:"EKRN",
+   legs:[{dep:"LFMN",arr:"EDXW",std:9*60,   dur:155, type:"charter"},
+         {dep:"EDXW",arr:"EKRN",std:14*60,  dur:55,  type:"charter"}]},
+  {day:2,theme:"Copenhagen design fair, Poprad-Tatry ski detour, Vilnius art",overnight:"EYVI",
+   legs:[{dep:"EKRN",arr:"EKCH",std:9*60,   dur:35,  type:"charter"},
+         {dep:"EKCH",arr:"LZTT",std:12*60,  dur:115, type:"charter"},
+         {dep:"LZTT",arr:"EYVI",std:17*60,  dur:80,  type:"charter"}]},
+  {day:3,theme:"Sofia birthday dinner, Istanbul business",overnight:"LTFM",
+   legs:[{dep:"EYVI",arr:"LBSF",std:9*60,   dur:120, type:"charter"},
+         {dep:"LBSF",arr:"LTFM",std:15*60,  dur:80,  type:"charter"}]},
+  {day:4,theme:"Antalya yacht join, Rhodes crew change",overnight:"LGRP",
+   legs:[{dep:"LTFM",arr:"LTAI",std:9*60,   dur:60,  type:"charter"},
+         {dep:"LTAI",arr:"LGRP",std:14*60,  dur:75,  type:"charter"}]},
+  {day:5,theme:"Kos stop, Heraklion finale – ends away",overnight:"LGIR",
+   legs:[{dep:"LGRP",arr:"LGKO",std:9*60,   dur:25,  type:"charter"},
+         {dep:"LGKO",arr:"LGIR",std:13*60,  dur:40,  type:"charter"}]},
+ ]},
 
 ];
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  HELPERS
-// ═══════════════════════════════════════════════════
-const BASE = 'LFMN';
-const SB_AC = 'E55P', NJ_AIRLINE = 'NJE', NJ_REG = 'N87CG';
-
-function minToHHMM(m){return`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;}
-function durStr(m){if(!m||m<=0)return'—';return m<60?`${m}m`:`${Math.floor(m/60)}h${String(m%60).padStart(2,'0')}m`;}
-
-function simbriefURL(dep,arr,dur,pid){
+// ═══════════════════════════════════════════════════════════
+const BASE='LFMN', NJ_AL='NJE', NJ_AC='E55P', NJ_REG='N87CG';
+function mmhh(m){return`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;}
+function ds(m){if(!m||m<=0)return'—';return m<60?`${m}m`:`${Math.floor(m/60)}h${String(m%60).padStart(2,'0')}m`;}
+function sbURL(dep,arr,dur,pid){
   const flt=Math.floor(100+Math.random()*900);
-  let u=`https://dispatch.simbrief.com/options/custom?airline=${NJ_AIRLINE}&fltnum=${flt}&type=${SB_AC}&orig=${dep}&dest=${arr}&steh=${Math.floor(dur/60)}&stem=${dur%60}&reg=${NJ_REG}&planformat=LIDO&navlog=1&find_sidstar=1&units=KGS`;
+  let u=`https://dispatch.simbrief.com/options/custom?airline=${NJ_AL}&fltnum=${flt}&type=${NJ_AC}&orig=${dep}&dest=${arr}&steh=${Math.floor(dur/60)}&stem=${dur%60}&reg=${NJ_REG}&planformat=LIDO&navlog=1&find_sidstar=1&units=KGS`;
   if(pid)u+=`&pid=${encodeURIComponent(pid)}`;
   return u;
 }
-
-function pairingStats(p){
+function dailyStats(p){
   const rl=p.legs.filter(l=>l.dur>0);
-  if(!rl.length)return{firstDep:0,lastArr:0,fdp:0,block:0,endAp:p.legs[p.legs.length-1].arr};
+  if(!rl.length)return{fd:0,la:0,fdp:0,block:0,end:p.legs[p.legs.length-1].arr};
   const fd=rl[0].std,last=rl[rl.length-1];
-  return{firstDep:fd,lastArr:last.std+last.dur,fdp:(last.std+last.dur)-fd,
-    block:rl.reduce((s,l)=>s+l.dur,0),endAp:last.arr};
+  return{fd,la:last.std+last.dur,fdp:(last.std+last.dur)-fd,block:rl.reduce((s,l)=>s+l.dur,0),end:last.arr};
 }
+function chainTotalLegs(c){return c.days.reduce((s,d)=>s+d.legs.filter(l=>l.dur>0).length,0)+(c.commute?1:0);}
+function chainTotalBlock(c){
+  let b=c.days.reduce((s,d)=>s+d.legs.filter(l=>l.dur>0).reduce((a,l)=>a+l.dur,0),0);
+  if(c.commute&&c.commute.dur)b+=c.commute.dur;
+  return b;
+}
+function chainEnd(c){const d5=c.days[c.days.length-1];const rl=d5.legs.filter(l=>l.dur>0);return rl.length?rl[rl.length-1].arr:d5.overnight;}
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  STATE
-// ═══════════════════════════════════════════════════
-let schedType='weekday', filterLegs='all', filterRegion='all', filterEnd='all';
-let selectedIdx=null, selectedData=null;
+// ═══════════════════════════════════════════════════════════
+let filterCEnd='all', filterCommute='all', filterTheme='all';
+let selIdx=null, selData=null;
 let pilotId=localStorage.getItem('sb_pid_lfmn')||'';
 
-// ═══════════════════════════════════════════════════
-//  RENDER
-// ═══════════════════════════════════════════════════
-function filterPairings(){
-  const isWeekend=schedType==='weekend';
-  return PAIRINGS.filter(p=>{
-    if(isWeekend&&!p.weekend) return false;
-    if(!isWeekend&&!p.weekday) return false;
-    const rl=p.legs.filter(l=>l.dur>0);
-    if(filterLegs!=='all'&&rl.length!==parseInt(filterLegs)) return false;
-    const stats=pairingStats(p);
-    if(filterEnd==='base'&&stats.endAp!==BASE) return false;
-    if(filterEnd==='away'&&stats.endAp===BASE) return false;
-    if(filterRegion!=='all'){
-      const hit=p.legs.some(l=>{
-        const d=AP[l.dep],a=AP[l.arr];
-        return(d&&d.region===filterRegion)||(a&&a.region===filterRegion);
-      });
-      if(!hit) return false;
+// ═══════════════════════════════════════════════════════════
+//  LEG HTML BUILDER (shared)
+// ═══════════════════════════════════════════════════════════
+function legHTML(legs, showNight=false, nightAp=null){
+  let h='';
+  legs.forEach((l,li)=>{
+    const dAP=AP[l.dep]||{name:l.dep,city:'',country:''};
+    const aAP=AP[l.arr]||{name:l.arr,city:'',country:''};
+    const isBaseD=l.dep===BASE,isBaseA=l.arr===BASE;
+    if(li>0&&l.dur>0){
+      const prev=legs.slice(0,li).filter(x=>x.dur>0).pop();
+      if(prev){const gnd=l.std-(prev.std+prev.dur);if(gnd>0)h+=`<div class="gnd-row"><span>GND ${ds(gnd)} · ${l.dep}</span><div class="gnd-bar"></div></div>`;}
     }
-    return true;
+    if(l.dur===0)return;
+    const depClass=isBaseD?'base dep':'dep';
+    const arrClass=(showNight&&l.arr===nightAp)?'away-night arr':(isBaseA?'base arr':'arr');
+    const sbU=sbURL(l.dep,l.arr,l.dur,pilotId);
+    h+=`<div class="leg-row">
+      <div class="leg-connector">
+        <div class="leg-dot ${depClass}"></div>
+        <div class="leg-line"></div>
+        <div class="leg-dot ${arrClass}"></div>
+      </div>
+      <div class="leg-info">
+        <div class="leg-rt">
+          <div><span class="leg-ap">${l.dep}</span><span class="leg-city"> ${dAP.country} ${dAP.name}</span></div>
+        </div>
+        <div class="leg-times">${mmhh(l.std)} → ${mmhh(l.std+l.dur)} · ${ds(l.dur)}</div>
+        <div class="leg-rb">
+          <div><span class="leg-ap">${l.arr}</span><span class="leg-city"> ${aAP.country} ${aAP.name}</span></div>
+          <div class="leg-tags">
+            <span class="tt ${l.type}">${l.type}</span>
+            <a class="sb-link" href="${sbU}" target="_blank" onclick="event.stopPropagation()">✈ SB</a>
+          </div>
+        </div>
+      </div>
+    </div>`;
   });
+  return h;
 }
 
-function renderAll(){
-  const pairings=filterPairings();
-  document.getElementById('m-sub').textContent=`LFMN · Phenom 300E · N87CG · ${pairings.length} pairing${pairings.length!==1?'s':''} available`;
+// ═══════════════════════════════════════════════════════════
+//  RENDER DAILY PAIRINGS
+// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+//  RENDER CHAINS
+// ═══════════════════════════════════════════════════════════
+function renderChains(){
+  let list=CHAINS.filter(c=>{
+    if(filterCEnd==='base'&&!c.returnsToBase)return false;
+    if(filterCEnd==='away'&&c.returnsToBase)return false;
+    if(filterCommute==='yes'&&!c.commute)return false;
+    if(filterCommute==='no'&&c.commute)return false;
+    if(filterTheme!=='all'&&c.theme!==filterTheme)return false;
+    return true;
+  });
 
-  if(pairings.length){
-    const rc=pairings.map(p=>p.legs.filter(l=>l.dur>0).length);
-    document.getElementById('st-pairings').textContent=pairings.length;
-    document.getElementById('st-legs').textContent=(rc.reduce((a,b)=>a+b,0)/rc.length).toFixed(1);
-    const bl=pairings.map(p=>pairingStats(p).block).filter(b=>b>0);
-    const fd=pairings.map(p=>pairingStats(p).fdp).filter(f=>f>0);
-    document.getElementById('st-flt').textContent=bl.length?durStr(Math.min(...bl)):'—';
-    document.getElementById('st-fdp').textContent=fd.length?durStr(Math.max(...fd)):'—';
-    const ds=new Set(pairings.flatMap(p=>p.legs.filter(l=>l.dur>0).map(l=>l.arr)));
-    document.getElementById('st-dest').textContent=ds.size;
-  } else {
-    ['st-pairings','st-legs','st-flt','st-fdp','st-dest'].forEach(id=>document.getElementById(id).textContent='—');
-  }
+  document.getElementById('st-count').textContent=list.length;
+  document.getElementById('st-count-lbl').textContent='Chains';
+  if(list.length){
+    const tl=list.map(chainTotalLegs);
+    const tb=list.map(chainTotalBlock);
+    document.getElementById('st-b').textContent=ds(Math.min(...tb));
+    document.getElementById('st-fdp').textContent='5 days';
+    document.getElementById('st-dest').textContent=new Set(list.flatMap(c=>c.days.flatMap(d=>d.legs.map(l=>l.arr)))).size;
+    document.getElementById('st-legs').textContent=(tl.reduce((a,b)=>a+b,0)/tl.length).toFixed(1);
+  } else ['st-b','st-fdp','st-dest','st-legs'].forEach(id=>document.getElementById(id).textContent='—');
 
-  const grid=document.getElementById('pairingsGrid');
+  const grid=document.getElementById('content-grid');
+  grid.className='chains-grid';
   grid.innerHTML='';
-  if(!pairings.length){
-    grid.innerHTML='<div class="empty-msg">No pairings match the selected filters.</div>';return;
-  }
+  if(!list.length){grid.innerHTML='<div class="empty-msg">No chains match the selected filters.</div>';return;}
 
-  pairings.forEach((p,idx)=>{
-    const stats=pairingStats(p);
-    const rl=p.legs.filter(l=>l.dur>0);
-    const isSel=selectedIdx===idx;
-    const endsAtBase=stats.endAp===BASE;
+  const THEME_ICON={finance:'💼',lifestyle:'🏖',industry:'🏭',mixed:'✈'};
+
+  list.forEach((c,idx)=>{
+    const isSel=selIdx===idx;
+    const end=chainEnd(c);
+    const returns=c.returnsToBase;
+    const totalLegs=chainTotalLegs(c);
+    const totalBlock=chainTotalBlock(c);
+
     const card=document.createElement('div');
-    card.className='p-card'+(isSel?' selected':'');
-    card.style.animationDelay=`${Math.min(idx,25)*0.022}s`;
+    card.className='chain-card'+(isSel?' selected':'');
+    card.style.animationDelay=`${Math.min(idx,12)*0.03}s`;
 
-    let legsHTML='';
-    rl.forEach((l,li)=>{
-      const dAP=AP[l.dep]||{name:l.dep,city:'',country:''};
-      const aAP=AP[l.arr]||{name:l.arr,city:'',country:''};
-      const isBaseD=l.dep===BASE,isBaseA=l.arr===BASE;
-      if(li>0){
-        const prev=rl[li-1];const gnd=l.std-(prev.std+prev.dur);
-        if(gnd>0)legsHTML+=`<div class="gnd-row"><span>GND ${durStr(gnd)} at ${l.dep}</span><div class="gnd-bar"></div></div>`;
-      }
-      const sbURL=simbriefURL(l.dep,l.arr,l.dur,pilotId);
-      legsHTML+=`
-        <div class="leg-row">
-          <div class="leg-connector">
-            <div class="leg-dot dep${isBaseD?' base':''}"></div>
-            <div class="leg-line"></div>
-            <div class="leg-dot arr${isBaseA?' base':''}"></div>
-          </div>
-          <div class="leg-info">
-            <div class="leg-row-top">
-              <div><span class="leg-ap">${l.dep}</span><span class="leg-city"> ${dAP.country} ${dAP.name}</span></div>
-            </div>
-            <div class="leg-times">${minToHHMM(l.std)} → ${minToHHMM(l.std+l.dur)} · ${durStr(l.dur)}</div>
-            <div class="leg-row-bot">
-              <div><span class="leg-ap">${l.arr}</span><span class="leg-city"> ${aAP.country} ${aAP.name}</span></div>
-              <div class="leg-tags">
-                <span class="leg-type-tag ${l.type}">${l.type}</span>
-                <a class="sb-leg-link" href="${sbURL}" target="_blank" onclick="event.stopPropagation()">✈ SimBrief</a>
-              </div>
-            </div>
-          </div>
-        </div>`;
+    let commuteBanner='';
+    if(c.commute){
+      const dAP=AP[c.commute.dep]||{name:c.commute.dep,country:''};
+      const aAP=AP[c.commute.arr]||{name:c.commute.arr,country:''};
+      commuteBanner=`<div class="commute-banner">
+        <span class="cb-icon">🎒</span>
+        Pilot commute · ${c.commute.dep} ${dAP.country} → ${c.commute.arr} ${aAP.country} · ${ds(c.commute.dur)} · ${c.commute.type}
+      </div>`;
+    }
+
+    let daysHTML='';
+    c.days.forEach((d,di)=>{
+      const rl=d.legs.filter(l=>l.dur>0);
+      const dayBlock=rl.reduce((s,l)=>s+l.dur,0);
+      const nightAp=d.overnight;
+      const isLastDay=di===c.days.length-1;
+      const nightAP=AP[nightAp]||{country:'',name:nightAp};
+
+      daysHTML+=`<div class="day-block">
+        <div class="day-header">
+          <span class="day-num">DAY ${d.day}</span>
+          <span class="day-theme">${d.theme}</span>
+          <span class="day-night">🌙 ${nightAp} · ${ds(dayBlock)}</span>
+        </div>
+        <div class="day-legs">
+          ${legHTML(rl,true,nightAp)}
+          ${!isLastDay?`<div class="night-marker">🌙 Overnight ${nightAp} · ${nightAP.country} ${nightAP.name}<div class="night-bar"></div></div>`:''}
+        </div>
+      </div>`;
     });
 
     card.innerHTML=`
-      <div class="p-check">✓</div>
-      <div class="p-card-head">
-        <div class="p-head-left">
-          <div class="p-name">${p.name}</div>
-          <div class="p-desc">${p.desc}</div>
+      <div class="chain-check">✓</div>
+      <div class="chain-head">
+        <div>
+          <div class="chain-name">${THEME_ICON[c.theme]||'✈'} ${c.name}</div>
+          <div class="chain-desc">${c.desc}</div>
         </div>
-        <div class="p-meta">
-          <span class="p-legs-badge">${rl.length} LEG${rl.length!==1?'S':''}</span>
-          <span class="p-end-badge${endsAtBase?'':' away'}">${endsAtBase?'Returns LFMN':'Ends '+stats.endAp}</span>
-          <span class="p-dur">${durStr(stats.block)}</span>
+        <div class="chain-meta">
+          <span class="chain-days-badge">5 DAYS · ${totalLegs} LEGS</span>
+          <span class="chain-legs-total">${ds(totalBlock)} total</span>
+          <span class="chain-end ${returns?'returns':'away'}">${returns?'Returns LFMN':'Ends '+end}</span>
         </div>
       </div>
-      <div class="p-timeline">${legsHTML}</div>
-      <div class="p-card-foot">
-        <div class="p-fdp">
-          ${stats.block>0?minToHHMM(stats.firstDep)+'–'+minToHHMM(stats.lastArr):'Overnight away'}
-          ${stats.block>0?`&nbsp;·&nbsp; Block <span>${durStr(stats.block)}</span>`:''}
-          ${stats.fdp>0?`&nbsp;·&nbsp; FDP <span>${durStr(stats.fdp)}</span>`:''}
+      ${commuteBanner}
+      <div class="chain-days">${daysHTML}</div>
+      <div class="chain-foot">
+        <div class="chain-summary">
+          ${c.commute?'<span style="color:var(--violet)">Commute + </span>':''}
+          <span>5 operating days</span> · Total block <span>${ds(totalBlock)}</span> · ${totalLegs} legs
         </div>
-        <button class="p-select-btn">${isSel?'✓ Selected':'Select'}</button>
+        <button class="chain-select-btn">${isSel?'✓ Selected':'Select'}</button>
       </div>`;
 
     card.addEventListener('click',()=>{
-      selectedIdx=selectedIdx===idx?null:idx;
-      selectedData=selectedIdx!==null?p:null;
-      updateSelSummary(selectedData);renderAll();
+      selIdx=selIdx===idx?null:idx;
+      selData=selIdx!==null?c:null;
+      updateSelSummary();renderChains();
     });
     grid.appendChild(card);
   });
 }
 
-function updateSelSummary(p){
+// ═══════════════════════════════════════════════════════════
+//  SELECTION SUMMARY
+// ═══════════════════════════════════════════════════════════
+function updateSelSummary(){
   const el=document.getElementById('sel-summary');
   const btn=document.getElementById('sb-all-btn');
-  if(!p){el.innerHTML='<span class="sel-none">No pairing selected</span>';btn.classList.add('hidden');return;}
-  const stats=pairingStats(p);
-  const rl=p.legs.filter(l=>l.dur>0);
-  let html=`<div style="color:var(--gold);margin-bottom:6px;font-size:11px">${p.name}</div>`;
-  rl.forEach(l=>{
-    const d=AP[l.dep]||{name:l.dep,country:''},a=AP[l.arr]||{name:l.arr,country:''};
-    html+=`<div style="color:var(--text)">${l.dep}→${l.arr} <span style="color:var(--muted)">${durStr(l.dur)}</span></div>`;
-    html+=`<div style="color:var(--muted);font-size:8px;padding-left:6px;margin-bottom:3px">${d.country}${d.name} → ${a.country}${a.name}</div>`;
+  if(!selData){el.innerHTML='<span class="sel-none">Nothing selected</span>';btn.classList.add('hidden');return;}
+  const c=selData;
+  let h=`<div style="color:var(--gold);margin-bottom:5px;font-size:10px">${c.name}</div>`;
+  if(c.commute)h+=`<div style="color:var(--violet);margin-bottom:4px;font-size:9px">🎒 ${c.commute.dep}→${c.commute.arr} ${ds(c.commute.dur)}</div>`;
+  c.days.forEach(d=>{
+    const rl=d.legs.filter(l=>l.dur>0);
+    const db=rl.reduce((s,l)=>s+l.dur,0);
+    h+=`<div style="color:var(--sky);margin-top:3px;font-size:9px">D${d.day} · 🌙${d.overnight} · ${ds(db)}</div>`;
+    rl.forEach(l=>h+=`<div style="color:var(--muted);padding-left:8px;font-size:8px">${l.dep}→${l.arr} ${ds(l.dur)}</div>`);
   });
-  if(stats.block>0)html+=`<div style="color:var(--gold);margin-top:5px;border-top:1px solid var(--line);padding-top:5px">Block ${durStr(stats.block)} · FDP ${durStr(stats.fdp)}</div>`;
-  el.innerHTML=html;
-  btn.href=simbriefURL(rl[0].dep,rl[0].arr,rl[0].dur,pilotId);
+  h+=`<div style="color:var(--gold);margin-top:5px;border-top:1px solid var(--line);padding-top:4px;font-size:9px">${chainTotalLegs(c)} legs · ${ds(chainTotalBlock(c))}</div>`;
+  el.innerHTML=h;
+  const firstLegs=c.commute?[c.commute]:c.days[0].legs.filter(l=>l.dur>0);
+  const fl=firstLegs[0];
+  btn.href=sbURL(fl.dep,fl.arr,fl.dur||60,pilotId);
   btn.classList.remove('hidden');
 }
 
-function clearSelection(){selectedIdx=null;selectedData=null;updateSelSummary(null);renderAll();}
+function clearSelection(){selIdx=null;selData=null;updateSelSummary();renderChains();}
+
 function savePid(){
   pilotId=document.getElementById('pid-input').value.trim();
   localStorage.setItem('sb_pid_lfmn',pilotId);
-  const b=document.querySelector('.pid-save');b.textContent='✓';setTimeout(()=>b.textContent='Save',1500);
+  const b=document.querySelector('.pid-save');
+  b.textContent='✓';setTimeout(()=>b.textContent='Save',1400);
 }
 
-// ── BINDINGS ──
-document.querySelectorAll('.sched-btn').forEach(btn=>btn.addEventListener('click',()=>{
-  document.querySelectorAll('.sched-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');schedType=btn.dataset.sched;
-  selectedIdx=null;selectedData=null;updateSelSummary(null);renderAll();
+// ═══════════════════════════════════════════════════════════
+//  EVENT BINDINGS
+// ═══════════════════════════════════════════════════════════
+document.querySelectorAll('.sf-btn[data-cend]').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.sf-btn[data-cend]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');filterCEnd=btn.dataset.cend;
+  selIdx=null;selData=null;updateSelSummary();renderChains();
 }));
-document.querySelectorAll('.leg-btn').forEach(btn=>btn.addEventListener('click',()=>{
-  document.querySelectorAll('.leg-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');filterLegs=btn.dataset.legs;
-  selectedIdx=null;selectedData=null;updateSelSummary(null);renderAll();
+document.querySelectorAll('.sf-btn[data-commute]').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.sf-btn[data-commute]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');filterCommute=btn.dataset.commute;
+  selIdx=null;selData=null;updateSelSummary();renderChains();
 }));
-document.querySelectorAll('.sf-btn[data-region]').forEach(btn=>btn.addEventListener('click',()=>{
-  document.querySelectorAll('.sf-btn[data-region]').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');filterRegion=btn.dataset.region;
-  selectedIdx=null;selectedData=null;updateSelSummary(null);renderAll();
-}));
-document.querySelectorAll('.sf-btn[data-end]').forEach(btn=>btn.addEventListener('click',()=>{
-  document.querySelectorAll('.sf-btn[data-end]').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');filterEnd=btn.dataset.end;
-  selectedIdx=null;selectedData=null;updateSelSummary(null);renderAll();
+document.querySelectorAll('.sf-btn[data-theme]').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.sf-btn[data-theme]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');filterTheme=btn.dataset.theme;
+  selIdx=null;selData=null;updateSelSummary();renderChains();
 }));
 
 window.addEventListener('DOMContentLoaded',()=>{
   const saved=localStorage.getItem('sb_pid_lfmn');
   if(saved){pilotId=saved;document.getElementById('pid-input').value=saved;}
-  renderAll();
+  document.getElementById('m-sub').textContent=`LFMN · Phenom 300E · N87CG · ${CHAINS.length} chains`;
+  renderChains();
 });
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('sw_nj_lfmn.js').catch(()=>{}));
-}
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw_nj_lfmn.js').catch(()=>{}));
 </script>
 </body>
 </html>
