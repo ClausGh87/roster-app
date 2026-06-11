@@ -1,148 +1,104 @@
-LOAN  Wiener Neustadt East
-LOAV
-LOWG  Graz
-LOWK  Klagenfurt
-LOWL  Linz / Hörsching
-LOWS  Salzburg
-LOWI
-LOWW  Vienna International
-
-EBBR  Brussels
-Antwerp
-Ostend
-
-LBSF  Sofia
-
-LDRI  Rijeka
-LDSU Split
-LDDU
-LDSB
-LDLO
-
-
-EKCH  Copenhagen Kastrup
-EKRN  Bornholm (Rønne)
-EKAH
-EKBI
-
-EFHK  Helsinki
-
-LFMD  Cannes Mandelieu
-LFMN
-LFPB  Paris Le Bourget
-LFRN
-LFRB
-LFKC
-LFKB
-LFKJ
-
-EDDK  Cologne / Bonn
-EDDS  Stuttgart
-EDDF  Frankfurt
-EDFE  Frankfurt Egelsbach
-EDHL  Lübeck Blankensee
-EDJA  Memmingen / Allgäu
-EDDL  Düsseldorf
-EDDM  Munich
-EDMA  Augsburg
-EDNY  Friedrichshafen
-EDXW  Sylt / Westerland
-EDHK  Kiel
-EDMO
-EDSB
-
-
-LGAV  Athens
-LGIR  Heraklion (Crete)
-LGKO  Kos
-LGKR  Corfu
-LGRP  Rhodes
-LGSM  Samos
-
-EICK  Cork
-EIDW
-
-LIEO  Olbia (Sardinia)
-LIML  Milan Linate
-LICC  Catania (Sicily)
-LICJ  Palermo (Sicily)
-LILO  Sondrio
-LIPB  Bolzano
-LIRF  Rome Fiumicino
-LIRI  Salerno / Amalfi
-LIRJ  Marina di Campo (Elba)
-LIRN  Naples
-
-LMML
-
-EYVI  Vilnius
-
-EHRD  Rotterdam The Hague
-
-ENGM  Oslo Gardermoen
-
-
-EPKK  Kraków
-Warsaw
-
-
-LPFR  Faro (Algarve)
-LPPT  Lisbon
-LPMA
-
-
-LYBE  Belgrade
-
-SLOVAKIA
---------
-LZTT  Poprad-Tatry
-
-SLOVENIA
---------
-LJMB  Maribor
-LJPZ  Portorož
-LJLJ
-
-SPAIN
------
-LECO  A Coruña
-LEIB  Ibiza
-LEMD  Madrid Barajas
-LEPA  Palma de Mallorca
-LESU  La Seu d'Urgell (Andorra)
-Bilbao
-Malaga
-Valencia
-LEBL
-
-
-SWEDEN
-------
-ESSA  Stockholm Arlanda
-ESGG
-ESMS
-ESSB
-
-SWITZERLAND
------------
-LSGG  Geneva
-LSZH  Zurich
-LSZR  St Gallen – Altenrhein
-LSZS  Samedan / St Moritz
-LSZA
-
-TURKEY
-------
-LTAI  Antalya
-LTFM  Istanbul
-
-UNITED KINGDOM
---------------
-EGFF  Cardiff
-EGGP  Liverpool John Lennon
-EGKB  London Biggin Hill
-EGSS  London Stansted
-EGTK  Oxford (Kidlington)
-EGLF  Farnborough
-EGJB
-EGJJ
+LOAN OK
+LOAV OK
+LOWG OK
+LOWK OK
+LOWL OK 
+LOWS OK
+LOWI OK
+LOWW OK 
+EBBR NOK
+EBAW NOK
+EBOS NOK
+LBSF OK
+LDRI NOK
+LDSU NOK
+LDDU NOK
+LDSB NOK
+LDLO NOK
+EKCH OK
+EKRN NOK
+EKAH NOK
+EKBI NOK
+EFHK OK
+LFMD OK
+LFMN OK
+LFPB OK 
+LFRN NOK
+LFRB NOK
+LFKC NOK
+LFKB NOK
+LFKJ NOK
+EDDK OK
+EDDS OK
+EDFE OK 
+EDHL OK
+EDJA OK
+EDDL OK
+EDDM OK
+EDMA OK 
+EDNY OK
+EDXW OK  
+EDHK NOK
+EDMO NOK
+EDSB NOK
+LGAV NOK
+LGIR NOK 
+LGKO NOK 
+LGKR NOK
+LGRP NOK
+LGSM NOK
+EICK NOK
+EIDW NOK
+LIEO NOK 
+LIML OK
+LICC NOK 
+LICJ NOK
+LILO NOK
+LIPB NOK
+LIRF OK  
+LIRI OK
+LIRJ NOK 
+LIRN OK
+LMML NOK
+EYVI NOK
+EHRD OK
+ENGM NOK 
+EPKK NOK
+EPWA NOK
+LPFR NOK
+LPPT NOK
+LPMA OK
+LYBE OK
+LZTT NOK
+LJMB NOK
+LJPZ NOK  
+LJLJ NOK
+LECO NOK
+LEIB OK
+LEMD OK 
+LEPA OK
+LESU NOK 
+LEBB NOK
+LEMG NOK
+LEVC NOK
+LEBL NOK
+ESSA OK
+ESGG NOK
+ESMS NOK
+ESSB NOK
+LSGG OK
+LSZH OK
+LSZR OK
+LSZS OK
+LSZA OK
+LTAI NOK
+LTFM NOK
+EGFF OK
+EGGP NOK
+EGKB OK
+EGSS OK
+EGTK OK
+EGLF OK
+EGJB NOK
+EGJJ NOK
+EGLC OK
