@@ -2,830 +2,790 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>OS A320 · Crew Duty Planner · LOWW</title>
-<!-- PWA -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#080B10">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>Austrian Airlines · A320 · LOWW</title>
+<meta name="theme-color" content="#f4f6fb">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="OS Duty">
-<meta name="description" content="Austrian Airlines A320 crew duty planner – LOWW">
-<!-- Icons (inline SVG favicon) -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23CC0A2F'/><text y='.9em' font-size='55' x='50' text-anchor='middle' dominant-baseline='middle' dy='5' fill='white' font-family='sans-serif' font-weight='bold'>OS</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="OS Vienna">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23c8102e'/><text y='.9em' font-size='40' x='50' text-anchor='middle' dominant-baseline='middle' dy='5' fill='white' font-family='sans-serif' font-weight='bold'>OS</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
 <style>
-:root {
-  --red:     #CC0A2F;
-  --red-dim: rgba(204,10,47,0.15);
-  --gold:    #D4A847;
-  --sky:     #3B8BEB;
-  --sky-dim: rgba(59,139,235,0.13);
-  --green:   #27AE60;
-  --sb:      #1B6FBE;
-  --sb-dim:  rgba(27,111,190,0.15);
-  --bg:      #080B10;
-  --bg1:     #0E1218;
-  --bg2:     #141920;
-  --bg3:     #1A2029;
-  --line:    rgba(255,255,255,0.06);
-  --text:    #DDE3EC;
-  --muted:   #5A6474;
-  --mono:    'IBM Plex Mono', monospace;
-  --sans:    'IBM Plex Sans', sans-serif;
+:root{
+  --ac:#c8102e;--ac-lt:#e01535;--ac-dim:rgba(200,16,46,0.07);
+  --gold:#b8860b;--gold-lt:#d4af37;
+  --sky:#1d6fd8;--sky-dim:rgba(29,111,216,0.08);
+  --green:#1a8a4a;--green-dim:rgba(26,138,74,0.09);
+  --amber:#c67c0a;--violet:#7b3fa0;
+  --bg:#f4f6fb;--bg1:#fff;--bg2:#eef1f8;--bg3:#e4e9f4;
+  --line:rgba(26,58,107,0.10);--text:#1a2540;--muted:#6b7a9a;--muted2:#8a97b8;
+  --shadow:0 2px 12px rgba(26,58,107,0.08);--shadow-lg:0 8px 32px rgba(26,58,107,0.12);
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;--radius:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:300;min-height:100vh;}
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:400;min-height:100vh;}
 
-.shell{display:flex;min-height:100vh;}
-.sidebar{width:270px;flex-shrink:0;background:var(--bg1);border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
-.main{flex:1;padding:36px 40px 80px;overflow-x:hidden;}
+/* LOGIN */
+#login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;position:relative;overflow:hidden;
+  background:linear-gradient(145deg,#8b0000 0%,#c8102e 40%,#e01535 70%,#c8102e 100%);}
+#login-page::before{content:'OS';position:absolute;font-family:var(--mono);font-weight:600;font-size:min(60vw,480px);
+  color:rgba(255,255,255,0.04);letter-spacing:-0.05em;top:50%;left:50%;transform:translate(-50%,-50%);
+  user-select:none;pointer-events:none;line-height:1;}
+.login-card{position:relative;z-index:1;background:rgba(255,255,255,0.97);border-radius:16px;
+  padding:48px 40px 40px;width:360px;box-shadow:0 24px 80px rgba(0,0,0,0.35);}
+.login-logo{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:32px;}
+.login-badge{width:64px;height:64px;border-radius:50%;background:var(--ac);display:flex;align-items:center;
+  justify-content:center;font-family:var(--mono);font-size:22px;font-weight:600;color:#fff;
+  box-shadow:0 4px 20px rgba(200,16,46,0.4);}
+.login-brand{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--ac);letter-spacing:0.04em;text-align:center;}
+.login-sub{font-size:12px;color:var(--muted);text-align:center;margin-top:2px;letter-spacing:0.06em;}
+.login-field{margin-bottom:16px;}
+.login-field label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.login-field input{width:100%;padding:11px 14px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);
+  font-family:var(--mono);font-size:13px;color:var(--text);outline:none;transition:border-color 0.2s;}
+.login-field input:focus{border-color:var(--ac);}
+.login-btn{width:100%;padding:13px;border-radius:8px;background:var(--ac);color:#fff;border:none;
+  font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:0.08em;cursor:pointer;
+  transition:background 0.2s,transform 0.1s;margin-top:8px;}
+.login-btn:hover{background:var(--ac-lt);}
+.login-btn:active{transform:scale(0.98);}
+.login-footer{margin-top:20px;text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted2);letter-spacing:0.06em;}
 
-/* SIDEBAR */
-.s-header{padding:24px 22px 18px;border-bottom:1px solid var(--line);}
-.s-logo{display:flex;align-items:center;gap:11px;margin-bottom:12px;}
-.os-dot{width:38px;height:38px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;font-weight:600;color:#fff;box-shadow:0 0 14px rgba(204,10,47,0.4);flex-shrink:0;}
-.s-title{font-family:var(--mono);font-size:11px;color:#fff;letter-spacing:0.05em;line-height:1.4;}
-.s-title .small{font-size:9px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:2px;}
+/* APP */
+#app-page{display:none;}
+.app-shell{display:flex;min-height:100vh;}
 
-.s-section{padding:18px 22px;border-bottom:1px solid var(--line);}
-.s-label{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+/* ICON BAR */
+.icon-bar{width:52px;flex-shrink:0;background:var(--ac);display:flex;flex-direction:column;align-items:center;
+  padding:14px 0;gap:4px;position:sticky;top:0;height:100vh;z-index:200;
+  box-shadow:2px 0 10px rgba(200,16,46,0.2);}
+.ib-logo{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.18);
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;
+  font-weight:700;color:#fff;border:1.5px solid rgba(255,255,255,0.3);margin-bottom:10px;flex-shrink:0;}
+.ib-btn{width:38px;height:38px;border-radius:8px;background:transparent;border:none;
+  color:rgba(255,255,255,0.55);font-size:17px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all 0.15s;position:relative;}
+.ib-btn:hover{background:rgba(255,255,255,0.15);color:#fff;}
+.ib-btn.active{background:rgba(255,255,255,0.22);color:#fff;}
+.ib-btn .ibt,.ib-logout .ibt{position:absolute;left:46px;top:50%;transform:translateY(-50%);
+  background:rgba(10,20,50,0.9);color:#fff;font-family:var(--mono);font-size:9px;letter-spacing:0.06em;
+  padding:4px 9px;border-radius:5px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 0.12s;z-index:400;}
+.ib-btn:hover .ibt,.ib-logout:hover .ibt{opacity:1;}
+.ib-spacer{flex:1;}
+.ib-logout{width:38px;height:38px;border-radius:8px;background:transparent;border:none;
+  color:rgba(255,255,255,0.4);font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all 0.15s;position:relative;}
+.ib-logout:hover{background:rgba(200,50,40,0.25);color:#ff8080;}
 
-/* WEEKDAY / WEEKEND TOGGLE */
-.sched-toggle{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:12px;}
-.sched-btn{
-  padding:10px 8px;border-radius:5px;border:1px solid var(--line);
-  background:var(--bg2);color:var(--muted);font-family:var(--mono);font-size:11px;
-  cursor:pointer;text-align:center;transition:all 0.15s;letter-spacing:0.04em;
-}
-.sched-btn:hover{border-color:var(--gold);color:#fff;}
-.sched-btn.active{background:rgba(212,168,71,0.14);border-color:var(--gold);color:var(--gold);}
-.sched-sub{font-family:var(--mono);font-size:8px;color:var(--muted);text-align:center;margin-top:6px;letter-spacing:0.06em;}
-
-/* LEGS */
-.leg-btns{display:flex;gap:3px;}
-.leg-btn{flex:1;padding:7px 4px;border-radius:4px;border:1px solid var(--line);background:var(--bg2);color:var(--muted);font-family:var(--mono);font-size:11px;cursor:pointer;text-align:center;transition:all 0.15s;}
-.leg-btn:hover{border-color:var(--sky);color:#fff;}
-.leg-btn.active{background:var(--sky-dim);border-color:var(--sky);color:var(--sky);}
-
-/* REGION */
-.s-filters{display:flex;flex-direction:column;gap:3px;}
-.sf-btn{padding:6px 9px;border-radius:4px;border:1px solid var(--line);background:transparent;color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:0.05em;cursor:pointer;text-align:left;transition:all 0.15s;}
-.sf-btn:hover{color:#fff;background:rgba(255,255,255,0.04);}
-.sf-btn.active{color:#fff;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.14);}
-
-/* SIMBRIEF PILOT ID */
-.pid-wrap{display:flex;gap:6px;align-items:center;}
-.pid-wrap input{
-  flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:5px;
-  color:var(--text);font-family:var(--mono);font-size:11px;
-  padding:7px 10px;outline:none;transition:border-color 0.2s;
-}
-.pid-wrap input:focus{border-color:var(--sb);}
-.pid-wrap input::placeholder{color:var(--muted);}
-.pid-save{padding:7px 10px;border-radius:5px;border:1px solid var(--line);background:var(--bg2);color:var(--muted);font-family:var(--mono);font-size:10px;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
-.pid-save:hover{border-color:var(--sb);color:var(--sky);}
-.pid-note{font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:6px;line-height:1.5;}
-
-/* SELECTED SUMMARY */
-.s-selected{margin-top:auto;padding:18px 22px;border-top:1px solid var(--line);}
-.sel-label{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-#sel-summary{font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.7;}
-.sel-none{color:var(--muted);font-style:italic;}
-
-.sb-all-btn{
-  display:block;width:100%;margin-top:10px;padding:9px;border-radius:5px;
-  border:1px solid rgba(27,111,190,0.4);background:rgba(27,111,190,0.12);
-  color:var(--sky);font-family:var(--mono);font-size:10px;
-  cursor:pointer;text-align:center;letter-spacing:0.06em;
-  transition:all 0.2s;text-decoration:none;
-}
-.sb-all-btn:hover{background:rgba(27,111,190,0.22);border-color:var(--sky);}
-.sb-all-btn.hidden{display:none;}
-
-.clear-btn{margin-top:6px;width:100%;padding:7px;border-radius:4px;border:1px solid var(--line);background:transparent;color:var(--muted);font-family:var(--mono);font-size:10px;cursor:pointer;transition:all 0.15s;letter-spacing:0.05em;}
-.clear-btn:hover{border-color:var(--red);color:var(--red);}
+/* DRAWER */
+.drawer-backdrop{display:none;position:fixed;inset:0;z-index:190;background:rgba(26,37,64,0.18);}
+.drawer-backdrop.open{display:block;}
+.options-drawer{position:fixed;left:52px;top:0;bottom:0;width:258px;background:var(--bg1);
+  border-right:1.5px solid var(--line);z-index:195;overflow-y:auto;
+  transform:translateX(-110%);transition:transform 0.24s cubic-bezier(0.4,0,0.2,1);
+  box-shadow:4px 0 20px rgba(26,58,107,0.1);display:flex;flex-direction:column;}
+.options-drawer.open{transform:translateX(0);}
+.od-header{padding:14px 14px 12px;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.od-title{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;}
+.od-close{background:none;border:none;color:rgba(255,255,255,0.6);font-size:16px;cursor:pointer;}
+.od-close:hover{color:#fff;}
+.s-section{padding:12px 14px;border-bottom:1px solid var(--line);}
+.s-label{font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+.s-filters{display:flex;flex-direction:column;gap:2px;}
+.sf-btn{padding:5px 8px;border-radius:5px;border:1.5px solid transparent;background:transparent;
+  color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:0.04em;
+  cursor:pointer;text-align:left;transition:all 0.14s;}
+.sf-btn:hover{color:var(--ac);background:var(--ac-dim);}
+.sf-btn.active{color:var(--ac);background:var(--ac-dim);border-color:rgba(200,16,46,0.2);}
+.pid-wrap{display:flex;gap:5px;}
+.pid-wrap input{flex:1;background:var(--bg2);border:1.5px solid var(--line);border-radius:6px;
+  color:var(--text);font-family:var(--mono);font-size:11px;padding:6px 9px;outline:none;transition:border-color 0.2s;}
+.pid-wrap input:focus{border-color:var(--ac);}
+.pid-wrap input::placeholder{color:var(--muted2);}
+.pid-save{padding:6px 9px;border-radius:6px;border:1.5px solid var(--line);background:var(--bg2);
+  color:var(--muted);font-family:var(--mono);font-size:10px;cursor:pointer;transition:all 0.15s;}
+.pid-save:hover{border-color:var(--ac);color:var(--ac);}
+.pid-note{font-family:var(--mono);font-size:8px;color:var(--muted2);margin-top:4px;line-height:1.5;}
 
 /* MAIN */
-.m-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;}
-.m-title{font-family:var(--mono);font-size:20px;color:#fff;letter-spacing:0.04em;}
-.m-sub{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:5px;letter-spacing:0.08em;}
-.m-badge{text-align:right;}
-.sched-badge{font-family:var(--mono);font-size:12px;color:var(--gold);letter-spacing:0.08em;}
-.sched-days{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:4px;letter-spacing:0.06em;}
+.main{flex:1;padding:28px 32px 80px;overflow-x:hidden;min-width:0;}
+.m-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;}
+.m-title{font-family:var(--mono);font-size:18px;color:var(--ac);font-weight:600;letter-spacing:0.04em;}
+.m-sub{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:4px;letter-spacing:0.07em;}
+.m-right{text-align:right;}
+.base-badge{font-family:var(--mono);font-size:14px;color:var(--ac);font-weight:700;letter-spacing:0.1em;}
+.base-full{font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:2px;}
 
-/* STATS BAR */
-.duty-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:24px;}
-.db-cell{background:var(--bg1);border:1px solid var(--line);padding:12px 14px;}
-.db-cell:first-child{border-radius:8px 0 0 8px;}
-.db-cell:last-child{border-radius:0 8px 8px 0;}
-.db-val{font-family:var(--mono);font-size:17px;color:#fff;font-weight:500;}
-.db-val .unit{font-size:10px;color:var(--muted);}
-.db-lbl{font-size:9px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:3px;}
+/* CHAIN BANNER */
+.chain-banner{background:var(--ac);border-radius:var(--radius);padding:16px 20px;margin-bottom:18px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:var(--shadow);}
+.cb-info .cb-label{font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;
+  color:rgba(255,255,255,0.5);margin-bottom:3px;}
+.cb-info .cb-name{font-family:var(--mono);font-size:14px;font-weight:700;color:#fff;letter-spacing:0.04em;}
+.cb-info .cb-desc{font-size:11px;color:rgba(255,255,255,0.65);margin-top:3px;line-height:1.4;}
+.cb-meta{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
+.cb-progress{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,0.85);}
+.cb-change-btn{padding:5px 12px;border-radius:5px;border:1px solid rgba(255,255,255,0.3);
+  background:rgba(255,255,255,0.12);color:#fff;font-family:var(--mono);font-size:9px;
+  letter-spacing:0.06em;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.cb-change-btn:hover{background:rgba(255,255,255,0.22);}
 
-/* GRID */
-.pairings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;}
+/* MAP */
+.map-section{background:var(--bg1);border-radius:var(--radius);border:1.5px solid var(--line);
+  margin-bottom:18px;box-shadow:var(--shadow);overflow:hidden;}
+.map-header{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}
+.map-title{font-family:var(--mono);font-size:10px;color:var(--ac);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;}
+#chain-map{width:100%;height:340px;background:#e8eef8;position:relative;overflow:hidden;}
 
-/* CARD */
-.p-card{background:var(--bg1);border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer;transition:all 0.2s;position:relative;animation:cardIn 0.3s ease both;}
-.p-card:hover{border-color:rgba(255,255,255,0.13);transform:translateY(-1px);box-shadow:0 8px 28px rgba(0,0,0,0.4);}
-.p-card.selected{border-color:var(--red);box-shadow:0 0 0 1px var(--red),0 8px 28px rgba(204,10,47,0.2);}
+/* STATS */
+.duty-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:18px;}
+.db-cell{background:var(--bg1);border:1.5px solid var(--line);padding:10px 12px;box-shadow:var(--shadow);}
+.db-cell:first-child{border-radius:var(--radius) 0 0 var(--radius);}
+.db-cell:last-child{border-radius:0 var(--radius) var(--radius) 0;}
+.db-val{font-family:var(--mono);font-size:15px;color:var(--ac);font-weight:600;}
+.db-lbl{font-size:8px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;}
 
-.p-card-head{padding:12px 15px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);}
-.p-id{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:0.1em;}
-.p-meta{display:flex;align-items:center;gap:7px;}
-.p-legs-badge{font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:3px;background:var(--bg3);border:1px solid var(--line);color:var(--muted);letter-spacing:0.05em;}
-.p-dur{font-family:var(--mono);font-size:11px;color:var(--gold);}
+/* COMPLETE */
+.chain-complete-card{background:linear-gradient(135deg,#1a8a4a,#27ae60);border-radius:var(--radius);
+  padding:24px;text-align:center;color:#fff;margin-bottom:18px;box-shadow:var(--shadow-lg);}
+.chain-complete-card h3{font-family:var(--mono);font-size:16px;margin-bottom:8px;}
+.chain-complete-card p{font-size:12px;opacity:0.85;margin-bottom:16px;}
+.new-chain-btn{padding:10px 24px;border-radius:8px;background:#fff;color:#1a8a4a;border:none;
+  font-family:var(--mono);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;}
+.new-chain-btn:hover{transform:scale(1.02);}
 
-/* TIMELINE */
-.p-timeline{padding:12px 15px;}
-.leg-row{display:flex;align-items:stretch;margin-bottom:6px;position:relative;}
-.leg-row:last-child{margin-bottom:0;}
-.leg-connector{display:flex;flex-direction:column;align-items:center;width:26px;flex-shrink:0;margin-right:9px;}
-.leg-dot{width:8px;height:8px;border-radius:50%;background:var(--bg3);border:1.5px solid var(--muted);flex-shrink:0;margin-top:3px;}
-.leg-dot.dep{border-color:var(--sky);background:var(--sky-dim);}
-.leg-dot.arr{border-color:var(--green);background:rgba(39,174,96,0.15);}
-.leg-line{flex:1;width:1px;background:var(--line);margin:3px 0;}
-.leg-info{flex:1;min-width:0;}
-.leg-ap{font-family:var(--mono);font-size:13px;font-weight:500;color:#fff;letter-spacing:0.05em;}
-.leg-city{font-size:10px;color:var(--muted);}
-.leg-times{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:1px;}
-.leg-fn{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:0.05em;}
-.leg-ac{font-family:var(--mono);font-size:8px;padding:1px 5px;border-radius:2px;border:1px solid var(--line);background:var(--bg3);color:var(--muted);}
-.leg-block-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;}
+/* DAY CARDS */
+.days-grid{display:flex;flex-direction:column;gap:12px;}
+.day-card{background:var(--bg1);border-radius:var(--radius);border:1.5px solid var(--line);
+  overflow:hidden;box-shadow:var(--shadow);}
+.day-card.day-complete{border-color:var(--green);background:#f0faf4;}
+.day-card-head{padding:10px 14px;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid var(--line);background:var(--bg2);}
+.day-card.day-complete .day-card-head{background:#e0f5e9;}
+.day-num-badge{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;padding:2px 7px;
+  border-radius:4px;background:var(--ac);color:#fff;white-space:nowrap;flex-shrink:0;}
+.day-card.day-complete .day-num-badge{background:var(--green);}
+.day-route{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--ac);
+  letter-spacing:0.06em;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.day-card.day-complete .day-route{color:var(--green);}
+.day-block{font-family:var(--mono);font-size:9px;color:var(--muted);white-space:nowrap;flex-shrink:0;}
+.day-complete-badge{font-family:var(--mono);font-size:9px;color:var(--green);font-weight:600;flex-shrink:0;}
 
-.gnd-row{display:flex;align-items:center;gap:7px;padding:3px 0 3px 35px;font-family:var(--mono);font-size:8px;color:var(--muted);letter-spacing:0.05em;}
-.gnd-bar{height:1px;flex:1;background:repeating-linear-gradient(90deg,var(--muted) 0,var(--muted) 3px,transparent 3px,transparent 6px);opacity:0.25;}
+/* LEGS */
+.legs-list{padding:10px 14px;display:flex;flex-direction:column;gap:5px;}
+.leg-item{display:flex;align-items:stretch;gap:8px;padding:8px 10px;border-radius:8px;
+  border:1.5px solid var(--line);background:var(--bg2);transition:all 0.15s;}
+.leg-item.flown{border-color:var(--green);background:#f0faf4;}
+.leg-item.leg-next{border-color:var(--ac);background:var(--ac-dim);box-shadow:0 2px 8px rgba(200,16,46,0.08);}
+.leg-tick{display:flex;align-items:center;justify-content:center;width:24px;flex-shrink:0;}
+.tick-btn{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);background:var(--bg1);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all 0.15s;}
+.tick-btn:hover{border-color:var(--ac);}
+.leg-item.flown .tick-btn{background:var(--green);border-color:var(--green);color:#fff;}
+.leg-item.leg-next .tick-btn{border-color:var(--ac);}
+.leg-detail{flex:1;min-width:0;}
+.leg-route{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);}
+.leg-iata{font-size:13px;font-weight:700;}
+.leg-iata.base{color:var(--gold);}
+.leg-arrow{color:var(--muted);font-size:10px;}
+.leg-cities{font-size:10px;color:var(--muted);margin-top:2px;}
+.leg-times{font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:2px;}
+.leg-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.flt-num{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:0.04em;}
+.sb-link{display:inline-flex;align-items:center;font-family:var(--mono);font-size:8px;letter-spacing:0.05em;
+  padding:2px 6px;border-radius:3px;border:1.5px solid rgba(200,16,46,0.2);background:var(--ac-dim);
+  color:var(--ac);text-decoration:none;transition:all 0.15s;white-space:nowrap;}
+.sb-link:hover{background:var(--ac);color:#fff;}
+.gnd-sep{display:flex;align-items:center;gap:8px;padding:2px 10px;font-family:var(--mono);font-size:8px;color:var(--muted2);}
+.gnd-bar{flex:1;height:1px;background:repeating-linear-gradient(90deg,var(--muted2) 0,var(--muted2) 2px,transparent 2px,transparent 5px);opacity:0.25;}
 
-/* SIMBRIEF LEG LINK */
-.sb-leg-link{
-  display:inline-flex;align-items:center;gap:4px;
-  font-family:var(--mono);font-size:8px;letter-spacing:0.06em;
-  padding:3px 7px;border-radius:3px;
-  border:1px solid rgba(27,111,190,0.3);background:rgba(27,111,190,0.1);
-  color:var(--sky);text-decoration:none;transition:all 0.15s;
-  white-space:nowrap;
-}
-.sb-leg-link:hover{background:rgba(27,111,190,0.22);border-color:var(--sky);}
-.sb-icon{font-size:9px;}
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:1000;background:rgba(26,37,64,0.45);
+  backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:var(--bg1);border-radius:14px;width:min(700px,100%);max-height:80vh;
+  display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(26,58,107,0.25);
+  border:1.5px solid var(--line);overflow:hidden;}
+.modal-head{padding:16px 20px;border-bottom:1.5px solid var(--line);display:flex;align-items:center;
+  justify-content:space-between;background:var(--ac);color:#fff;}
+.modal-head h3{font-family:var(--mono);font-size:13px;letter-spacing:0.05em;}
+.modal-close{background:transparent;border:none;color:rgba(255,255,255,0.7);font-size:18px;cursor:pointer;padding:2px 6px;}
+.modal-body{overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:6px;}
+.modal-sched-item{padding:12px 14px;border-radius:8px;border:1.5px solid var(--line);
+  background:var(--bg2);cursor:pointer;transition:all 0.15s;}
+.modal-sched-item:hover{border-color:var(--ac);background:var(--ac-dim);}
+.modal-sched-item.current{border-color:var(--ac);background:var(--ac-dim);}
+.msi-name{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--ac);letter-spacing:0.04em;}
+.msi-routes{font-size:10px;color:var(--muted);margin-top:2px;}
+.msi-meta{font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:3px;}
+.pct-badge{display:inline-block;padding:1px 6px;border-radius:3px;font-family:var(--mono);
+  font-size:8px;margin-left:6px;background:var(--green-dim);color:var(--green);}
 
-/* CARD FOOTER */
-.p-card-foot{padding:9px 15px;border-top:1px solid var(--line);background:var(--bg2);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
-.p-fdp{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:0.04em;}
-.p-fdp span{color:var(--text);}
+/* OPTIONS FILTER GROUPS */
+.sf-sep{height:1px;background:var(--line);margin:6px 0;}
 
-/* CARD FOOT ACTIONS */
-.foot-actions{display:flex;align-items:center;gap:6px;}
-.sb-pairing-link{
-  display:inline-flex;align-items:center;gap:4px;
-  font-family:var(--mono);font-size:9px;letter-spacing:0.05em;
-  padding:4px 9px;border-radius:4px;
-  border:1px solid rgba(27,111,190,0.35);background:rgba(27,111,190,0.12);
-  color:var(--sky);text-decoration:none;transition:all 0.15s;
-}
-.sb-pairing-link:hover{background:rgba(27,111,190,0.24);border-color:var(--sky);}
-.p-select-btn{font-family:var(--mono);font-size:9px;letter-spacing:0.06em;padding:4px 10px;border-radius:4px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.15s;text-transform:uppercase;}
-.p-card.selected .p-select-btn{background:var(--red);border-color:var(--red);color:#fff;}
-.p-card:not(.selected) .p-select-btn:hover{border-color:var(--red);color:var(--red);}
-
-.p-check{position:absolute;top:9px;right:9px;width:17px;height:17px;border-radius:50%;background:var(--red);display:none;align-items:center;justify-content:center;font-size:9px;}
-.p-card.selected .p-check{display:flex;}
-
-.empty-msg{grid-column:1/-1;text-align:center;padding:60px;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:0.08em;}
-
-@keyframes cardIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-
-@media(max-width:800px){
-  .shell{flex-direction:column;}
-  .sidebar{width:100%;height:auto;position:static;}
-  .main{padding:18px 14px 60px;}
-  .pairings-grid{grid-template-columns:1fr;}
-  .duty-bar{grid-template-columns:repeat(2,1fr);}
-}
-/* PWA safe areas */
 @supports(padding:max(0px)){
-  .sidebar{padding-top:max(0px,env(safe-area-inset-top));}
+  .icon-bar{padding-top:max(14px,env(safe-area-inset-top));}
   .main{padding-bottom:max(80px,calc(60px + env(safe-area-inset-bottom)));}
+}
+@media(max-width:800px){
+  .main{padding:14px 12px 50px;}
+  .duty-bar{grid-template-columns:repeat(2,1fr);}
+  #chain-map{height:230px;}
+  .login-card{width:calc(100vw - 32px);padding:32px 24px;}
+  .options-drawer{width:min(258px,calc(100vw - 52px));}
 }
 </style>
 </head>
 <body>
-<div class="shell">
 
-<!-- ══ SIDEBAR ══ -->
-<aside class="sidebar">
-  <div class="s-header">
-    <div class="s-logo">
-      <div class="os-dot">OS</div>
-      <div class="s-title">Austrian Airlines
-        <div class="small">A320 · Crew Duty Planner</div>
+<!-- LOGIN -->
+<div id="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-badge">OS</div>
+      <div>
+        <div class="login-brand">Austrian Airlines</div>
+        <div class="login-sub">CREW SCHEDULING PORTAL · LOWW</div>
       </div>
     </div>
+    <div class="login-field"><label>Username</label>
+      <input type="text" id="login-user" value="ClausGh" autocomplete="username"></div>
+    <div class="login-field"><label>Password</label>
+      <input type="password" id="login-pass" value="••••••••" autocomplete="current-password"></div>
+    <button class="login-btn" id="login-btn">ENTER SCHEDULING</button>
+    <div class="login-footer">OE-LZE · A320 · Callsign AUA</div>
   </div>
+</div>
 
-  <!-- WEEKDAY / WEEKEND -->
-  <div class="s-section">
-    <div class="s-label">Schedule Type</div>
-    <div class="sched-toggle">
-      <button class="sched-btn active" data-sched="weekday">Weekday<br><span style="font-size:8px;opacity:0.7">Mon – Fri</span></button>
-      <button class="sched-btn" data-sched="weekend">Weekend<br><span style="font-size:8px;opacity:0.7">Sat &amp; Sun</span></button>
-    </div>
-    <div class="sched-sub" id="sched-sub">Full schedule operating · Mon–Fri</div>
-  </div>
+<!-- APP -->
+<div id="app-page">
+<div class="app-shell">
+<div class="icon-bar">
+  <div class="ib-logo">OS</div>
+  <button class="ib-btn" id="ib-options" onclick="toggleDrawer()">⚙<span class="ibt">Options</span></button>
+  <button class="ib-btn" onclick="openSchedPicker()">📋<span class="ibt">Change Schedule</span></button>
+  <div class="ib-spacer"></div>
+  <button class="ib-logout" onclick="doLogout()">↩<span class="ibt">Sign Out</span></button>
+</div>
 
-  <!-- LEGS -->
+<div class="drawer-backdrop" id="drawer-backdrop" onclick="closeDrawer()"></div>
+<div class="options-drawer" id="options-drawer">
+  <div class="od-header"><span class="od-title">⚙ Options</span><button class="od-close" onclick="closeDrawer()">✕</button></div>
   <div class="s-section">
-    <div class="s-label">Duty Legs</div>
-    <div class="leg-btns">
-      <button class="leg-btn active" data-legs="all">All</button>
-      <button class="leg-btn" data-legs="2">2</button>
-      <button class="leg-btn" data-legs="3">3</button>
-      <button class="leg-btn" data-legs="4">4</button>
-    </div>
-  </div>
-
-  <!-- REGION -->
-  <div class="s-section">
-    <div class="s-label">Region</div>
+    <div class="s-label">Schedule End</div>
     <div class="s-filters">
-      <button class="sf-btn active" data-region="all">◈  All Regions</button>
-      <button class="sf-btn" data-region="DACH">◈  DACH</button>
-      <button class="sf-btn" data-region="Western Europe">◈  Western Europe</button>
-      <button class="sf-btn" data-region="Southern Europe">◈  Southern Europe</button>
-      <button class="sf-btn" data-region="Eastern Europe">◈  Eastern Europe</button>
-      <button class="sf-btn" data-region="Scandinavia">◈  Scandinavia</button>
-      <button class="sf-btn" data-region="Holiday">☀  Holiday</button>
+      <button class="sf-btn active" data-end="all">◈ All</button>
+      <button class="sf-btn" data-end="base">⌂ Returns VIE</button>
+      <button class="sf-btn" data-end="away">✈ Ends Away</button>
     </div>
   </div>
-
-  <!-- SIMBRIEF PILOT ID -->
+  <div class="s-section">
+    <div class="s-label">Legs per Day</div>
+    <div class="s-filters">
+      <button class="sf-btn active" data-lpd="all">◈ All</button>
+      <button class="sf-btn" data-lpd="2">2 legs / day</button>
+      <button class="sf-btn" data-lpd="4">4 legs / day</button>
+    </div>
+  </div>
   <div class="s-section">
     <div class="s-label">SimBrief Pilot ID</div>
     <div class="pid-wrap">
-      <input type="text" id="pid-input" placeholder="e.g. 123456" maxlength="12">
+      <input type="text" id="pid-input" placeholder="123456" maxlength="12">
       <button class="pid-save" onclick="savePid()">Save</button>
     </div>
-    <div class="pid-note">Optional – pre-fills your weights &amp; preferences.<br>Find it under SimBrief → Account Settings.</div>
+    <div class="pid-note">Reg OE-LZE · Airline AUA · Callsign AUA · A320</div>
   </div>
+</div>
 
-  <!-- SELECTED -->
-  <div class="s-selected">
-    <div class="sel-label">Selected Pairing</div>
-    <div id="sel-summary"><span class="sel-none">No pairing selected</span></div>
-    <a class="sb-all-btn hidden" id="sb-all-btn" href="#" target="_blank">⟶ Open First Leg in SimBrief</a>
-    <button class="clear-btn" onclick="clearSelection()">✕  Clear Selection</button>
-  </div>
-</aside>
-
-<!-- ══ MAIN ══ -->
 <main class="main">
   <div class="m-header">
     <div>
-      <div class="m-title">Duty Pairings</div>
-      <div class="m-sub" id="m-sub">LOWW · Select schedule type to view duties</div>
+      <div class="m-title">Crew Duty Roster</div>
+      <div class="m-sub" id="m-sub">LOWW · A320 · OE-LZE · Austrian Airlines</div>
     </div>
-    <div class="m-badge">
-      <div class="sched-badge" id="sched-badge">WEEKDAY</div>
-      <div class="sched-days" id="sched-days">Monday · Tuesday · Wednesday · Thursday · Friday</div>
+    <div class="m-right">
+      <div class="base-badge">VIE</div>
+      <div class="base-full">Vienna Int'l · A320</div>
+    </div>
+  </div>
+
+  <div id="chain-complete-banner" style="display:none">
+    <div class="chain-complete-card">
+      <h3>✅ Schedule Complete</h3>
+      <p id="complete-msg">All legs flown. Ready for new assignment.</p>
+      <button class="new-chain-btn" onclick="assignNewSched()">Assign New Schedule →</button>
+    </div>
+  </div>
+
+  <div class="chain-banner" id="chain-banner" style="display:none">
+    <div class="cb-info">
+      <div class="cb-label">Current Schedule</div>
+      <div class="cb-name" id="cb-name">—</div>
+      <div class="cb-desc" id="cb-desc">—</div>
+    </div>
+    <div class="cb-meta">
+      <div class="cb-progress" id="cb-progress">—</div>
+      <button class="cb-change-btn" onclick="openSchedPicker()">Change Schedule</button>
     </div>
   </div>
 
   <div class="duty-bar">
-    <div class="db-cell"><div class="db-val" id="st-pairings">—</div><div class="db-lbl">Pairings</div></div>
-    <div class="db-cell"><div class="db-val" id="st-flt">—</div><div class="db-lbl">Min Block</div></div>
-    <div class="db-cell"><div class="db-val" id="st-fdp">—</div><div class="db-lbl">Max FDP</div></div>
-    <div class="db-cell"><div class="db-val" id="st-sectors">—</div><div class="db-lbl">City Pairs</div></div>
+    <div class="db-cell"><div class="db-val" id="st-days">5</div><div class="db-lbl">Days</div></div>
+    <div class="db-cell"><div class="db-val" id="st-legs">—</div><div class="db-lbl">Total Legs</div></div>
+    <div class="db-cell"><div class="db-val" id="st-flown">—</div><div class="db-lbl">Flown</div></div>
+    <div class="db-cell"><div class="db-val" id="st-block">—</div><div class="db-lbl">Block</div></div>
   </div>
 
-  <div class="pairings-grid" id="pairingsGrid">
-    <div class="empty-msg">← Select Weekday or Weekend to load pairings</div>
+  <div class="map-section">
+    <div class="map-header">
+      <div class="map-title">Route Map · Current Schedule</div>
+      <div style="font-family:var(--mono);font-size:9px;color:var(--muted)">
+        <span style="color:var(--green)">● Flown</span>&nbsp;&nbsp;
+        <span style="color:var(--ac)">● Planned</span>&nbsp;&nbsp;
+        <span style="color:var(--gold)">● VIE</span>
+      </div>
+    </div>
+    <div id="chain-map"></div>
   </div>
+
+  <div class="days-grid" id="days-grid"></div>
 </main>
+</div>
+</div>
+
+<div class="modal-overlay" id="sched-modal">
+  <div class="modal-box">
+    <div class="modal-head"><h3>SELECT SCHEDULE</h3><button class="modal-close" onclick="closeSchedPicker()">✕</button></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════
-//  CITY DATA
-// ═══════════════════════════════════════════════
-const CITIES = {
-  VIE:{name:"Vienna",country:"🇦🇹",icao:"LOWW"},
-  MUC:{name:"Munich",country:"🇩🇪",icao:"EDDM"},
-  FRA:{name:"Frankfurt",country:"🇩🇪",icao:"EDDF"},
-  STR:{name:"Stuttgart",country:"🇩🇪",icao:"EDDS"},
-  DUS:{name:"Düsseldorf",country:"🇩🇪",icao:"EDDL"},
-  HAM:{name:"Hamburg",country:"🇩🇪",icao:"EDDH"},
-  BER:{name:"Berlin",country:"🇩🇪",icao:"EDDB"},
-  CGN:{name:"Cologne/Bonn",country:"🇩🇪",icao:"EDDK"},
-  ZRH:{name:"Zurich",country:"🇨🇭",icao:"LSZH"},
-  GVA:{name:"Geneva",country:"🇨🇭",icao:"LSGG"},
-  CDG:{name:"Paris CDG",country:"🇫🇷",icao:"LFPG"},
-  ORY:{name:"Paris Orly",country:"🇫🇷",icao:"LFPO"},
-  AMS:{name:"Amsterdam",country:"🇳🇱",icao:"EHAM"},
-  BRU:{name:"Brussels",country:"🇧🇪",icao:"EBBR"},
-  LHR:{name:"London Heathrow",country:"🇬🇧",icao:"EGLL"},
-  BCN:{name:"Barcelona",country:"🇪🇸",icao:"LEBL"},
-  MAD:{name:"Madrid",country:"🇪🇸",icao:"LEMD"},
-  LIS:{name:"Lisbon",country:"🇵🇹",icao:"LPPT"},
-  FCO:{name:"Rome Fiumicino",country:"🇮🇹",icao:"LIRF"},
-  MXP:{name:"Milan Malpensa",country:"🇮🇹",icao:"LIMC"},
-  ATH:{name:"Athens",country:"🇬🇷",icao:"LGAV"},
-  IST:{name:"Istanbul",country:"🇹🇷",icao:"LTFM"},
-  PRG:{name:"Prague",country:"🇨🇿",icao:"LKPR"},
-  WAW:{name:"Warsaw",country:"🇵🇱",icao:"EPWA"},
-  BUD:{name:"Budapest",country:"🇭🇺",icao:"LHBP"},
-  BEG:{name:"Belgrade",country:"🇷🇸",icao:"LYBE"},
-  SOF:{name:"Sofia",country:"🇧🇬",icao:"LBSF"},
-  SKP:{name:"Skopje",country:"🇲🇰",icao:"LWSK"},
-  VNO:{name:"Vilnius",country:"🇱🇹",icao:"EYVI"},
-  CPH:{name:"Copenhagen",country:"🇩🇰",icao:"EKCH"},
-  ARN:{name:"Stockholm Arlanda",country:"🇸🇪",icao:"ESSA"},
-  OSL:{name:"Oslo Gardermoen",country:"🇳🇴",icao:"ENGM"},
-  HEL:{name:"Helsinki",country:"🇫🇮",icao:"EFHK"},
-  TLV:{name:"Tel Aviv",country:"🇮🇱",icao:"LLBG"},
-  // ── Holiday ──
-  PMI:{name:"Palma de Mallorca",country:"🇪🇸",icao:"LEPA"},
-  AYT:{name:"Antalya",country:"🇹🇷",icao:"LTAI"},
-  HER:{name:"Heraklion (Crete)",country:"🇬🇷",icao:"LGIR"},
-  RHO:{name:"Rhodes",country:"🇬🇷",icao:"LGRP"},
-  CFU:{name:"Corfu",country:"🇬🇷",icao:"LGKR"},
-  JMK:{name:"Mykonos",country:"🇬🇷",icao:"LGMK"},
-  JTR:{name:"Santorini",country:"🇬🇷",icao:"LGSR"},
-  KGS:{name:"Kos",country:"🇬🇷",icao:"LGKO"},
-  ZTH:{name:"Zakynthos",country:"🇬🇷",icao:"LGZA"},
-  OLB:{name:"Olbia (Sardinia)",country:"🇮🇹",icao:"LIEO"},
-  CAG:{name:"Cagliari (Sardinia)",country:"🇮🇹",icao:"LIEE"},
-  NAP:{name:"Naples",country:"🇮🇹",icao:"LIRN"},
-  CTA:{name:"Catania (Sicily)",country:"🇮🇹",icao:"LICC"},
-  PMO:{name:"Palermo (Sicily)",country:"🇮🇹",icao:"LICJ"},
-  BDS:{name:"Brindisi (Puglia)",country:"🇮🇹",icao:"LIBR"},
-  SUF:{name:"Lamezia Terme",country:"🇮🇹",icao:"LICA"},
+// ═══════════════════════════════════════════════════════════
+//  AIRPORT DATA – 27 AUA airports, IATA codes verified
+// ═══════════════════════════════════════════════════════════
+const AP={
+  LOWW:{iata:"VIE",name:"Vienna Int'l",       city:"Vienna",     c:"🇦🇹"},
+  LOWG:{iata:"GRZ",name:"Graz",               city:"Graz",       c:"🇦🇹"},
+  LOWI:{iata:"INN",name:"Innsbruck",           city:"Innsbruck",  c:"🇦🇹"},
+  EBBR:{iata:"BRU",name:"Brussels",            city:"Brussels",   c:"🇧🇪"},
+  LBSF:{iata:"SOF",name:"Sofia",               city:"Sofia",      c:"🇧🇬"},
+  EKCH:{iata:"CPH",name:"Copenhagen",          city:"Copenhagen", c:"🇩🇰"},
+  LFMN:{iata:"NCE",name:"Nice Côte d'Azur",   city:"Nice",       c:"🇫🇷"},
+  LFPG:{iata:"CDG",name:"Paris CDG",           city:"Paris",      c:"🇫🇷"},
+  EDDS:{iata:"STR",name:"Stuttgart",           city:"Stuttgart",  c:"🇩🇪"},
+  EDDL:{iata:"DUS",name:"Düsseldorf",          city:"Düsseldorf", c:"🇩🇪"},
+  EDDM:{iata:"MUC",name:"Munich",              city:"Munich",     c:"🇩🇪"},
+  LGAV:{iata:"ATH",name:"Athens",              city:"Athens",     c:"🇬🇷"},
+  LGIR:{iata:"HER",name:"Heraklion",           city:"Heraklion",  c:"🇬🇷"},
+  LIEO:{iata:"OLB",name:"Olbia",               city:"Olbia",      c:"🇮🇹"},
+  LIML:{iata:"LIN",name:"Milan Linate",        city:"Milan",      c:"🇮🇹"},
+  LIRF:{iata:"FCO",name:"Rome Fiumicino",      city:"Rome",       c:"🇮🇹"},
+  LIRN:{iata:"NAP",name:"Naples",              city:"Naples",     c:"🇮🇹"},
+  EPKK:{iata:"KRK",name:"Kraków",              city:"Kraków",     c:"🇵🇱"},
+  LYBE:{iata:"BEG",name:"Belgrade",            city:"Belgrade",   c:"🇷🇸"},
+  LEMD:{iata:"MAD",name:"Madrid Barajas",      city:"Madrid",     c:"🇪🇸"},
+  LEPA:{iata:"PMI",name:"Palma de Mallorca",   city:"Palma",      c:"🇪🇸"},
+  LEMG:{iata:"AGP",name:"Málaga",              city:"Málaga",     c:"🇪🇸"},
+  LEVC:{iata:"VLC",name:"Valencia",            city:"Valencia",   c:"🇪🇸"},
+  LEBL:{iata:"BCN",name:"Barcelona",           city:"Barcelona",  c:"🇪🇸"},
+  ESSA:{iata:"ARN",name:"Stockholm Arlanda",   city:"Stockholm",  c:"🇸🇪"},
+  LSGG:{iata:"GVA",name:"Geneva",              city:"Geneva",     c:"🇨🇭"},
+  LSZH:{iata:"ZRH",name:"Zurich",              city:"Zurich",     c:"🇨🇭"},
 };
 
-const REGION = {
-  MUC:"DACH",FRA:"DACH",STR:"DACH",DUS:"DACH",HAM:"DACH",BER:"DACH",CGN:"DACH",ZRH:"DACH",GVA:"DACH",
-  CDG:"Western Europe",ORY:"Western Europe",AMS:"Western Europe",BRU:"Western Europe",LHR:"Western Europe",LIS:"Western Europe",
-  BCN:"Southern Europe",MAD:"Southern Europe",FCO:"Southern Europe",MXP:"Southern Europe",ATH:"Southern Europe",IST:"Southern Europe",
-  PRG:"Eastern Europe",WAW:"Eastern Europe",BUD:"Eastern Europe",BEG:"Eastern Europe",SOF:"Eastern Europe",SKP:"Eastern Europe",VNO:"Eastern Europe",TLV:"Eastern Europe",
-  CPH:"Scandinavia",ARN:"Scandinavia",OSL:"Scandinavia",HEL:"Scandinavia",
-  PMI:"Holiday",AYT:"Holiday",HER:"Holiday",RHO:"Holiday",CFU:"Holiday",JMK:"Holiday",JTR:"Holiday",KGS:"Holiday",ZTH:"Holiday",
-  OLB:"Holiday",CAG:"Holiday",NAP:"Holiday",CTA:"Holiday",PMO:"Holiday",BDS:"Holiday",SUF:"Holiday",
+// Block times LOWW↔dest (min, A320)
+const BLK={
+  LOWG:30,LOWI:40,EBBR:115,LBSF:75,EKCH:110,LFMN:100,LFPG:120,
+  EDDS:65,EDDL:115,EDDM:50,LGAV:120,LGIR:140,LIEO:130,LIML:65,
+  LIRF:90,LIRN:110,EPKK:65,LYBE:55,LEMD:185,LEPA:165,LEMG:165,
+  LEVC:185,LEBL:175,ESSA:130,LSGG:70,LSZH:60,
 };
 
-// Flights: [fn, dep_iata, arr_iata, std_min, dur_min, ac, weekday(bool), weekend(bool)]
-// weekday = Mon-Fri, weekend = Sat/Sun  (some routes differ)
-const FLIGHTS = [
-  // DACH
-  ["OS121","VIE","MUC", 6*60+45, 50,"ceo",true,true],
-  ["OS123","VIE","MUC",12*60+20, 45,"ceo",true,true],
-  ["OS122","MUC","VIE", 8*60+10, 50,"ceo",true,true],
-  ["OS124","MUC","VIE",13*60+30, 50,"ceo",true,true],
-  ["OS211","VIE","FRA", 7*60+10, 60,"ceo",true,true],
-  ["OS213","VIE","FRA",13*60+35, 60,"ceo",true,true],
-  ["OS215","VIE","FRA",18*60+ 5, 60,"ceo",true,false],
-  ["OS212","FRA","VIE", 9*60+ 0, 65,"ceo",true,true],
-  ["OS214","FRA","VIE",15*60+20, 65,"ceo",true,true],
-  ["OS216","FRA","VIE",19*60+55, 65,"ceo",true,false],
-  ["OS135","VIE","STR", 8*60+ 0, 55,"ceo",true,false],
-  ["OS136","STR","VIE", 9*60+20, 55,"ceo",true,false],
-  ["OS233","VIE","DUS", 7*60+15, 80,"neo",true,true],
-  ["OS235","VIE","DUS",14*60+30, 80,"neo",true,false],
-  ["OS234","DUS","VIE", 9*60+25, 80,"neo",true,true],
-  ["OS236","DUS","VIE",17*60+ 5, 80,"neo",true,false],
-  ["OS251","VIE","HAM", 7*60+ 0, 90,"neo",true,true],
-  ["OS253","VIE","HAM",16*60+45, 90,"neo",true,false],
-  ["OS252","HAM","VIE", 9*60+20, 90,"neo",true,true],
-  ["OS254","HAM","VIE",19*60+15, 90,"neo",true,false],
-  ["OS203","VIE","BER", 6*60+50, 75,"neo",true,true],
-  ["OS205","VIE","BER",17*60+30, 75,"neo",true,false],
-  ["OS204","BER","VIE", 8*60+45, 80,"neo",true,true],
-  ["OS206","BER","VIE",19*60+25, 80,"neo",true,false],
-  ["OS223","VIE","CGN", 7*60+40, 80,"ceo",true,false],
-  ["OS224","CGN","VIE", 9*60+55, 85,"ceo",true,false],
-  ["OS737","VIE","ZRH", 6*60+55, 60,"ceo",true,true],
-  ["OS731","VIE","ZRH",11*60+40, 60,"ceo",true,true],
-  ["OS738","ZRH","VIE", 8*60+30, 65,"ceo",true,true],
-  ["OS732","ZRH","VIE",13*60+15, 65,"ceo",true,true],
-  ["OS441","VIE","GVA", 7*60+35,105,"ceo",true,true],
-  ["OS443","VIE","GVA",15*60+10,105,"ceo",true,false],
-  ["OS442","GVA","VIE",10*60+10,105,"ceo",true,true],
-  ["OS444","GVA","VIE",17*60+45,105,"ceo",true,false],
-  // Western Europe
-  ["OS401","VIE","CDG", 7*60+ 5,135,"neo",true,true],
-  ["OS403","VIE","CDG",14*60+10,135,"neo",true,false],
-  ["OS402","CDG","VIE",10*60+30,135,"neo",true,true],
-  ["OS404","CDG","VIE",17*60+45,135,"neo",true,false],
-  ["OS451","VIE","ORY", 9*60+55,130,"ceo",true,false],
-  ["OS452","ORY","VIE",13*60+ 0,130,"ceo",true,false],
-  ["OS361","VIE","AMS", 7*60+20,120,"neo",true,true],
-  ["OS363","VIE","AMS",14*60+ 5,120,"neo",true,false],
-  ["OS362","AMS","VIE",10*60+10,120,"neo",true,true],
-  ["OS364","AMS","VIE",17*60+ 0,120,"neo",true,false],
-  ["OS371","VIE","BRU", 7*60+30,115,"ceo",true,true],
-  ["OS373","VIE","BRU",15*60+40,115,"ceo",true,false],
-  ["OS372","BRU","VIE",10*60+25,110,"ceo",true,true],
-  ["OS374","BRU","VIE",18*60+40,110,"ceo",true,false],
-  ["OS491","VIE","LHR", 7*60+ 0,125,"neo",true,true],
-  ["OS493","VIE","LHR",12*60+20,125,"neo",true,true],
-  ["OS495","VIE","LHR",18*60+15,125,"neo",true,false],
-  ["OS492","LHR","VIE", 9*60+40,125,"neo",true,true],
-  ["OS494","LHR","VIE",15*60+ 5,125,"neo",true,true],
-  ["OS496","LHR","VIE",21*60+ 0,125,"neo",true,false],
-  ["OS391","VIE","LIS", 7*60+40,160,"neo",true,false],
-  ["OS392","LIS","VIE",11*60+ 0,165,"neo",true,false],
-  // Southern Europe
-  ["OS461","VIE","BCN", 6*60+50,150,"neo",true,true],
-  ["OS463","VIE","BCN",14*60+20,150,"neo",true,false],
-  ["OS462","BCN","VIE",10*60+30,155,"neo",true,true],
-  ["OS464","BCN","VIE",18*60+ 0,155,"neo",true,false],
-  ["OS471","VIE","MAD", 7*60+30,155,"neo",true,true],
-  ["OS472","MAD","VIE",11*60+15,165,"neo",true,true],
-  ["OS551","VIE","FCO", 7*60+10,105,"ceo",true,true],
-  ["OS553","VIE","FCO",13*60+40,105,"ceo",true,true],
-  ["OS552","FCO","VIE", 9*60+30,105,"ceo",true,true],
-  ["OS554","FCO","VIE",16*60+ 5,105,"ceo",true,true],
-  ["OS561","VIE","MXP", 7*60+25, 85,"ceo",true,true],
-  ["OS563","VIE","MXP",14*60+ 0, 85,"ceo",true,false],
-  ["OS562","MXP","VIE", 9*60+25, 85,"ceo",true,true],
-  ["OS564","MXP","VIE",16*60+20, 85,"ceo",true,false],
-  ["OS861","VIE","ATH", 8*60+40,140,"neo",true,true],
-  ["OS863","VIE","ATH",15*60+55,140,"neo",true,false],
-  ["OS862","ATH","VIE",12*60+10,135,"neo",true,true],
-  ["OS864","ATH","VIE",19*60+25,135,"neo",true,false],
-  ["OS791","VIE","IST", 7*60+15,180,"neo",true,true],
-  ["OS793","VIE","IST",14*60+20,180,"neo",true,false],
-  ["OS792","IST","VIE",10*60+45,175,"neo",true,true],
-  ["OS794","IST","VIE",17*60+50,175,"neo",true,false],
-  // Eastern Europe
-  ["OS165","VIE","PRG", 7*60+25, 40,"ceo",true,true],
-  ["OS167","VIE","PRG",14*60+50, 40,"ceo",true,true],
-  ["OS166","PRG","VIE", 8*60+35, 45,"ceo",true,true],
-  ["OS168","PRG","VIE",16*60+10, 45,"ceo",true,true],
-  ["OS701","VIE","BUD", 8*60+30, 40,"ceo",true,true],
-  ["OS703","VIE","BUD",15*60+20, 40,"ceo",true,true],
-  ["OS702","BUD","VIE", 9*60+45, 45,"ceo",true,true],
-  ["OS704","BUD","VIE",16*60+45, 45,"ceo",true,true],
-  ["OS185","VIE","WAW", 9*60+ 5, 70,"neo",true,true],
-  ["OS187","VIE","WAW",16*60+30, 70,"neo",true,false],
-  ["OS186","WAW","VIE",11*60+25, 70,"neo",true,true],
-  ["OS188","WAW","VIE",18*60+50, 70,"neo",true,false],
-  ["OS601","VIE","BEG", 9*60+ 0, 50,"ceo",true,true],
-  ["OS603","VIE","BEG",15*60+10, 50,"ceo",true,false],
-  ["OS602","BEG","VIE",10*60+20, 55,"ceo",true,true],
-  ["OS604","BEG","VIE",16*60+40, 55,"ceo",true,false],
-  ["OS633","VIE","SOF", 8*60+15, 75,"ceo",true,true],
-  ["OS635","VIE","SOF",15*60+40, 75,"ceo",true,false],
-  ["OS634","SOF","VIE",10*60+35, 75,"ceo",true,true],
-  ["OS636","SOF","VIE",18*60+ 0, 75,"ceo",true,false],
-  ["OS611","VIE","SKP", 7*60+50, 95,"ceo",true,false],
-  ["OS612","SKP","VIE",10*60+30, 95,"ceo",true,false],
-  ["OS531","VIE","VNO", 7*60+30, 80,"neo",true,false],
-  ["OS532","VNO","VIE", 9*60+40, 80,"neo",true,false],
-  // Scandinavia
-  ["OS381","VIE","CPH", 7*60+30,135,"neo",true,true],
-  ["OS383","VIE","CPH",16*60+ 0,135,"neo",true,false],
-  ["OS382","CPH","VIE",10*60+35,130,"neo",true,true],
-  ["OS384","CPH","VIE",19*60+15,130,"neo",true,false],
-  ["OS801","VIE","ARN", 6*60+55,175,"neo",true,true],
-  ["OS802","ARN","VIE",10*60+40,175,"neo",true,true],
-  ["OS751","VIE","OSL", 7*60+ 5,170,"neo",true,true],
-  ["OS752","OSL","VIE",10*60+55,175,"neo",true,true],
-  ["OS841","VIE","HEL", 7*60+10,175,"neo",true,true],
-  ["OS842","HEL","VIE",11*60+ 5,180,"neo",true,true],
-  // ── HOLIDAY ── (seasonal / summer schedule, heavy weekend bias)
-  // Palma de Mallorca (LEPA) ~115 min
-  ["OS711","VIE","PMI", 6*60+30,115,"neo",true,true],
-  ["OS713","VIE","PMI",13*60+15,115,"neo",false,true],
-  ["OS712","PMI","VIE", 9*60+20,120,"neo",true,true],
-  ["OS714","PMI","VIE",16*60+30,120,"neo",false,true],
-  // Antalya (LTAI) ~195 min
-  ["OS811","VIE","AYT", 7*60+ 0,195,"neo",false,true],
-  ["OS813","VIE","AYT",14*60+20,195,"neo",true,false],
-  ["OS812","AYT","VIE",11*60+30,195,"neo",false,true],
-  ["OS814","AYT","VIE",18*60+50,195,"neo",true,false],
-  // Heraklion / Crete (LGIR) ~155 min
-  ["OS671","VIE","HER", 7*60+10,155,"neo",false,true],
-  ["OS673","VIE","HER",13*60+45,155,"neo",true,false],
-  ["OS672","HER","VIE",11*60+ 0,150,"neo",false,true],
-  ["OS674","HER","VIE",17*60+50,150,"neo",true,false],
-  // Rhodes (LGRP) ~160 min
-  ["OS681","VIE","RHO", 6*60+55,160,"neo",false,true],
-  ["OS682","RHO","VIE",10*60+50,160,"neo",false,true],
-  // Corfu (LGKR) ~120 min
-  ["OS641","VIE","CFU", 7*60+20,120,"neo",false,true],
-  ["OS643","VIE","CFU",14*60+ 0,120,"neo",true,false],
-  ["OS642","CFU","VIE",10*60+25,120,"neo",false,true],
-  ["OS644","CFU","VIE",17*60+15,120,"neo",true,false],
-  // Mykonos (LGMK) ~150 min
-  ["OS651","VIE","JMK", 7*60+30,150,"neo",false,true],
-  ["OS652","JMK","VIE",11*60+20,150,"neo",false,true],
-  // Santorini (LGSR) ~155 min
-  ["OS661","VIE","JTR", 7*60+45,155,"neo",false,true],
-  ["OS662","JTR","VIE",11*60+45,150,"neo",false,true],
-  // Kos (LGKO) ~155 min
-  ["OS683","VIE","KGS", 8*60+ 0,155,"neo",false,true],
-  ["OS684","KGS","VIE",12*60+ 0,150,"neo",false,true],
-  // Zakynthos (LGZA) ~130 min
-  ["OS645","VIE","ZTH", 8*60+10,130,"neo",false,true],
-  ["OS646","ZTH","VIE",11*60+35,130,"neo",false,true],
-  // Olbia / Sardinia (LIEO) ~100 min
-  ["OS571","VIE","OLB", 7*60+ 0,100,"ceo",false,true],
-  ["OS573","VIE","OLB",14*60+30,100,"ceo",true,false],
-  ["OS572","OLB","VIE", 9*60+25,105,"ceo",false,true],
-  ["OS574","OLB","VIE",17*60+15,105,"ceo",true,false],
-  // Cagliari (LIEE) ~105 min
-  ["OS575","VIE","CAG", 7*60+15,105,"ceo",false,true],
-  ["OS576","CAG","VIE",10*60+ 5,105,"ceo",false,true],
-  // Naples (LIRN) ~85 min
-  ["OS581","VIE","NAP", 7*60+30, 85,"ceo",true,true],
-  ["OS583","VIE","NAP",15*60+10, 85,"ceo",true,false],
-  ["OS582","NAP","VIE", 9*60+30, 85,"ceo",true,true],
-  ["OS584","NAP","VIE",17*60+20, 85,"ceo",true,false],
-  // Catania / Sicily (LICC) ~110 min
-  ["OS591","VIE","CTA", 7*60+20,110,"ceo",false,true],
-  ["OS593","VIE","CTA",14*60+45,110,"ceo",true,false],
-  ["OS592","CTA","VIE",10*60+15,110,"ceo",false,true],
-  ["OS594","CTA","VIE",17*60+40,110,"ceo",true,false],
-  // Palermo / Sicily (LICJ) ~110 min
-  ["OS595","VIE","PMO", 8*60+ 0,110,"ceo",false,true],
-  ["OS596","PMO","VIE",11*60+ 5,110,"ceo",false,true],
-  // Brindisi / Puglia (LIBR) ~90 min
-  ["OS585","VIE","BDS", 7*60+50, 90,"ceo",false,true],
-  ["OS587","VIE","BDS",15*60+20, 90,"ceo",true,false],
-  ["OS586","BDS","VIE",10*60+15, 90,"ceo",false,true],
-  ["OS588","BDS","VIE",17*60+50, 90,"ceo",true,false],
-  // Lamezia Terme (LICA) ~110 min
-  ["OS597","VIE","SUF", 8*60+15,110,"ceo",false,true],
-  ["OS598","SUF","VIE",11*60+20,110,"ceo",false,true],
+// Approximate coords [lon,lat]
+const COORDS={
+  LOWW:[16.57,48.11],LOWG:[15.44,46.99],LOWI:[11.35,47.26],
+  EBBR:[4.48,50.90],LBSF:[23.41,42.68],EKCH:[12.64,55.62],
+  LFMN:[7.21,43.66],LFPG:[2.55,49.01],EDDS:[9.22,48.69],
+  EDDL:[6.77,51.29],EDDM:[11.79,48.35],LGAV:[23.94,37.94],
+  LGIR:[25.18,35.34],LIEO:[9.52,40.90],LIML:[9.28,45.45],
+  LIRF:[12.25,41.80],LIRN:[14.29,40.88],EPKK:[19.78,50.08],
+  LYBE:[20.31,44.82],LEMD:[-3.57,40.47],LEPA:[2.74,39.55],
+  LEMG:[-4.50,36.67],LEVC:[-0.48,39.49],LEBL:[2.07,41.30],
+  ESSA:[17.93,59.65],LSGG:[6.11,46.24],LSZH:[8.55,47.46],
+};
+
+// ═══════════════════════════════════════════════════════════
+//  30 FIVE-DAY SCHEDULES
+//  Each day = city pair(s) always departing & returning LOWW
+//  days[n].legs = [{dep,arr,std,flt,isOut}]
+//  Route codes use correct IATA (VIE–FCO not VIE–FCO)
+//  Max 4 legs/day. STD in minutes from midnight.
+//  GND turn at dest = 45 min. Base gap between pairs = 55 min.
+//  returnsToBase: day 5 ends at LOWW (true) or away (false)
+// ═══════════════════════════════════════════════════════════
+function mkDay(day,theme,pairs){
+  // pairs = [{dest,out_flt,back_flt,std_out}]
+  const legs=[];
+  pairs.forEach(p=>{
+    const b=BLK[p.dest];
+    legs.push({dep:"LOWW",arr:p.dest,std:p.std,dur:b,flt:p.out,isOut:true});
+    legs.push({dep:p.dest,arr:"LOWW",std:p.std+b+45,dur:b,flt:p.back,isOut:false});
+  });
+  const totalBlk=pairs.reduce((s,p)=>s+BLK[p.dest]*2,0);
+  const routeCode=pairs.map(p=>`VIE\u2013${AP[p.dest].iata}`).join(' / ');
+  return{day,theme,routeCode,legs,totalBlk};
+}
+
+
+function mkDay(dayNum,routeCode,totalBlk,pairs){
+  const legs=[];
+  pairs.forEach(p=>{
+    const b=BLK[p.dest];
+    legs.push({dep:"LOWW",arr:p.dest,std:p.std,dur:b,flt:p.out,isOut:true});
+    legs.push({dep:p.dest,arr:"LOWW",std:p.std+b+45,dur:b,flt:p.back,isOut:false});
+  });
+  return{day:dayNum,routeCode,totalBlk,legs};
+}
+const SCHEDS=[
+{id:"S01",name:"Rotation A",desc:"Serving CPH, GRZ, FCO, BEG, LIN.",returnsToBase:true,days:[mkDay(1,'VIE–CPH / VIE–GRZ',280,[{dest:"EKCH",out:"OS341",back:"OS342",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:575}]),mkDay(2,'VIE–FCO / VIE–BEG',290,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"LYBE",out:"OS791",back:"OS792",std:555}]),mkDay(3,'VIE–LIN / VIE–SOF',280,[{dest:"LIML",out:"OS211",back:"OS212",std:360},{dest:"LBSF",out:"OS731",back:"OS732",std:530}]),mkDay(4,'VIE–MUC / VIE–INN',180,[{dest:"EDDM",out:"OS101",back:"OS102",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:515}]),mkDay(5,'VIE–ZRH / VIE–STR',250,[{dest:"LSZH",out:"OS251",back:"OS252",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:525}])]},
+{id:"S02",name:"Rotation B",desc:"Serving SOF, STR, NAP, GRZ, FCO.",returnsToBase:true,days:[mkDay(1,'VIE–SOF / VIE–STR',280,[{dest:"LBSF",out:"OS731",back:"OS732",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:540}]),mkDay(2,'VIE–NAP / VIE–GRZ',280,[{dest:"LIRN",out:"OS221",back:"OS222",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:575}]),mkDay(3,'VIE–FCO / VIE–BEG',290,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"LYBE",out:"OS791",back:"OS792",std:555}]),mkDay(4,'VIE–INN / VIE–MUC',180,[{dest:"LOWI",out:"OS711",back:"OS712",std:360},{dest:"EDDM",out:"OS101",back:"OS102",std:505}]),mkDay(5,'VIE–LIN / VIE–ZRH',250,[{dest:"LIML",out:"OS211",back:"OS212",std:360},{dest:"LSZH",out:"OS251",back:"OS252",std:530}])]},
+{id:"S03",name:"Rotation C",desc:"Serving GRZ, NAP, KRK, INN, LIN.",returnsToBase:true,days:[mkDay(1,'VIE–GRZ / VIE–NAP',280,[{dest:"LOWG",out:"OS701",back:"OS702",std:360},{dest:"LIRN",out:"OS221",back:"OS222",std:495}]),mkDay(2,'VIE–KRK / VIE–INN',210,[{dest:"EPKK",out:"OS761",back:"OS762",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:530}]),mkDay(3,'VIE–LIN / VIE–STR',260,[{dest:"LIML",out:"OS211",back:"OS212",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:530}]),mkDay(4,'VIE–ZRH / VIE–BEG',230,[{dest:"LSZH",out:"OS251",back:"OS252",std:360},{dest:"LYBE",out:"OS791",back:"OS792",std:525}]),mkDay(5,'VIE–MUC / VIE–GVA',240,[{dest:"EDDM",out:"OS101",back:"OS102",std:360},{dest:"LSGG",out:"OS241",back:"OS242",std:515}])]},
+{id:"S04",name:"Rotation D",desc:"Serving KRK, STR, BEG, FCO, NAP.",returnsToBase:true,days:[mkDay(1,'VIE–KRK / VIE–STR',260,[{dest:"EPKK",out:"OS761",back:"OS762",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:530}]),mkDay(2,'VIE–BEG / VIE–FCO',290,[{dest:"LYBE",out:"OS791",back:"OS792",std:360},{dest:"LIRF",out:"OS201",back:"OS202",std:520}]),mkDay(3,'VIE–NAP / VIE–GRZ',280,[{dest:"LIRN",out:"OS221",back:"OS222",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:575}]),mkDay(4,'VIE–MUC / VIE–SOF',250,[{dest:"EDDM",out:"OS101",back:"OS102",std:360},{dest:"LBSF",out:"OS731",back:"OS732",std:515}]),mkDay(5,'VIE–NCE / VIE–INN',280,[{dest:"LFMN",out:"OS231",back:"OS232",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:565}])]},
+{id:"S05",name:"Rotation E",desc:"Serving SOF, MUC, DUS, GRZ, FCO.",returnsToBase:true,days:[mkDay(1,'VIE–SOF / VIE–MUC',250,[{dest:"LBSF",out:"OS731",back:"OS732",std:360},{dest:"EDDM",out:"OS101",back:"OS102",std:540}]),mkDay(2,'VIE–DUS / VIE–GRZ',290,[{dest:"EDDL",out:"OS131",back:"OS132",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:580}]),mkDay(3,'VIE–FCO / VIE–BEG',290,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"LYBE",out:"OS791",back:"OS792",std:555}]),mkDay(4,'VIE–GVA / VIE–KRK',270,[{dest:"LSGG",out:"OS241",back:"OS242",std:360},{dest:"EPKK",out:"OS761",back:"OS762",std:535}]),mkDay(5,'VIE–INN / VIE–NCE',280,[{dest:"LOWI",out:"OS711",back:"OS712",std:360},{dest:"LFMN",out:"OS231",back:"OS232",std:505}])]},
+{id:"S06",name:"Rotation F",desc:"Serving GVA, ZRH, INN, GRZ, LIN.",returnsToBase:true,days:[mkDay(1,'VIE–GVA / VIE–ZRH',260,[{dest:"LSGG",out:"OS241",back:"OS242",std:360},{dest:"LSZH",out:"OS251",back:"OS252",std:535}]),mkDay(2,'VIE–INN / VIE–GRZ',140,[{dest:"LOWI",out:"OS711",back:"OS712",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:505}]),mkDay(3,'VIE–LIN / VIE–MUC',230,[{dest:"LIML",out:"OS211",back:"OS212",std:360},{dest:"EDDM",out:"OS101",back:"OS102",std:530}]),mkDay(4,'VIE–FCO / VIE–BEG',290,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"LYBE",out:"OS791",back:"OS792",std:555}]),mkDay(5,'VIE–KRK / VIE–SOF',280,[{dest:"EPKK",out:"OS761",back:"OS762",std:360},{dest:"LBSF",out:"OS731",back:"OS732",std:530}])]},
+{id:"S07",name:"Rotation G",desc:"Serving SOF, GRZ, FCO, INN, ZRH.",returnsToBase:true,days:[mkDay(1,'VIE–SOF / VIE–GRZ',210,[{dest:"LBSF",out:"OS731",back:"OS732",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:540}]),mkDay(2,'VIE–FCO / VIE–INN',260,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:555}]),mkDay(3,'VIE–ZRH / VIE–KRK',250,[{dest:"LSZH",out:"OS251",back:"OS252",std:360},{dest:"EPKK",out:"OS761",back:"OS762",std:525}]),mkDay(4,'VIE–GVA / VIE–LIN',270,[{dest:"LSGG",out:"OS241",back:"OS242",std:360},{dest:"LIML",out:"OS211",back:"OS212",std:535}]),mkDay(5,'VIE–MUC / VIE–STR',230,[{dest:"EDDM",out:"OS101",back:"OS102",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:515}])]},
+{id:"S08",name:"Rotation H",desc:"Serving MUC, LIN, INN, FCO, SOF.",returnsToBase:true,days:[mkDay(1,'VIE–MUC / VIE–LIN',230,[{dest:"EDDM",out:"OS101",back:"OS102",std:360},{dest:"LIML",out:"OS211",back:"OS212",std:515}]),mkDay(2,'VIE–INN / VIE–FCO',260,[{dest:"LOWI",out:"OS711",back:"OS712",std:360},{dest:"LIRF",out:"OS201",back:"OS202",std:505}]),mkDay(3,'VIE–SOF / VIE–GRZ',210,[{dest:"LBSF",out:"OS731",back:"OS732",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:540}]),mkDay(4,'VIE–KRK / VIE–ZRH',250,[{dest:"EPKK",out:"OS761",back:"OS762",std:360},{dest:"LSZH",out:"OS251",back:"OS252",std:530}]),mkDay(5,'VIE–STR / VIE–BEG',240,[{dest:"EDDS",out:"OS111",back:"OS112",std:360},{dest:"LYBE",out:"OS791",back:"OS792",std:530}])]},
+{id:"S09",name:"Rotation J",desc:"Serving NCE, INN, BRU, GRZ, GVA.",returnsToBase:true,days:[mkDay(1,'VIE–NCE / VIE–INN',280,[{dest:"LFMN",out:"OS231",back:"OS232",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:565}]),mkDay(2,'VIE–BRU / VIE–GRZ',290,[{dest:"EBBR",out:"OS521",back:"OS522",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:580}]),mkDay(3,'VIE–GVA / VIE–LIN',270,[{dest:"LSGG",out:"OS241",back:"OS242",std:360},{dest:"LIML",out:"OS211",back:"OS212",std:535}]),mkDay(4,'VIE–SOF / VIE–STR',280,[{dest:"LBSF",out:"OS731",back:"OS732",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:540}]),mkDay(5,'VIE–FCO / VIE–MUC',280,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"EDDM",out:"OS101",back:"OS102",std:555}])]},
+{id:"S10",name:"Rotation K",desc:"Serving ZRH, BEG, DUS, GRZ, INN.",returnsToBase:true,days:[mkDay(1,'VIE–ZRH / VIE–BEG',230,[{dest:"LSZH",out:"OS251",back:"OS252",std:360},{dest:"LYBE",out:"OS791",back:"OS792",std:525}]),mkDay(2,'VIE–DUS / VIE–GRZ',290,[{dest:"EDDL",out:"OS131",back:"OS132",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:580}]),mkDay(3,'VIE–INN / VIE–GVA',220,[{dest:"LOWI",out:"OS711",back:"OS712",std:360},{dest:"LSGG",out:"OS241",back:"OS242",std:505}]),mkDay(4,'VIE–STR / VIE–LIN',260,[{dest:"EDDS",out:"OS111",back:"OS112",std:360},{dest:"LIML",out:"OS211",back:"OS212",std:530}]),mkDay(5,'VIE–KRK / VIE–SOF',280,[{dest:"EPKK",out:"OS761",back:"OS762",std:360},{dest:"LBSF",out:"OS731",back:"OS732",std:530}])]},
+{id:"S11",name:"Rotation L",desc:"Serving GVA, STR, SOF, GRZ, LIN.",returnsToBase:true,days:[mkDay(1,'VIE–GVA / VIE–STR',270,[{dest:"LSGG",out:"OS241",back:"OS242",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:535}]),mkDay(2,'VIE–SOF / VIE–GRZ',210,[{dest:"LBSF",out:"OS731",back:"OS732",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:540}]),mkDay(3,'VIE–LIN / VIE–KRK',260,[{dest:"LIML",out:"OS211",back:"OS212",std:360},{dest:"EPKK",out:"OS761",back:"OS762",std:530}]),mkDay(4,'VIE–ZRH / VIE–BEG',230,[{dest:"LSZH",out:"OS251",back:"OS252",std:360},{dest:"LYBE",out:"OS791",back:"OS792",std:525}]),mkDay(5,'VIE–INN / VIE–FCO',260,[{dest:"LOWI",out:"OS711",back:"OS712",std:360},{dest:"LIRF",out:"OS201",back:"OS202",std:505}])]},
+{id:"S12",name:"Rotation M",desc:"Serving NAP, GRZ, ZRH, INN, BEG.",returnsToBase:true,days:[mkDay(1,'VIE–NAP / VIE–GRZ',280,[{dest:"LIRN",out:"OS221",back:"OS222",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:575}]),mkDay(2,'VIE–ZRH / VIE–INN',200,[{dest:"LSZH",out:"OS251",back:"OS252",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:525}]),mkDay(3,'VIE–BEG / VIE–FCO',290,[{dest:"LYBE",out:"OS791",back:"OS792",std:360},{dest:"LIRF",out:"OS201",back:"OS202",std:520}]),mkDay(4,'VIE–SOF / VIE–LIN',280,[{dest:"LBSF",out:"OS731",back:"OS732",std:360},{dest:"LIML",out:"OS211",back:"OS212",std:540}]),mkDay(5,'VIE–GVA / VIE–KRK',270,[{dest:"LSGG",out:"OS241",back:"OS242",std:360},{dest:"EPKK",out:"OS761",back:"OS762",std:535}])]},
+{id:"S13",name:"Rotation N",desc:"Serving SOF, STR, BEG, KRK, MUC.",returnsToBase:true,days:[mkDay(1,'VIE–SOF / VIE–STR',280,[{dest:"LBSF",out:"OS731",back:"OS732",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:540}]),mkDay(2,'VIE–BEG / VIE–KRK',240,[{dest:"LYBE",out:"OS791",back:"OS792",std:360},{dest:"EPKK",out:"OS761",back:"OS762",std:520}]),mkDay(3,'VIE–MUC / VIE–ZRH',220,[{dest:"EDDM",out:"OS101",back:"OS102",std:360},{dest:"LSZH",out:"OS251",back:"OS252",std:515}]),mkDay(4,'VIE–LIN / VIE–GVA',270,[{dest:"LIML",out:"OS211",back:"OS212",std:360},{dest:"LSGG",out:"OS241",back:"OS242",std:530}]),mkDay(5,'VIE–INN / VIE–GRZ',140,[{dest:"LOWI",out:"OS711",back:"OS712",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:505}])]},
+{id:"S14",name:"Rotation P",desc:"Serving MUC, GVA, SOF, GRZ, BEG.",returnsToBase:true,days:[mkDay(1,'VIE–MUC / VIE–GVA',240,[{dest:"EDDM",out:"OS101",back:"OS102",std:360},{dest:"LSGG",out:"OS241",back:"OS242",std:515}]),mkDay(2,'VIE–SOF / VIE–GRZ',210,[{dest:"LBSF",out:"OS731",back:"OS732",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:540}]),mkDay(3,'VIE–BEG / VIE–ZRH',230,[{dest:"LYBE",out:"OS791",back:"OS792",std:360},{dest:"LSZH",out:"OS251",back:"OS252",std:520}]),mkDay(4,'VIE–LIN / VIE–STR',260,[{dest:"LIML",out:"OS211",back:"OS212",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:530}]),mkDay(5,'VIE–NCE / VIE–INN',280,[{dest:"LFMN",out:"OS231",back:"OS232",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:565}])]},
+{id:"S15",name:"Rotation Q",desc:"Serving MUC, GRZ, BEG, SOF, LIN.",returnsToBase:true,days:[mkDay(1,'VIE–MUC / VIE–GRZ',160,[{dest:"EDDM",out:"OS101",back:"OS102",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:515}]),mkDay(2,'VIE–BEG / VIE–SOF',260,[{dest:"LYBE",out:"OS791",back:"OS792",std:360},{dest:"LBSF",out:"OS731",back:"OS732",std:520}]),mkDay(3,'VIE–LIN / VIE–KRK',260,[{dest:"LIML",out:"OS211",back:"OS212",std:360},{dest:"EPKK",out:"OS761",back:"OS762",std:530}]),mkDay(4,'VIE–FCO / VIE–INN',260,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:555}]),mkDay(5,'VIE–ZRH / VIE–STR',250,[{dest:"LSZH",out:"OS251",back:"OS252",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:525}])]},
+{id:"S16",name:"Rotation R",desc:"Serving BEG, KRK, NCE, GRZ, INN.",returnsToBase:true,days:[mkDay(1,'VIE–BEG / VIE–KRK',240,[{dest:"LYBE",out:"OS791",back:"OS792",std:360},{dest:"EPKK",out:"OS761",back:"OS762",std:520}]),mkDay(2,'VIE–NCE / VIE–GRZ',260,[{dest:"LFMN",out:"OS231",back:"OS232",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:565}]),mkDay(3,'VIE–INN / VIE–STR',210,[{dest:"LOWI",out:"OS711",back:"OS712",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:505}]),mkDay(4,'VIE–GVA / VIE–MUC',240,[{dest:"LSGG",out:"OS241",back:"OS242",std:360},{dest:"EDDM",out:"OS101",back:"OS102",std:535}]),mkDay(5,'VIE–LIN / VIE–SOF',280,[{dest:"LIML",out:"OS211",back:"OS212",std:360},{dest:"LBSF",out:"OS731",back:"OS732",std:530}])]},
+{id:"S17",name:"Rotation S",desc:"Serving NCE, INN, MUC, KRK, BRU.",returnsToBase:true,days:[mkDay(1,'VIE–NCE / VIE–INN',280,[{dest:"LFMN",out:"OS231",back:"OS232",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:565}]),mkDay(2,'VIE–MUC / VIE–KRK',230,[{dest:"EDDM",out:"OS101",back:"OS102",std:360},{dest:"EPKK",out:"OS761",back:"OS762",std:515}]),mkDay(3,'VIE–BRU / VIE–GRZ',290,[{dest:"EBBR",out:"OS521",back:"OS522",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:580}]),mkDay(4,'VIE–FCO / VIE–BEG',290,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"LYBE",out:"OS791",back:"OS792",std:555}]),mkDay(5,'VIE–SOF / VIE–STR',280,[{dest:"LBSF",out:"OS731",back:"OS732",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:540}])]},
+{id:"S18",name:"Rotation T",desc:"Serving GVA, INN, FCO, MUC, CPH.",returnsToBase:true,days:[mkDay(1,'VIE–GVA / VIE–INN',220,[{dest:"LSGG",out:"OS241",back:"OS242",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:535}]),mkDay(2,'VIE–FCO / VIE–MUC',280,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"EDDM",out:"OS101",back:"OS102",std:555}]),mkDay(3,'VIE–CPH / VIE–GRZ',280,[{dest:"EKCH",out:"OS341",back:"OS342",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:575}]),mkDay(4,'VIE–KRK / VIE–STR',260,[{dest:"EPKK",out:"OS761",back:"OS762",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:530}]),mkDay(5,'VIE–LIN / VIE–SOF',280,[{dest:"LIML",out:"OS211",back:"OS212",std:360},{dest:"LBSF",out:"OS731",back:"OS732",std:530}])]},
+{id:"S19",name:"Rotation U",desc:"Serving INN, GVA, FCO, BEG, ZRH.",returnsToBase:true,days:[mkDay(1,'VIE–INN / VIE–GVA',220,[{dest:"LOWI",out:"OS711",back:"OS712",std:360},{dest:"LSGG",out:"OS241",back:"OS242",std:505}]),mkDay(2,'VIE–FCO / VIE–BEG',290,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"LYBE",out:"OS791",back:"OS792",std:555}]),mkDay(3,'VIE–ZRH / VIE–KRK',250,[{dest:"LSZH",out:"OS251",back:"OS252",std:360},{dest:"EPKK",out:"OS761",back:"OS762",std:525}]),mkDay(4,'VIE–NAP / VIE–GRZ',280,[{dest:"LIRN",out:"OS221",back:"OS222",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:575}]),mkDay(5,'VIE–LIN / VIE–STR',260,[{dest:"LIML",out:"OS211",back:"OS212",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:530}])]},
+{id:"S20",name:"Rotation V",desc:"Serving NCE, GRZ, LIN, INN, BEG.",returnsToBase:true,days:[mkDay(1,'VIE–NCE / VIE–GRZ',260,[{dest:"LFMN",out:"OS231",back:"OS232",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:565}]),mkDay(2,'VIE–LIN / VIE–INN',210,[{dest:"LIML",out:"OS211",back:"OS212",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:530}]),mkDay(3,'VIE–BEG / VIE–STR',240,[{dest:"LYBE",out:"OS791",back:"OS792",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:520}]),mkDay(4,'VIE–KRK / VIE–ZRH',250,[{dest:"EPKK",out:"OS761",back:"OS762",std:360},{dest:"LSZH",out:"OS251",back:"OS252",std:530}]),mkDay(5,'VIE–FCO / VIE–MUC',280,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"EDDM",out:"OS101",back:"OS102",std:555}])]},
+{id:"S21",name:"Rotation W",desc:"Serving GRZ, FCO, KRK, SOF, BEG.",returnsToBase:true,days:[mkDay(1,'VIE–GRZ / VIE–FCO',240,[{dest:"LOWG",out:"OS701",back:"OS702",std:360},{dest:"LIRF",out:"OS201",back:"OS202",std:495}]),mkDay(2,'VIE–KRK / VIE–SOF',280,[{dest:"EPKK",out:"OS761",back:"OS762",std:360},{dest:"LBSF",out:"OS731",back:"OS732",std:530}]),mkDay(3,'VIE–BEG / VIE–ZRH',230,[{dest:"LYBE",out:"OS791",back:"OS792",std:360},{dest:"LSZH",out:"OS251",back:"OS252",std:520}]),mkDay(4,'VIE–STR / VIE–MUC',230,[{dest:"EDDS",out:"OS111",back:"OS112",std:360},{dest:"EDDM",out:"OS101",back:"OS102",std:530}]),mkDay(5,'VIE–INN / VIE–LIN',210,[{dest:"LOWI",out:"OS711",back:"OS712",std:360},{dest:"LIML",out:"OS211",back:"OS212",std:505}])]},
+{id:"S22",name:"Rotation X",desc:"Serving KRK, MUC, BRU, GRZ, SOF.",returnsToBase:true,days:[mkDay(1,'VIE–KRK / VIE–MUC',230,[{dest:"EPKK",out:"OS761",back:"OS762",std:360},{dest:"EDDM",out:"OS101",back:"OS102",std:530}]),mkDay(2,'VIE–BRU / VIE–GRZ',290,[{dest:"EBBR",out:"OS521",back:"OS522",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:580}]),mkDay(3,'VIE–SOF / VIE–INN',230,[{dest:"LBSF",out:"OS731",back:"OS732",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:540}]),mkDay(4,'VIE–BEG / VIE–STR',240,[{dest:"LYBE",out:"OS791",back:"OS792",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:520}]),mkDay(5,'VIE–ZRH / VIE–LIN',250,[{dest:"LSZH",out:"OS251",back:"OS252",std:360},{dest:"LIML",out:"OS211",back:"OS212",std:525}])]},
+{id:"S23",name:"Rotation Y",desc:"Serving CPH, GRZ, ZRH, SOF, NCE.",returnsToBase:true,days:[mkDay(1,'VIE–CPH / VIE–GRZ',280,[{dest:"EKCH",out:"OS341",back:"OS342",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:575}]),mkDay(2,'VIE–ZRH / VIE–SOF',270,[{dest:"LSZH",out:"OS251",back:"OS252",std:360},{dest:"LBSF",out:"OS731",back:"OS732",std:525}]),mkDay(3,'VIE–NCE / VIE–INN',280,[{dest:"LFMN",out:"OS231",back:"OS232",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:565}]),mkDay(4,'VIE–LIN / VIE–KRK',260,[{dest:"LIML",out:"OS211",back:"OS212",std:360},{dest:"EPKK",out:"OS761",back:"OS762",std:530}]),mkDay(5,'VIE–BEG / VIE–STR',240,[{dest:"LYBE",out:"OS791",back:"OS792",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:520}])]},
+{id:"S24",name:"Rotation Z",desc:"Serving GRZ, NAP, INN, STR, ZRH.",returnsToBase:true,days:[mkDay(1,'VIE–GRZ / VIE–NAP',280,[{dest:"LOWG",out:"OS701",back:"OS702",std:360},{dest:"LIRN",out:"OS221",back:"OS222",std:495}]),mkDay(2,'VIE–INN / VIE–STR',210,[{dest:"LOWI",out:"OS711",back:"OS712",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:505}]),mkDay(3,'VIE–ZRH / VIE–KRK',250,[{dest:"LSZH",out:"OS251",back:"OS252",std:360},{dest:"EPKK",out:"OS761",back:"OS762",std:525}]),mkDay(4,'VIE–FCO / VIE–MUC',280,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"EDDM",out:"OS101",back:"OS102",std:555}]),mkDay(5,'VIE–BEG / VIE–SOF',260,[{dest:"LYBE",out:"OS791",back:"OS792",std:360},{dest:"LBSF",out:"OS731",back:"OS732",std:520}])]},
+{id:"S25",name:"Rotation AA",desc:"Serving STR, MUC, GRZ, DUS, LIN.",returnsToBase:true,days:[mkDay(1,'VIE–STR / VIE–MUC',230,[{dest:"EDDS",out:"OS111",back:"OS112",std:360},{dest:"EDDM",out:"OS101",back:"OS102",std:530}]),mkDay(2,'VIE–GRZ / VIE–DUS',290,[{dest:"LOWG",out:"OS701",back:"OS702",std:360},{dest:"EDDL",out:"OS131",back:"OS132",std:495}]),mkDay(3,'VIE–LIN / VIE–ZRH',250,[{dest:"LIML",out:"OS211",back:"OS212",std:360},{dest:"LSZH",out:"OS251",back:"OS252",std:530}]),mkDay(4,'VIE–FCO / VIE–BEG',290,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"LYBE",out:"OS791",back:"OS792",std:555}]),mkDay(5,'VIE–KRK / VIE–INN',210,[{dest:"EPKK",out:"OS761",back:"OS762",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:530}])]},
+{id:"S26",name:"Rotation AB",desc:"Serving NCE, INN, BRU, GRZ, GVA.",returnsToBase:true,days:[mkDay(1,'VIE–NCE / VIE–INN',280,[{dest:"LFMN",out:"OS231",back:"OS232",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:565}]),mkDay(2,'VIE–BRU / VIE–GRZ',290,[{dest:"EBBR",out:"OS521",back:"OS522",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:580}]),mkDay(3,'VIE–GVA / VIE–STR',270,[{dest:"LSGG",out:"OS241",back:"OS242",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:535}]),mkDay(4,'VIE–BEG / VIE–FCO',290,[{dest:"LYBE",out:"OS791",back:"OS792",std:360},{dest:"LIRF",out:"OS201",back:"OS202",std:520}]),mkDay(5,'VIE–KRK / VIE–ZRH',250,[{dest:"EPKK",out:"OS761",back:"OS762",std:360},{dest:"LSZH",out:"OS251",back:"OS252",std:530}])]},
+{id:"S27",name:"Rotation AC",desc:"Serving DUS, GRZ, LIN, GVA, FCO.",returnsToBase:true,days:[mkDay(1,'VIE–DUS / VIE–GRZ',290,[{dest:"EDDL",out:"OS131",back:"OS132",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:580}]),mkDay(2,'VIE–LIN / VIE–GVA',270,[{dest:"LIML",out:"OS211",back:"OS212",std:360},{dest:"LSGG",out:"OS241",back:"OS242",std:530}]),mkDay(3,'VIE–FCO / VIE–INN',260,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:555}]),mkDay(4,'VIE–SOF / VIE–STR',280,[{dest:"LBSF",out:"OS731",back:"OS732",std:360},{dest:"EDDS",out:"OS111",back:"OS112",std:540}]),mkDay(5,'VIE–MUC / VIE–KRK',230,[{dest:"EDDM",out:"OS101",back:"OS102",std:360},{dest:"EPKK",out:"OS761",back:"OS762",std:515}])]},
+{id:"S28",name:"Rotation AD",desc:"Serving GVA, LIN, SOF, ZRH, BRU.",returnsToBase:true,days:[mkDay(1,'VIE–GVA / VIE–LIN',270,[{dest:"LSGG",out:"OS241",back:"OS242",std:360},{dest:"LIML",out:"OS211",back:"OS212",std:535}]),mkDay(2,'VIE–SOF / VIE–ZRH',270,[{dest:"LBSF",out:"OS731",back:"OS732",std:360},{dest:"LSZH",out:"OS251",back:"OS252",std:540}]),mkDay(3,'VIE–BRU / VIE–GRZ',290,[{dest:"EBBR",out:"OS521",back:"OS522",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:580}]),mkDay(4,'VIE–STR / VIE–MUC',230,[{dest:"EDDS",out:"OS111",back:"OS112",std:360},{dest:"EDDM",out:"OS101",back:"OS102",std:530}]),mkDay(5,'VIE–BEG / VIE–INN',190,[{dest:"LYBE",out:"OS791",back:"OS792",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:520}])]},
+{id:"S29",name:"Rotation AE",desc:"Serving BEG, GVA, SOF, GRZ, FCO.",returnsToBase:true,days:[mkDay(1,'VIE–BEG / VIE–GVA',250,[{dest:"LYBE",out:"OS791",back:"OS792",std:360},{dest:"LSGG",out:"OS241",back:"OS242",std:520}]),mkDay(2,'VIE–SOF / VIE–GRZ',210,[{dest:"LBSF",out:"OS731",back:"OS732",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:540}]),mkDay(3,'VIE–FCO / VIE–MUC',280,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"EDDM",out:"OS101",back:"OS102",std:555}]),mkDay(4,'VIE–INN / VIE–LIN',210,[{dest:"LOWI",out:"OS711",back:"OS712",std:360},{dest:"LIML",out:"OS211",back:"OS212",std:505}]),mkDay(5,'VIE–KRK / VIE–ZRH',250,[{dest:"EPKK",out:"OS761",back:"OS762",std:360},{dest:"LSZH",out:"OS251",back:"OS252",std:530}])]},
+{id:"S30",name:"Rotation AF",desc:"Serving ZRH, MUC, NCE, INN, CPH.",returnsToBase:true,days:[mkDay(1,'VIE–ZRH / VIE–MUC',220,[{dest:"LSZH",out:"OS251",back:"OS252",std:360},{dest:"EDDM",out:"OS101",back:"OS102",std:525}]),mkDay(2,'VIE–NCE / VIE–INN',280,[{dest:"LFMN",out:"OS231",back:"OS232",std:360},{dest:"LOWI",out:"OS711",back:"OS712",std:565}]),mkDay(3,'VIE–CPH / VIE–GRZ',280,[{dest:"EKCH",out:"OS341",back:"OS342",std:360},{dest:"LOWG",out:"OS701",back:"OS702",std:575}]),mkDay(4,'VIE–FCO / VIE–BEG',290,[{dest:"LIRF",out:"OS201",back:"OS202",std:360},{dest:"LYBE",out:"OS791",back:"OS792",std:555}]),mkDay(5,'VIE–SOF / VIE–GVA',290,[{dest:"LBSF",out:"OS731",back:"OS732",std:360},{dest:"LSGG",out:"OS241",back:"OS242",std:540}])]}
 ];
 
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  HELPERS
-// ═══════════════════════════════════════════════
-function minToHHMM(m){return`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;}
-function durStr(m){return`${Math.floor(m/60)}h${String(m%60).padStart(2,'0')}`;}
-
-// SimBrief ICAO type codes for A320 variants
-const AC_TYPE = {ceo:"A320",neo:"A20N"};
-
-function simbriefURL(f, pid){
-  const dep = CITIES[f[1]];
-  const arr = CITIES[f[2]];
-  const fn  = f[0].replace('OS','').trim();
-  const deph= Math.floor(f[3]/60);
-  const depm= f[3]%60;
-  const steh= Math.floor(f[4]/60);
-  const stem= f[4]%60;
-  let url = `https://dispatch.simbrief.com/options/custom?airline=AUA&fltnum=${fn}&type=${AC_TYPE[f[5]]}&orig=${dep.icao}&dest=${arr.icao}&deph=${deph}&depm=${depm}&steh=${steh}&stem=${stem}&reg=OE-LZE&planformat=LIDO&navlog=1&find_sidstar=1&units=KGS`;
-  if(pid) url += `&pid=${encodeURIComponent(pid)}`;
-  return url;
+// ═══════════════════════════════════════════════════════════
+const BASE='LOWW', AL='AUA', AC='A320', REG='OE-LZE';
+function mmhh(m){return`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;}
+function ds(m){if(!m||m<=0)return'—';return m<60?`${m}m`:`${Math.floor(m/60)}h${String(m%60).padStart(2,'0')}m`;}
+function sbURL(dep,arr,flt,dur,pid){
+  let u=`https://dispatch.simbrief.com/options/custom?airline=${AL}&fltnum=${flt}&type=${AC}&orig=${dep}&dest=${arr}&steh=${Math.floor(dur/60)}&stem=${dur%60}&reg=${REG}&callsign=${AL}&planformat=LIDO&navlog=1&find_sidstar=1&units=KGS`;
+  if(pid)u+=`&pid=${encodeURIComponent(pid)}`;
+  return u;
 }
-
-// ═══════════════════════════════════════════════
-//  PAIRING ENGINE
-// ═══════════════════════════════════════════════
-function flightsForSched(isWeekend){
-  return FLIGHTS.filter(f => isWeekend ? f[7] : f[6]);
+function schedTotalLegs(s){return s.days.reduce((t,d)=>t+d.legs.length,0);}
+function schedTotalBlock(s){return s.days.reduce((t,d)=>t+d.totalBlk,0);}
+// Build flat leg list with global indices
+function schedLegs(s){
+  const all=[];
+  s.days.forEach(d=>d.legs.forEach(l=>all.push(l)));
+  return all;
 }
+function segCount(s){return schedLegs(s).length;}
 
-function buildPairings(isWeekend){
-  const daily = flightsForSched(isWeekend);
-  const byDep = {};
-  daily.forEach(f=>{if(!byDep[f[1]])byDep[f[1]]=[];byDep[f[1]].push(f);});
-  const results=[];
-  function dfs(chain,arrAp,arrTime){
-    if(chain.length>=2&&arrAp==='VIE')results.push([...chain]);
-    if(chain.length>=4)return;
-    const nexts=byDep[arrAp]||[];
-    for(const f of nexts){
-      const gnd=f[3]-arrTime;
-      if(gnd<30||gnd>240)continue;
-      dfs([...chain,f],f[2],f[3]+f[4]);
-    }
-  }
-  (byDep['VIE']||[]).forEach(f=>dfs([f],f[2],f[3]+f[4]));
-  const seen=new Set();
-  return results.filter(p=>{const k=p.map(f=>f[0]).join('|');if(seen.has(k))return false;seen.add(k);return true;});
-}
-
-function pairingStats(p){
-  const firstDep=p[0][3],lastArr=p[p.length-1][3]+p[p.length-1][4];
-  return{firstDep,lastArr,fdp:lastArr-firstDep,block:p.reduce((s,f)=>s+f[4],0)};
-}
-
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  STATE
-// ═══════════════════════════════════════════════
-let schedType   = 'weekday'; // 'weekday' | 'weekend'
-let filterLegs  = 'all';
-let filterRegion= 'all';
-let selectedPairing = null;
-let selectedPairingData = null;
+// ═══════════════════════════════════════════════════════════
+const STORE='aua_v3';
+function load(){try{return JSON.parse(localStorage.getItem(STORE))||{};}catch{return{};}}
+function save(s){localStorage.setItem(STORE,JSON.stringify(s));}
+let S=load();
+if(!S.id){S.id=SCHEDS[Math.floor(Math.random()*SCHEDS.length)].id;S.flown={};save(S);}
+let pilotId=localStorage.getItem('sb_pid_aua')||'141979';
+let fEnd='all',fLpd='all';
 
-// Load saved pilot ID
-let pilotId = localStorage.getItem('sb_pid') || '';
-if(pilotId) document.addEventListener('DOMContentLoaded',()=>{
-  const el=document.getElementById('pid-input');
-  if(el) el.value=pilotId;
-});
-
-function savePid(){
-  pilotId=document.getElementById('pid-input').value.trim();
-  localStorage.setItem('sb_pid',pilotId);
-  const btn=document.querySelector('.pid-save');
-  btn.textContent='✓ Saved';setTimeout(()=>btn.textContent='Save',1500);
+// ═══════════════════════════════════════════════════════════
+//  LOGIN
+// ═══════════════════════════════════════════════════════════
+document.getElementById('login-btn').addEventListener('click',doLogin);
+document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+function doLogin(){
+  if(!document.getElementById('login-user').value.trim())return;
+  localStorage.setItem('aua_li','1');
+  document.getElementById('login-page').style.display='none';
+  document.getElementById('app-page').style.display='block';
+  renderApp();
+}
+function doLogout(){
+  localStorage.removeItem('aua_li');
+  document.getElementById('app-page').style.display='none';
+  document.getElementById('login-page').style.display='flex';
 }
 
-// ═══════════════════════════════════════════════
-//  RENDER
-// ═══════════════════════════════════════════════
-function renderAll(){
-  const isWeekend = schedType==='weekend';
-  let pairings = buildPairings(isWeekend);
+// ═══════════════════════════════════════════════════════════
+//  RENDER APP
+// ═══════════════════════════════════════════════════════════
+function renderApp(){
+  const sched=SCHEDS.find(s=>s.id===S.id)||SCHEDS[0];
+  if(!S.flown)S.flown={};
+  if(!S.flown[sched.id])S.flown[sched.id]={};
+  const flownSet=S.flown[sched.id];
+  const allLegs=schedLegs(sched);
+  const flownCount=Object.keys(flownSet).length;
+  const totalLegs=allLegs.length;
+  const isComplete=flownCount>=totalLegs;
+  const totalBlock=schedTotalBlock(sched);
 
-  if(filterLegs!=='all') pairings=pairings.filter(p=>p.length===parseInt(filterLegs));
-  if(filterRegion!=='all') pairings=pairings.filter(p=>p.some(f=>REGION[f[2]]===filterRegion||REGION[f[1]]===filterRegion));
-  pairings.sort((a,b)=>a[0][3]-b[0][3]);
+  document.getElementById('st-legs').textContent=totalLegs;
+  document.getElementById('st-flown').textContent=`${flownCount}/${totalLegs}`;
+  document.getElementById('st-block').textContent=ds(totalBlock);
+  document.getElementById('m-sub').textContent=`LOWW · A320 · OE-LZE · ${sched.id}`;
 
-  // header
-  document.getElementById('sched-badge').textContent = isWeekend ? 'WEEKEND' : 'WEEKDAY';
-  document.getElementById('sched-days').textContent   = isWeekend ? 'Saturday · Sunday' : 'Monday · Tuesday · Wednesday · Thursday · Friday';
-  document.getElementById('sched-sub').textContent    = isWeekend ? 'Reduced schedule · Sat–Sun' : 'Full schedule operating · Mon–Fri';
-  document.getElementById('m-sub').textContent        = `${pairings.length} pairing${pairings.length!==1?'s':''} available · A320 Family · LOWW`;
+  document.getElementById('chain-banner').style.display='flex';
+  document.getElementById('cb-name').textContent=sched.name;
+  document.getElementById('cb-desc').textContent=sched.desc;
+  document.getElementById('cb-progress').textContent=`${flownCount} / ${totalLegs} legs`;
 
-  // stats
-  document.getElementById('st-pairings').textContent = pairings.length;
-  if(pairings.length){
-    const blocks=pairings.map(p=>pairingStats(p).block);
-    const fdps  =pairings.map(p=>pairingStats(p).fdp);
-    document.getElementById('st-flt').innerHTML  = durStr(Math.min(...blocks));
-    document.getElementById('st-fdp').innerHTML  = durStr(Math.max(...fdps));
-    document.getElementById('st-sectors').textContent = new Set(pairings.flatMap(p=>p.map(f=>`${f[1]}-${f[2]}`))).size;
-  } else {
-    ['st-flt','st-fdp','st-sectors'].forEach(id=>document.getElementById(id).textContent='—');
+  document.getElementById('chain-complete-banner').style.display=isComplete?'block':'none';
+  if(isComplete)document.getElementById('complete-msg').textContent=
+    `All ${totalLegs} legs of "${sched.name}" flown. Ready for new schedule.`;
+
+  renderMap(sched,allLegs,flownSet);
+  renderDays(sched,allLegs,flownSet);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  MAP
+// ═══════════════════════════════════════════════════════════
+const DAY_COLS=['#c8102e','#1d6fd8','#7b3fa0','#c67c0a','#1a8a4a'];
+function renderMap(sched,allLegs,flownSet){
+  const el=document.getElementById('chain-map');
+  const W=el.clientWidth||800, H=el.clientHeight||340;
+  const pts=[[16.57,48.11]];
+  sched.days.forEach(d=>d.legs.forEach(l=>{const c=COORDS[l.arr];if(c)pts.push(c);}));
+  let lonMin=Infinity,lonMax=-Infinity,latMin=Infinity,latMax=-Infinity;
+  pts.forEach(p=>{lonMin=Math.min(lonMin,p[0]);lonMax=Math.max(lonMax,p[0]);latMin=Math.min(latMin,p[1]);latMax=Math.max(latMax,p[1]);});
+  const lp=(lonMax-lonMin)*0.22||5, ltp=(latMax-latMin)*0.22||4;
+  lonMin-=lp;lonMax+=lp;latMin-=ltp;latMax+=ltp;
+  function proj(lon,lat){
+    const x=((lon-lonMin)/(lonMax-lonMin))*(W-40)+20;
+    const r=lat*Math.PI/180,mn=latMin*Math.PI/180,mx2=latMax*Math.PI/180;
+    const my=Math.log(Math.tan(Math.PI/4+r/2)),myMin=Math.log(Math.tan(Math.PI/4+mn/2)),myMax=Math.log(Math.tan(Math.PI/4+mx2/2));
+    return[Math.round(x),Math.round((H-20)-((my-myMin)/(myMax-myMin))*(H-40))];
   }
-
-  // grid
-  const grid = document.getElementById('pairingsGrid');
-  grid.innerHTML='';
-  if(!pairings.length){grid.innerHTML='<div class="empty-msg">No pairings match the selected filters.</div>';return;}
-
-  pairings.forEach((p,idx)=>{
-    const stats = pairingStats(p);
-    const isSel = selectedPairing===idx;
-    const card  = document.createElement('div');
-    card.className = 'p-card'+(isSel?' selected':'');
-    card.style.animationDelay = `${Math.min(idx,20)*0.03}s`;
-
-    let legsHTML='';
-    p.forEach((f,li)=>{
-      const dep=f[1],arr=f[2];
-      const depC=CITIES[dep],arrC=CITIES[arr];
-      if(li>0){
-        const gnd=f[3]-(p[li-1][3]+p[li-1][4]);
-        legsHTML+=`<div class="gnd-row"><span>GND ${durStr(gnd)} · ${dep}</span><div class="gnd-bar"></div></div>`;
+  let svg=`<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="background:#e8eef8">`;
+  svg+=`<defs><pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0L0 0 0 40" fill="none" stroke="rgba(26,58,107,0.05)" stroke-width="0.5"/></pattern></defs>`;
+  svg+=`<rect width="${W}" height="${H}" fill="url(#g)"/>`;
+  const [bx,by]=proj(16.57,48.11);
+  let legIdx=0;
+  sched.days.forEach((d,di)=>{
+    const col=DAY_COLS[di%DAY_COLS.length];
+    d.legs.forEach((l,li)=>{
+      const idx=legIdx++;
+      const co=COORDS[l.arr==='LOWW'?l.dep:l.arr];
+      if(!co)return;
+      const [dx2,dy2]=proj(co[0],co[1]);
+      const isFlown=!!flownSet[idx];
+      const x1=l.arr==='LOWW'?dx2:bx, y1=l.arr==='LOWW'?dy2:by;
+      const x2=l.arr==='LOWW'?bx:dx2, y2=l.arr==='LOWW'?by:dy2;
+      const ddx=x2-x1,ddy=y2-y1,len=Math.sqrt(ddx*ddx+ddy*ddy)||1;
+      const curve=Math.min(len*0.15,28);
+      const cx=(x1+x2)/2-ddy/len*curve,cy=(y1+y2)/2+ddx/len*curve;
+      const sc=isFlown?'#1a8a4a':col, sw=isFlown?2.5:1.8, sd=isFlown?'':'5,3';
+      svg+=`<path d="M${x1},${y1} Q${cx},${cy} ${x2},${y2}" fill="none" stroke="${sc}" stroke-width="${sw}" stroke-dasharray="${sd}" stroke-linecap="round" opacity="${isFlown?1:0.65}"/>`;
+      if(isFlown){const a=Math.atan2(y2-cy,x2-cx);svg+=`<polygon points="${x2},${y2} ${x2-8*Math.cos(a-0.4)},${y2-8*Math.sin(a-0.4)} ${x2-8*Math.cos(a+0.4)},${y2-8*Math.sin(a+0.4)}" fill="#1a8a4a"/>`;}
+      // Day label on first outbound leg of each day
+      if(li===0){
+        const lx=Math.round((x1+cx*2+x2)/4),ly=Math.round((y1+cy*2+y2)/4);
+        svg+=`<circle cx="${lx}" cy="${ly}" r="9" fill="white" stroke="${col}" stroke-width="1.5" opacity="0.93"/>`;
+        svg+=`<text x="${lx}" y="${ly+3}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8.5" font-weight="700" fill="${col}">D${d.day}</text>`;
       }
-      const sbURL = simbriefURL(f, pilotId);
-      legsHTML+=`
-        <div class="leg-row">
-          <div class="leg-connector">
-            <div class="leg-dot dep"></div>
-            <div class="leg-line"></div>
-            <div class="leg-dot arr"></div>
-          </div>
-          <div class="leg-info">
-            <div class="leg-block-row">
-              <div>
-                <span class="leg-ap">${dep}</span>
-                <span class="leg-city"> ${depC.country} ${depC.name}</span>
-              </div>
-              <span class="leg-fn">${f[0]}</span>
-            </div>
-            <div class="leg-times">${minToHHMM(f[3])} → ${minToHHMM(f[3]+f[4])} · ${durStr(f[4])}</div>
-            <div class="leg-block-row" style="margin-top:4px">
-              <div>
-                <span class="leg-ap">${arr}</span>
-                <span class="leg-city"> ${arrC.country} ${arrC.name}</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="leg-ac">${f[5]==='neo'?'A320neo':'A320ceo'}</span>
-                <a class="sb-leg-link" href="${sbURL}" target="_blank" onclick="event.stopPropagation()">
-                  <span class="sb-icon">✈</span> SimBrief
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>`;
     });
+  });
+  // Nodes
+  const drawn=new Set();
+  [[BASE,[bx,by]],...Object.keys(COORDS).filter(k=>k!=='LOWW').map(k=>[k,COORDS[k]?proj(COORDS[k][0],COORDS[k][1]):null])].forEach(([icao,xy])=>{
+    if(!xy||drawn.has(icao))return;
+    // Only draw if used in this schedule
+    const used=sched.days.some(d=>d.legs.some(l=>l.dep===icao||l.arr===icao));
+    if(!used&&icao!==BASE)return;
+    drawn.add(icao);
+    const [x,y]=Array.isArray(xy)?xy:proj(COORDS[icao][0],COORDS[icao][1]);
+    const isBase=icao===BASE;
+    const col=isBase?'#b8860b':'#c8102e';
+    const r=isBase?7:5;
+    const lbl=AP[icao]?AP[icao].iata:icao;
+    svg+=`<circle cx="${x}" cy="${y}" r="${r+2}" fill="white" opacity="0.85"/>`;
+    svg+=`<circle cx="${x}" cy="${y}" r="${r}" fill="${col}" stroke="white" stroke-width="1.5"/>`;
+    svg+=`<text x="${x}" y="${y-r-3}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8.5" font-weight="700" fill="${col}" stroke="white" stroke-width="2.5" paint-order="stroke">${lbl}</text>`;
+  });
+  svg+=`</svg>`;
+  el.innerHTML=svg;
+}
 
-    // Full pairing SimBrief link = first leg only (multi-leg needs separate OFPs)
-    const sbFirst = simbriefURL(p[0], pilotId);
-
-    card.innerHTML=`
-      <div class="p-check">✓</div>
-      <div class="p-card-head">
-        <div class="p-id">PAIRING ${String(idx+1).padStart(3,'0')} · ${schedType.toUpperCase()}</div>
-        <div class="p-meta">
-          <span class="p-legs-badge">${p.length} LEG${p.length>1?'S':''}</span>
-          <span class="p-dur">FLT ${durStr(stats.block)}</span>
+// ═══════════════════════════════════════════════════════════
+//  RENDER DAY CARDS
+// ═══════════════════════════════════════════════════════════
+function renderDays(sched,allLegs,flownSet){
+  const grid=document.getElementById('days-grid');
+  grid.innerHTML='';
+  let legIdx=0;
+  sched.days.forEach(d=>{
+    const dLegs=d.legs;
+    const dayFlown=dLegs.every((_,i)=>flownSet[legIdx+i]);
+    const card=document.createElement('div');
+    card.className='day-card'+(dayFlown?' day-complete':'');
+    let legsHTML='';
+    dLegs.forEach((l,li)=>{
+      const idx=legIdx+li;
+      const isFlown=!!flownSet[idx];
+      // next unflown = first leg where no previous is unflown
+      const isNext=!isFlown&&Object.keys(flownSet).length===idx;
+      const dAP=AP[l.dep]||{iata:l.dep,name:l.dep,c:''};
+      const aAP=AP[l.arr]||{iata:l.arr,name:l.arr,c:''};
+      const depBase=l.dep===BASE, arrBase=l.arr===BASE;
+      const cls='leg-item'+(isFlown?' flown':isNext?' leg-next':'');
+      // Ground time: show before every leg except the first
+      let gnd='';
+      if(li>0){
+        const prev=dLegs[li-1];
+        const gndMin=l.std-(prev.std+prev.dur);
+        if(gndMin>0){
+          // Location: previous leg's arrival airport
+          const gndAP=AP[prev.arr]||{iata:prev.arr};
+          gnd=`<div class="gnd-sep"><span>GND ${ds(gndMin)} · ${gndAP.iata}</span><div class="gnd-bar"></div></div>`;
+        }
+      }
+      const sb=sbURL(l.dep,l.arr,l.flt,l.dur,pilotId);
+      legsHTML+=`${gnd}<div class="${cls}">
+        <div class="leg-tick"><button class="tick-btn${isFlown?' ticked':''}" data-idx="${idx}">${isFlown?'✓':'○'}</button></div>
+        <div class="leg-detail">
+          <div class="leg-route">
+            <span class="leg-iata${depBase?' base':''}">${dAP.iata||l.dep}</span>
+            <span class="leg-arrow">→</span>
+            <span class="leg-iata${arrBase?' base':''}">${aAP.iata||l.arr}</span>
+          </div>
+          <div class="leg-cities">${dAP.c} ${dAP.name} → ${aAP.c} ${aAP.name}</div>
+          <div class="leg-times">${mmhh(l.std)} → ${mmhh(l.std+l.dur)} · ${ds(l.dur)}</div>
         </div>
-      </div>
-      <div class="p-timeline">${legsHTML}</div>
-      <div class="p-card-foot">
-        <div class="p-fdp">
-          ${minToHHMM(stats.firstDep)}–${minToHHMM(stats.lastArr)}
-          &nbsp;·&nbsp; Block <span>${durStr(stats.block)}</span>
-          &nbsp;·&nbsp; FDP <span>${durStr(stats.fdp)}</span>
-        </div>
-        <div class="foot-actions">
-          <button class="p-select-btn">${isSel?'✓ Selected':'Select'}</button>
+        <div class="leg-right">
+          <span class="flt-num">${l.flt}</span>
+          <a class="sb-link" href="${sb}" target="_blank">✈ SimBrief</a>
         </div>
       </div>`;
-
-    card.addEventListener('click',()=>{
-      selectedPairing = selectedPairing===idx ? null : idx;
-      selectedPairingData = selectedPairing!==null ? p : null;
-      updateSelSummary(selectedPairingData);
-      renderAll();
     });
+    card.innerHTML=`
+      <div class="day-card-head">
+        <span class="day-num-badge">DAY ${d.day}</span>
+        <span class="day-route">${d.routeCode}</span>
+        <span class="day-block">${ds(d.totalBlk)}</span>
+        ${dayFlown?'<span class="day-complete-badge">✓</span>':''}
+      </div>
+      <div class="legs-list">${legsHTML}</div>`;
     grid.appendChild(card);
+    legIdx+=dLegs.length;
+  });
+  // Tick listeners
+  grid.querySelectorAll('.tick-btn').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const idx=parseInt(btn.dataset.idx);
+      if(!S.flown[S.id])S.flown[S.id]={};
+      if(S.flown[S.id][idx])delete S.flown[S.id][idx];
+      else S.flown[S.id][idx]=true;
+      save(S);renderApp();
+    });
   });
 }
 
-function updateSelSummary(p){
-  const el=document.getElementById('sel-summary');
-  const sbBtn=document.getElementById('sb-all-btn');
-  if(!p){
-    el.innerHTML='<span class="sel-none">No pairing selected</span>';
-    sbBtn.classList.add('hidden');
-    return;
-  }
-  const stats=pairingStats(p);
-  let html='';
-  p.forEach(f=>{
-    const dep=CITIES[f[1]],arr=CITIES[f[2]];
-    html+=`<div style="color:var(--text)">${f[0]} &nbsp;${f[1]}→${f[2]}</div>`;
-    html+=`<div style="color:var(--muted);font-size:9px;padding-left:8px;margin-bottom:3px">${dep.country}${dep.name} → ${arr.country}${arr.name}<br>${minToHHMM(f[3])} – ${minToHHMM(f[3]+f[4])}</div>`;
+// ═══════════════════════════════════════════════════════════
+//  SCHEDULE PICKER
+// ═══════════════════════════════════════════════════════════
+function openSchedPicker(){
+  const body=document.getElementById('modal-body');
+  body.innerHTML='';
+  const filtered=SCHEDS.filter(s=>{
+    if(fEnd==='base'&&!s.returnsToBase)return false;
+    if(fEnd==='away'&&s.returnsToBase)return false;
+    const maxL=Math.max(...s.days.map(d=>d.legs.length));
+    if(fLpd!=='all'&&maxL!==parseInt(fLpd))return false;
+    return true;
   });
-  html+=`<div style="color:var(--gold);margin-top:6px;border-top:1px solid var(--line);padding-top:6px">Block ${durStr(stats.block)} · FDP ${durStr(stats.fdp)}</div>`;
-  el.innerHTML=html;
-  // Show first-leg SimBrief link in sidebar
-  sbBtn.href = simbriefURL(p[0], pilotId);
-  sbBtn.classList.remove('hidden');
+  if(!filtered.length){body.innerHTML='<div style="padding:30px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted)">No schedules match filters.</div>';
+  } else filtered.forEach(s=>{
+    const isCur=s.id===S.id;
+    const fl=Object.keys(S.flown[s.id]||{}).length;
+    const tot=schedTotalLegs(s);
+    const pct=tot?Math.round(fl/tot*100):0;
+    const routes=s.days.map(d=>d.routeCode).join(' · ');
+    const div=document.createElement('div');
+    div.className='modal-sched-item'+(isCur?' current':'');
+    div.innerHTML=`<div class="msi-name">${s.name}${isCur?'<span style="color:var(--green);font-size:9px;margin-left:8px">← CURRENT</span>':''}</div>
+      <div class="msi-routes">${routes}</div>
+      <div class="msi-meta">${tot} legs · ${ds(schedTotalBlock(s))} block${fl>0?`<span class="pct-badge">${pct}%</span>`:''}</div>`;
+    div.addEventListener('click',()=>selectSched(s.id));
+    body.appendChild(div);
+  });
+  document.getElementById('sched-modal').classList.add('open');
+}
+function closeSchedPicker(){document.getElementById('sched-modal').classList.remove('open');}
+function selectSched(id){S.id=id;if(!S.flown[id])S.flown[id]={};save(S);closeSchedPicker();renderApp();}
+function assignNewSched(){
+  const others=SCHEDS.filter(s=>s.id!==S.id);
+  selectSched(others[Math.floor(Math.random()*others.length)].id);
 }
 
-function clearSelection(){
-  selectedPairing=null;selectedPairingData=null;
-  updateSelSummary(null);renderAll();
+// ═══════════════════════════════════════════════════════════
+//  DRAWER & FILTERS
+// ═══════════════════════════════════════════════════════════
+function toggleDrawer(){
+  const d=document.getElementById('options-drawer'),b=document.getElementById('drawer-backdrop'),btn=document.getElementById('ib-options');
+  if(d.classList.contains('open')){closeDrawer();}
+  else{d.classList.add('open');b.classList.add('open');btn.classList.add('active');}
 }
+function closeDrawer(){
+  document.getElementById('options-drawer').classList.remove('open');
+  document.getElementById('drawer-backdrop').classList.remove('open');
+  document.getElementById('ib-options').classList.remove('active');
+}
+document.querySelectorAll('.sf-btn[data-end]').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.sf-btn[data-end]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');fEnd=btn.dataset.end;
+}));
+document.querySelectorAll('.sf-btn[data-lpd]').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.sf-btn[data-lpd]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');fLpd=btn.dataset.lpd;
+}));
+function savePid(){
+  pilotId=document.getElementById('pid-input').value.trim();
+  localStorage.setItem('sb_pid_aua',pilotId);
+  const b=document.querySelector('.pid-save');b.textContent='✓';setTimeout(()=>b.textContent='Save',1400);
+}
+document.getElementById('sched-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeSchedPicker();});
 
-// ═══════════════════════════════════════════════
-//  EVENT BINDINGS
-// ═══════════════════════════════════════════════
-document.querySelectorAll('.sched-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.sched-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    schedType=btn.dataset.sched;
-    selectedPairing=null;selectedPairingData=null;
-    updateSelSummary(null);renderAll();
-  });
-});
-document.querySelectorAll('.leg-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.leg-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    filterLegs=btn.dataset.legs;
-    selectedPairing=null;selectedPairingData=null;
-    updateSelSummary(null);renderAll();
-  });
-});
-document.querySelectorAll('.sf-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.sf-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    filterRegion=btn.dataset.region;
-    selectedPairing=null;selectedPairingData=null;
-    updateSelSummary(null);renderAll();
-  });
-});
-
-// Reload saved PID on boot
+// ═══════════════════════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded',()=>{
-  const saved=localStorage.getItem('sb_pid');
+  const saved=localStorage.getItem('sb_pid_aua');
   if(saved){pilotId=saved;document.getElementById('pid-input').value=saved;}
-  renderAll();
+  else{document.getElementById('pid-input').value='141979';}
+  if(localStorage.getItem('aua_li')==='1'){
+    document.getElementById('login-page').style.display='none';
+    document.getElementById('app-page').style.display='block';
+    renderApp();
+  }
 });
-
-// ── PWA: Register Service Worker ──
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('sw.js')
-      .then(()=>console.log('SW registered'))
-      .catch(e=>console.log('SW error',e));
-  });
-}
 </script>
 </body>
 </html>
