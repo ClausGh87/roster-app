@@ -8,8 +8,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="EWE Palma">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%2300B5E2'/><text y='.9em' font-size='30' x='50' text-anchor='middle' dominant-baseline='middle' dy='5' fill='white' font-family='sans-serif' font-weight='bold'>EWE</text></svg>">
+<meta name="apple-mobile-web-app-title" content="EWL Palma">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%2300B5E2'/><text y='.9em' font-size='30' x='50' text-anchor='middle' dominant-baseline='middle' dy='5' fill='white' font-family='sans-serif' font-weight='bold'>EWL</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -30,7 +30,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 #login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;
   position:relative;overflow:hidden;
   background:linear-gradient(145deg,#003d5c 0%,#0077a8 40%,#00B5E2 70%,#0077a8 100%);}
-#login-page::before{content:'EWE';position:absolute;font-family:var(--mono);font-weight:600;
+#login-page::before{content:'EWL';position:absolute;font-family:var(--mono);font-weight:600;
   font-size:min(45vw,400px);color:rgba(255,255,255,0.04);letter-spacing:-0.02em;
   top:50%;left:50%;transform:translate(-50%,-50%);user-select:none;pointer-events:none;line-height:1;}
 .login-card{position:relative;z-index:1;background:rgba(255,255,255,0.97);border-radius:16px;
@@ -274,7 +274,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 <div id="login-page">
   <div class="login-card">
     <div class="login-logo">
-      <div class="login-badge">EWE</div>
+      <div class="login-badge">EWL</div>
       <div>
         <div class="login-brand">Eurowings Europe</div>
         <div class="login-sub">CREW SCHEDULING PORTAL · PMI</div>
@@ -285,7 +285,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
     <div class="login-field"><label>Password</label>
       <input type="password" id="login-pass" value="••••••••" autocomplete="current-password"></div>
     <button class="login-btn" id="login-btn">ENTER SCHEDULING</button>
-    <div class="login-footer">9H-EWF · A320 · Callsign EWE · Sub-base DUS</div>
+    <div class="login-footer">9H-EWF · A320 · Callsign EWL · Sub-base DUS</div>
   </div>
 </div>
 
@@ -293,7 +293,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 <div id="app-page">
 <div class="app-shell">
 <div class="icon-bar">
-  <div class="ib-logo">EWE</div>
+  <div class="ib-logo">EWL</div>
   <button class="ib-btn" id="ib-options" onclick="toggleDrawer()">⚙<span class="ibt">Options</span></button>
   <button class="ib-btn" onclick="openSchedPicker()">📋<span class="ibt">Change Schedule</span></button>
   <div class="ib-spacer"></div>
@@ -317,7 +317,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
       <input type="text" id="pid-input" placeholder="123456" maxlength="12">
       <button class="pid-save" onclick="savePid()">Save</button>
     </div>
-    <div class="pid-note">Reg 9H-EWF · Airline EWE · Callsign EWE · A320</div>
+    <div class="pid-note">Reg 9H-EWF · Airline EWL · Callsign · A320</div>
   </div>
 </div>
 <main class="main">
@@ -489,7 +489,7 @@ const SCHEDS=[
 // ═══════════════════════════════════════════════════════════
 //  HELPERS
 // ═══════════════════════════════════════════════════════════
-const BASE_LEPA='LEPA', BASE_EDDL='EDDL', AL='EWE', AC='A320', REG='9H-EWF';
+const BASE_LEPA='LEPA', BASE_EDDL='EDDL', AL='EWL', AC='A320', REG='9H-EWF';
 function mmhh(m){return`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;}
 function ds(m){if(!m||m<=0)return'—';return m<60?`${m}m`:`${Math.floor(m/60)}h${String(m%60).padStart(2,'0')}m`;}
 function sbURL(dep,arr,flt,dur,pid){
@@ -505,12 +505,12 @@ function hasEddl(s){return s.days.some(d=>d.base===BASE_EDDL||d.base==='TRANSIT'
 // ═══════════════════════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════════════════════
-const STORE='ewe_v1';
+const STORE='EWL_v1';
 function load(){try{return JSON.parse(localStorage.getItem(STORE))||{};}catch{return{};}}
 function save(s){localStorage.setItem(STORE,JSON.stringify(s));}
 let S=load();
 if(!S.id){S.id=SCHEDS[Math.floor(Math.random()*SCHEDS.length)].id;S.flown={};save(S);}
-let pilotId=localStorage.getItem('sb_pid_ewe')||'141979';
+let pilotId=localStorage.getItem('sb_pid_EWL')||'141979';
 let fType='all';
 
 // ═══════════════════════════════════════════════════════════
@@ -520,13 +520,13 @@ document.getElementById('login-btn').addEventListener('click',doLogin);
 document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 function doLogin(){
   if(!document.getElementById('login-user').value.trim())return;
-  localStorage.setItem('ewe_li','1');
+  localStorage.setItem('EWL_li','1');
   document.getElementById('login-page').style.display='none';
   document.getElementById('app-page').style.display='block';
   renderApp();
 }
 function doLogout(){
-  localStorage.removeItem('ewe_li');
+  localStorage.removeItem('EWL_li');
   document.getElementById('app-page').style.display='none';
   document.getElementById('login-page').style.display='flex';
 }
@@ -778,7 +778,7 @@ document.querySelectorAll('.sf-btn[data-type]').forEach(btn=>btn.addEventListene
 }));
 function savePid(){
   pilotId=document.getElementById('pid-input').value.trim();
-  localStorage.setItem('sb_pid_ewe',pilotId);
+  localStorage.setItem('sb_pid_EWL',pilotId);
   const b=document.querySelector('.pid-save');b.textContent='✓';setTimeout(()=>b.textContent='Save',1400);
 }
 document.getElementById('sched-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeSchedPicker();});
@@ -787,10 +787,10 @@ document.getElementById('sched-modal').addEventListener('click',e=>{if(e.target=
 //  BOOT
 // ═══════════════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded',()=>{
-  const saved=localStorage.getItem('sb_pid_ewe');
+  const saved=localStorage.getItem('sb_pid_EWL');
   if(saved){pilotId=saved;document.getElementById('pid-input').value=saved;}
   else{document.getElementById('pid-input').value='141979';}
-  if(localStorage.getItem('ewe_li')==='1'){
+  if(localStorage.getItem('EWL_li')==='1'){
     document.getElementById('login-page').style.display='none';
     document.getElementById('app-page').style.display='block';
     renderApp();
