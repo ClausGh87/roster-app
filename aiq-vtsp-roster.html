@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIQ Roster — VTSP Base</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#FF0000;
+    --red-deep:#C40016;
+    --black:#171412;
+    --grey-900:#2B2724;
+    --grey-500:#7A756F;
+    --grey-200:#E7E3DE;
+    --grey-100:#F5F2EE;
+    --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:var(--grey-100);
+    font-family:'Inter',sans-serif;
+    color:var(--black);
+    display:flex;
+    justify-content:center;
+    padding:0 0 60px;
+  }
+  .unit{ width:100%; max-width:460px; }
+
+  .band{
+    background:linear-gradient(135deg,var(--red) 0%, var(--red-deep) 100%);
+    color:var(--white);
+    padding:22px 20px 26px;
+    border-radius:0 0 22px 22px;
+    position:relative;
+    overflow:hidden;
+  }
+  .band::after{
+    content:'';
+    position:absolute;
+    right:-40px; top:-40px;
+    width:160px; height:160px;
+    background:rgba(255,255,255,0.10);
+    border-radius:50%;
+  }
+  .brand{
+    font-family:'Poppins',sans-serif;
+    font-weight:800;
+    font-size:22px;
+    letter-spacing:0.5px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .brand small{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:11px;
+    letter-spacing:1.5px;
+    background:rgba(255,255,255,0.18);
+    padding:3px 7px;
+    border-radius:5px;
+  }
+  .band-sub{ font-size:12.5px; opacity:0.92; margin-top:4px; }
+
+  /* ---------- login ---------- */
+  #login-screen{ display:none; }
+  .login-card{
+    background:var(--white);
+    margin:-18px 18px 0;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.10);
+    padding:22px 20px 24px;
+    position:relative;
+    z-index:2;
+  }
+  .login-card h2{ font-family:'Poppins',sans-serif; font-size:16px; margin:0 0 4px; }
+  .login-card p{ font-size:12.5px; color:var(--grey-500); margin:0 0 18px; }
+  .field{ margin-bottom:14px; }
+  .field label{
+    display:block; font-size:11px; font-weight:600; letter-spacing:0.5px;
+    color:var(--grey-500); margin-bottom:5px; text-transform:uppercase;
+  }
+  .field input{
+    width:100%; border:1.5px solid var(--grey-200); background:var(--grey-100);
+    border-radius:10px; padding:11px 13px; font-size:14px; font-family:'Inter',sans-serif;
+    color:var(--black); outline:none; transition:border-color .15s ease;
+  }
+  .field input:focus{ border-color:var(--red); background:var(--white); }
+  .btn-primary{
+    width:100%; background:var(--red); color:var(--white); border:none;
+    border-radius:999px; padding:13px; font-family:'Poppins',sans-serif; font-weight:700;
+    font-size:14px; letter-spacing:0.3px; cursor:pointer; transition:background .15s ease, transform .1s ease;
+  }
+  .btn-primary:hover{ background:var(--red-deep); }
+  .btn-primary:active{ transform:scale(0.98); }
+  .login-note{ font-size:11px; color:var(--grey-500); text-align:center; margin-top:12px; }
+
+  /* ---------- roster ---------- */
+  #roster-screen{ display:none; }
+  .pilot-row{ display:flex; justify-content:space-between; align-items:center; margin-top:4px; }
+  .pilot-id{ font-size:12px; opacity:0.9; }
+  .logout-link{
+    font-size:11px; color:var(--white); opacity:0.85; text-decoration:underline;
+    cursor:pointer; background:none; border:none; font-family:'Inter',sans-serif; padding:0;
+  }
+
+  .toolbar{ display:flex; justify-content:space-between; align-items:center; padding:16px 20px 8px; }
+  .duty-id{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--grey-500); }
+  .btn-new{
+    background:var(--black); color:var(--white); border:none; border-radius:999px;
+    padding:9px 16px; font-size:12px; font-weight:700; font-family:'Poppins',sans-serif; cursor:pointer;
+  }
+  .btn-new:hover{ background:var(--grey-900); }
+
+  /* ---------- map card ---------- */
+  .map-card{
+    margin:8px 18px 4px;
+    background:var(--white);
+    border-radius:14px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.07);
+    padding:12px 14px 8px;
+  }
+  .map-title{
+    font-family:'Poppins',sans-serif; font-weight:700; font-size:11px;
+    letter-spacing:1px; color:var(--grey-500); text-transform:uppercase; margin-bottom:4px;
+  }
+  #route-map{ width:100%; height:auto; display:block; }
+
+  .legs{ padding:10px 18px 0; display:flex; flex-direction:column; gap:14px; }
+
+  .pass{
+    background:var(--white); border-radius:14px; box-shadow:0 4px 14px rgba(0,0,0,0.07);
+    display:flex; overflow:hidden; position:relative;
+  }
+  .pass-main{ flex:1; padding:14px 14px 12px; border-right:2px dashed var(--grey-200); position:relative; }
+  .pass-main::before, .pass-main::after{
+    content:''; position:absolute; right:-8px; width:16px; height:16px;
+    background:var(--grey-100); border-radius:50%;
+  }
+  .pass-main::before{ top:-8px; }
+  .pass-main::after{ bottom:-8px; }
+
+  .leg-tag{ font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--red); font-weight:700; letter-spacing:1px; margin-bottom:4px; }
+  .route-line{ display:flex; align-items:center; gap:8px; font-family:'Poppins',sans-serif; font-weight:700; font-size:19px; }
+  .route-line .arrow{ color:var(--grey-500); font-size:14px; }
+  .cities{ font-size:11px; color:var(--grey-500); margin:2px 0 10px; }
+
+  .data-grid{ display:flex; gap:16px; font-family:'IBM Plex Mono',monospace; font-size:12px; }
+  .data-grid div{ display:flex; flex-direction:column; gap:2px; }
+  .data-grid span.label{ font-size:9px; color:var(--grey-500); letter-spacing:0.5px; }
+  .data-grid span.val{ font-weight:600; color:var(--black); }
+
+  .pass-stub{
+    width:112px; background:var(--grey-100); padding:12px 9px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; text-align:center;
+  }
+  .stub-flight{ font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:13px; color:var(--black); }
+  .ac-select{
+    width:100%; font-size:10.5px; font-family:'Inter',sans-serif; color:var(--black);
+    border:1.5px solid var(--grey-200); border-radius:6px; padding:5px 4px; background:var(--white); outline:none;
+  }
+  .ac-select:focus{ border-color:var(--red); }
+  .sb-btn{
+    margin-top:2px; background:var(--red); color:var(--white); border:none; border-radius:7px;
+    padding:6px 8px; font-size:9.5px; font-weight:700; font-family:'Inter',sans-serif;
+    letter-spacing:0.3px; cursor:pointer; width:100%; transition:opacity .15s ease;
+  }
+  .sb-btn:hover{ background:var(--red-deep); }
+  .sb-btn:disabled{ background:var(--grey-200); color:var(--grey-500); cursor:not-allowed; }
+
+  .layover{
+    text-align:center; font-family:'IBM Plex Mono',monospace; font-size:10.5px;
+    color:var(--grey-500); letter-spacing:1px; padding:2px 0 4px;
+  }
+
+  .foot{ margin:18px 20px 0; font-size:10.5px; color:var(--grey-500); line-height:1.6; text-align:center; }
+  .foot b{ color:var(--black); }
+</style>
+</head>
+<body>
+
+<div class="unit">
+
+  <!-- LOGIN -->
+  <div id="login-screen">
+    <div class="band">
+      <div class="brand">air<span style="color:#1a1a1a; background:#fff; border-radius:4px; padding:0 4px;">asia</span> <small>AIQ</small></div>
+      <div class="band-sub">VTSP Base · Duty Roster</div>
+    </div>
+    <div class="login-card">
+      <h2>Crew sign-in</h2>
+      <p>Sign in to draw your randomized VTSP duty roster.</p>
+      <div class="field">
+        <label>Pilot name</label>
+        <input type="text" id="in-name">
+      </div>
+      <div class="field">
+        <label>Pilot ID</label>
+        <input type="text" id="in-id">
+      </div>
+      <button class="btn-primary" id="login-btn">LOG IN</button>
+      <div class="login-note">Stored on this device only — no account, no server.</div>
+    </div>
+  </div>
+
+  <!-- ROSTER -->
+  <div id="roster-screen">
+    <div class="band">
+      <div class="brand">air<span style="color:#1a1a1a; background:#fff; border-radius:4px; padding:0 4px;">asia</span> <small>AIQ</small></div>
+      <div class="pilot-row">
+        <span class="pilot-id" id="pilot-line">—</span>
+        <button class="logout-link" id="logout-btn">log out</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <span class="duty-id" id="draw-id">DUTY —</span>
+      <button class="btn-new" id="draw-btn">↻ New duty</button>
+    </div>
+
+    <div class="map-card">
+      <div class="map-title">Route map</div>
+      <svg id="route-map" viewBox="0 0 340 320" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <div class="legs" id="legs"></div>
+
+    <div class="foot">
+      Randomized on load, always departing <b>VTSP</b>, minimum 2 legs.<br>
+      Pick each leg's aircraft yourself, then use SimBrief to build the OFP.
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ---------------- data ---------------- */
+const airports = {
+  VTSP: { name:"Phuket Intl", city:"Phuket", intl:false, lat:7.9,  lon:98.3  },
+  VTCC: { name:"Chiang Mai Intl", city:"Chiang Mai", intl:false, lat:18.8, lon:98.9  },
+  VTBS: { name:"Suvarnabhumi", city:"Bangkok", intl:false, lat:13.7, lon:100.7 },
+  WMKK: { name:"Kuala Lumpur Intl", city:"Kuala Lumpur", intl:true, lat:2.7,  lon:101.7 },
+  WSSS: { name:"Changi", city:"Singapore", intl:true, lat:1.35, lon:103.99 },
+  VTSM: { name:"Samui", city:"Koh Samui", intl:false, lat:9.5,  lon:100.06 },
+  WBGG: { name:"Kuching Intl", city:"Kuching", intl:true, lat:-1.48, lon:110.34 },
+  VHHH: { name:"Hong Kong Intl", city:"Hong Kong", intl:true, lat:22.31, lon:113.91 }
+};
+
+const edges = {
+  VTSP: [
+    { to:"VTCC", flight:"FD3419", block:100, weight:1 },
+    { to:"VTBS", flight:"FD3011", block:75,  weight:1 },
+    { to:"WMKK", flight:"FD3606", block:90,  weight:1 },
+    { to:"WSSS", flight:"FD508",  block:110, weight:1 }
+  ],
+  VTBS: [
+    { to:"VTCC", flight:"FD3308", block:65,  weight:1 },
+    { to:"VTSM", flight:"FD3306", block:70,  weight:1 },
+    { to:"WBGG", flight:"FD3710", block:150, weight:1 },
+    { to:"VHHH", flight:"FD9911", block:155, weight:1 },
+    { to:"VTSP", flight:"FD3010", block:75,  weight:0.35 }
+  ],
+  WMKK: [
+    { to:"WSSS", flight:"FD9873", block:50,  weight:1 },
+    { to:"VTBS", flight:"FD3607", block:135, weight:1 },
+    { to:"WBGG", flight:"FD8821", block:95,  weight:1 },
+    { to:"VHHH", flight:"FD9912", block:215, weight:1 }
+  ],
+  WSSS: [
+    { to:"VTBS", flight:"FD509",  block:130, weight:1 },
+    { to:"VHHH", flight:"FD9910", block:220, weight:1 }
+  ],
+  VTCC: [
+    { to:"VTSP", flight:"FD3420", block:100, weight:1 }
+  ],
+  VTSM: [
+    { to:"VTSP", flight:"FD3307", block:55,  weight:1 }
+  ],
+  WBGG: [
+    { to:"VTBS", flight:"FD3711", block:150, weight:1 }
+  ],
+  VHHH: [
+    { to:"VTBS", flight:"FD9913", block:155, weight:1 }
+  ]
+};
+
+const a320regs = [
+  "HS-ABC","HS-ABD","HS-ABF","HS-ABP","HS-ABU","HS-ABV","HS-ABW","HS-ABX","HS-ABY","HS-ABZ",
+  "HS-BBA","HS-BBB","HS-BBC","HS-BBJ","HS-BBL","HS-BBM","HS-BBO","HS-BBP","HS-BBR","HS-BBW","HS-BBX",
+  "HS-CBC","HS-CBD","HS-CBG","HS-CBH","HS-CBI","HS-CBJ","HS-CBK","HS-CBL","HS-CBM"
+];
+const a220regs = ["HS-ANA","HS-ANB","HS-ANC","HS-AND","HS-ANE"]; // fictional AIQ extension
+const sbType = { "A320-200":"A320", "A220-300":"BCS3" };
+
+/* ---------------- map projection ---------------- */
+const LON_MIN=94, LON_MAX=116, LAT_MIN=-4, LAT_MAX=24;
+const PAD=30, MW=340, MH=320;
+function proj(lat, lon){
+  const x = PAD + (lon-LON_MIN)/(LON_MAX-LON_MIN) * (MW-2*PAD);
+  const y = PAD + (LAT_MAX-lat)/(LAT_MAX-LAT_MIN) * (MH-2*PAD);
+  return [x,y];
+}
+
+/* ---------------- helpers ---------------- */
+function pickWeighted(options){
+  const total = options.reduce((s,o)=>s+o.weight,0);
+  let r = Math.random()*total;
+  for(const o of options){ if(r < o.weight) return o; r -= o.weight; }
+  return options[options.length-1];
+}
+function fmtTime(min){
+  const day = Math.floor(min/1440);
+  const m = ((min%1440)+1440)%1440;
+  const hh = String(Math.floor(m/60)).padStart(2,'0');
+  const mm = String(m%60).padStart(2,'0');
+  return hh+":"+mm+(day>0 ? " +1":"");
+}
+function fmtBlock(min){ return Math.floor(min/60)+"h"+String(min%60).padStart(2,'0'); }
+function sbDate(dayOffset){
+  const d = new Date();
+  d.setDate(d.getDate()+dayOffset);
+  const months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  return String(d.getDate()).padStart(2,'0')+months[d.getMonth()]+String(d.getFullYear()).slice(-2);
+}
+
+/* ---------------- roster generation (min. 2 legs) ---------------- */
+function generateRoute(){
+  const maxLegs = 4;
+  let current = "VTSP", legs = [];
+  for(let i=0;i<maxLegs;i++){
+    const options = edges[current];
+    if(!options || options.length === 0) break;
+    const choice = pickWeighted(options);
+    legs.push({ from: current, to: choice.to, flight: choice.flight, block: choice.block });
+    current = choice.to;
+    if(legs.length >= 2 && Math.random() < 0.5){
+      if(edges[current] && edges[current].length > 0) break;
+    }
+  }
+  return legs;
+}
+function generateRouteMin2(){
+  let legs, attempts = 0;
+  do{ legs = generateRoute(); attempts++; } while(legs.length < 2 && attempts < 50);
+  return legs;
+}
+function buildSchedule(legs){
+  let t = 360 + Math.floor(Math.random()*720);
+  return legs.map((leg, idx) => {
+    const std = t, sta = std + leg.block;
+    const fromIntl = airports[leg.from].intl;
+    const turnaround = fromIntl ? (60 + Math.floor(Math.random()*30)) : (35 + Math.floor(Math.random()*25));
+    t = sta + turnaround;
+    return { ...leg, std, sta, turnaround: idx < legs.length-1 ? turnaround : null };
+  });
+}
+
+/* ---------------- SimBrief ---------------- */
+function simbriefUrl(leg, select, pilotName){
+  const val = select.value;
+  if(!val) return null;
+  const [type, reg] = val.split('|');
+  const dayOffset = Math.floor(leg.std/1440);
+  const depMin = ((leg.std%1440)+1440)%1440;
+  const fltnum = leg.flight.replace(/^FD/,'');
+  const params = new URLSearchParams({
+    airline:"FD", fltnum, orig:leg.from, dest:leg.to,
+    type: sbType[type] || "A320",
+    date: sbDate(dayOffset),
+    deph: String(Math.floor(depMin/60)).padStart(2,'0'),
+    depm: String(depMin%60).padStart(2,'0'),
+    reg, cpt: pilotName || "AIQ CREW"
+  });
+  return "https://dispatch.simbrief.com/options/custom?" + params.toString();
+}
+
+/* ---------------- map render ---------------- */
+function renderMap(legs){
+  const svg = document.getElementById('route-map');
+  const visited = new Set(['VTSP']);
+  legs.forEach(l => visited.add(l.to));
+  let s = '';
+
+  // faint full network first
+  Object.entries(edges).forEach(([from, list]) => {
+    list.forEach(e => {
+      const [x1,y1] = proj(airports[from].lat, airports[from].lon);
+      const [x2,y2] = proj(airports[e.to].lat, airports[e.to].lon);
+      s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#E7E3DE" stroke-width="2" stroke-dasharray="1 5" stroke-linecap="round"/>`;
+    });
+  });
+
+  // active route in red
+  legs.forEach(l => {
+    const [x1,y1] = proj(airports[l.from].lat, airports[l.from].lon);
+    const [x2,y2] = proj(airports[l.to].lat, airports[l.to].lon);
+    s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#FF0000" stroke-width="2.5" stroke-linecap="round"/>`;
+  });
+
+  // airport dots + labels
+  Object.entries(airports).forEach(([code, a]) => {
+    const [x,y] = proj(a.lat, a.lon);
+    const on = visited.has(code);
+    const isBase = code === 'VTSP';
+    s += `<circle cx="${x}" cy="${y}" r="${isBase?7:5}" fill="${on?'#FF0000':'#C8C2BB'}" stroke="#fff" stroke-width="2"/>`;
+    s += `<text x="${x}" y="${y-11}" font-family="IBM Plex Mono, monospace" font-size="10" font-weight="600" fill="${on?'#171412':'#A6A099'}" text-anchor="middle">${code}</text>`;
+  });
+
+  svg.innerHTML = s;
+}
+
+/* ---------------- roster render ---------------- */
+function renderRoster(){
+  const pilotName = localStorage.getItem('aiq_pilot_name') || '';
+  const legs = buildSchedule(generateRouteMin2());
+  renderMap(legs);
+
+  const container = document.getElementById('legs');
+  container.innerHTML = '';
+
+  legs.forEach((leg, idx) => {
+    const fromA = airports[leg.from], toA = airports[leg.to];
+    const pass = document.createElement('div');
+    pass.className = 'pass';
+    const options = ['<option value="">Choose aircraft ▾</option>']
+      .concat(a320regs.map(r => `<option value="A320-200|${r}">A320 · ${r}</option>`))
+      .concat(a220regs.map(r => `<option value="A220-300|${r}">A220* · ${r}</option>`));
+    pass.innerHTML = `
+      <div class="pass-main">
+        <div class="leg-tag">LEG ${idx+1}</div>
+        <div class="route-line">${leg.from}<span class="arrow">✈</span>${leg.to}</div>
+        <div class="cities">${fromA.city} → ${toA.city}</div>
+        <div class="data-grid">
+          <div><span class="label">STD</span><span class="val">${fmtTime(leg.std)}</span></div>
+          <div><span class="label">STA</span><span class="val">${fmtTime(leg.sta)}</span></div>
+          <div><span class="label">BLK</span><span class="val">${fmtBlock(leg.block)}</span></div>
+        </div>
+      </div>
+      <div class="pass-stub">
+        <div class="stub-flight">${leg.flight}</div>
+        <select class="ac-select">${options.join('')}</select>
+        <button class="sb-btn" disabled>SimBrief</button>
+      </div>
+    `;
+    container.appendChild(pass);
+
+    const select = pass.querySelector('.ac-select');
+    const sbBtn = pass.querySelector('.sb-btn');
+    select.addEventListener('change', () => { sbBtn.disabled = !select.value; });
+    sbBtn.addEventListener('click', () => {
+      const url = simbriefUrl(leg, select, pilotName);
+      if(url) window.open(url, '_blank');
+    });
+
+    if(leg.turnaround !== null){
+      const lay = document.createElement('div');
+      lay.className = 'layover';
+      lay.textContent = `— GND ${fmtBlock(leg.turnaround)} —`;
+      container.appendChild(lay);
+    }
+  });
+
+  document.getElementById('draw-id').textContent = 'DUTY #' + Math.floor(1000+Math.random()*9000);
+}
+
+/* ---------------- login flow ---------------- */
+function showRoster(){
+  const name = localStorage.getItem('aiq_pilot_name') || 'Crew';
+  const id = localStorage.getItem('aiq_pilot_id') || '—';
+  document.getElementById('pilot-line').textContent = name + ' · ID ' + id;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('roster-screen').style.display = 'block';
+  renderRoster();
+}
+function showLogin(){
+  document.getElementById('roster-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'block';
+  document.getElementById('in-name').value = localStorage.getItem('aiq_pilot_name') || 'Claus G.';
+  document.getElementById('in-id').value = localStorage.getItem('aiq_pilot_id') || '141979';
+}
+
+document.getElementById('login-btn').addEventListener('click', () => {
+  const name = document.getElementById('in-name').value.trim();
+  const id = document.getElementById('in-id').value.trim();
+  if(!name || !id){ alert('Please enter both name and pilot ID.'); return; }
+  localStorage.setItem('aiq_pilot_name', name);
+  localStorage.setItem('aiq_pilot_id', id);
+  showRoster();
+});
+document.getElementById('logout-btn').addEventListener('click', showLogin);
+document.getElementById('draw-btn').addEventListener('click', renderRoster);
+
+/* ---------------- boot ---------------- */
+if(localStorage.getItem('aiq_pilot_id')){ showRoster(); } else { showLogin(); }
+</script>
+
+</body>
+</html>
