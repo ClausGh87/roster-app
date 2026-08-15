@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QantasLink MEL A220 Roster</title>
+<style>
+  :root{
+    --qf-red:#e40000;
+    --bg:#f6f7f9;
+    --panel:#ffffff;
+    --line:#e2e5e9;
+    --text:#1c2126;
+    --muted:#6b7280;
+    --gold:#b8860b;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+  }
+  header{
+    background:#fff;
+    border-bottom:3px solid var(--qf-red);
+    padding:14px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  header h1{margin:0; font-size:1.15rem;}
+  header h1 span{color:var(--qf-red);}
+  header .sub{color:var(--muted); font-size:0.78rem;}
+  .stats{display:flex; gap:14px;}
+  .stat{text-align:center;}
+  .stat .num{font-size:1.1rem; font-weight:700; color:var(--qf-red);}
+  .stat .lbl{color:var(--muted); font-size:0.68rem;}
+  nav{
+    display:flex; gap:6px; padding:8px 20px; background:#fff;
+    border-bottom:1px solid var(--line);
+  }
+  nav button{
+    background:transparent; border:1px solid var(--line); color:var(--muted);
+    padding:6px 14px; border-radius:6px; cursor:pointer; font-size:0.82rem;
+  }
+  nav button.active{background:var(--qf-red); color:#fff; border-color:var(--qf-red);}
+  main{padding:18px 20px; max-width:1000px; margin:0 auto;}
+  section{display:none;}
+  section.active{display:block;}
+
+  .duty-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    padding:16px; margin-bottom:14px;
+  }
+  .duty-head{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;}
+  .duty-head h2{margin:0; font-size:1rem;}
+  .reroll-btn{
+    background:#fff; border:1px solid var(--qf-red); color:var(--qf-red);
+    padding:6px 12px; border-radius:6px; cursor:pointer; font-size:0.78rem; font-weight:600;
+  }
+  .leg{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:9px 0; border-bottom:1px solid var(--line); font-size:0.85rem;
+  }
+  .leg:last-child{border-bottom:none;}
+  .leg .route{font-weight:600;}
+  .leg .flt{color:var(--gold); font-size:0.78rem; margin-left:8px;}
+  .leg .time{color:var(--muted); font-size:0.8rem;}
+  .leg a{color:var(--qf-red); text-decoration:none; font-size:0.78rem; font-weight:600; margin-left:10px;}
+  .commit-btn{
+    margin-top:10px; background:var(--qf-red); color:#fff; border:none;
+    padding:8px 16px; border-radius:6px; cursor:pointer; font-size:0.82rem; font-weight:600;
+  }
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px;}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-size:0.8rem;}
+  .card b{color:var(--qf-red);}
+  .card .m{color:var(--muted); font-size:0.72rem;}
+
+  svg{width:100%; height:auto; background:#fff; border-radius:10px; border:1px solid var(--line);}
+  .route-line{stroke:var(--qf-red); stroke-width:1.4; stroke-dasharray:4 3; opacity:0.6;}
+  .dest-dot{fill:var(--gold); stroke:#fff; stroke-width:1;}
+  .hub-dot{fill:var(--qf-red); stroke:#fff; stroke-width:2;}
+  .lbl-code{fill:var(--text); font-size:13px; font-weight:700;}
+  .lbl-sub{fill:var(--muted); font-size:10px;}
+
+  table{width:100%; border-collapse:collapse; margin-top:8px; font-size:0.8rem;}
+  th,td{text-align:left; padding:7px 6px; border-bottom:1px solid var(--line);}
+  th{color:var(--muted); font-size:0.68rem; text-transform:uppercase;}
+  .empty{color:var(--muted); font-style:italic; padding:10px 0; font-size:0.85rem;}
+  .del{background:none; border:none; color:var(--muted); cursor:pointer;}
+  .del:hover{color:var(--qf-red);}
+  footer{text-align:center; color:var(--muted); font-size:0.7rem; padding:16px; opacity:0.7;}
+</style>
+</head>
+<body>
+
+<div id="loginScreen" style="min-height:100vh; display:flex; align-items:center; justify-content:center; background:var(--bg);">
+  <div style="background:#fff; border:1px solid var(--line); border-radius:12px; padding:32px; width:280px; text-align:center; box-shadow:0 4px 20px rgba(0,0,0,0.06);">
+    <div style="font-size:1.05rem; font-weight:700; margin-bottom:2px;">Qantas<span style="color:var(--qf-red);">Link</span> Crew Portal</div>
+    <div style="color:var(--muted); font-size:0.72rem; margin-bottom:20px;">Melbourne A220 Base</div>
+    <label style="display:block; text-align:left; font-size:0.72rem; color:var(--muted); margin-bottom:4px;">Crew ID</label>
+    <input id="loginUser" type="text" value="ClausGh" style="width:100%; margin-bottom:12px; padding:8px 10px; border:1px solid var(--line); border-radius:6px; font-size:0.85rem;">
+    <label style="display:block; text-align:left; font-size:0.72rem; color:var(--muted); margin-bottom:4px;">Password</label>
+    <input id="loginPass" type="password" value="qantaslink" style="width:100%; margin-bottom:18px; padding:8px 10px; border:1px solid var(--line); border-radius:6px; font-size:0.85rem;">
+    <button onclick="doLogin()" style="width:100%; background:var(--qf-red); color:#fff; border:none; padding:10px; border-radius:6px; font-weight:600; cursor:pointer; font-size:0.85rem;">Log In</button>
+    <div style="color:var(--muted); font-size:0.65rem; margin-top:14px;">Local-only, no real authentication &middot; a new duty rolls on each login</div>
+  </div>
+</div>
+
+<div id="appRoot" style="display:none;">
+
+<header>
+  <div>
+    <h1>Qantas<span>Link</span> MEL A220 Roster</h1>
+    <div class="sub">Base YMML &middot; A220-300 (BCS3) &middot; SimBrief ICAO QLK</div>
+  </div>
+  <div class="stats" id="headerStats"></div>
+</header>
+
+<nav>
+  <button data-tab="duty" class="active">Duty Roster</button>
+  <button data-tab="map">Map</button>
+</nav>
+
+<main>
+
+  <section id="duty" class="active">
+    <div class="duty-card">
+      <div class="duty-head">
+        <h2 id="dutyTitle">Today's Duty</h2>
+        <button class="reroll-btn" onclick="rollDuty()">Reroll Duty</button>
+      </div>
+      <div id="dutyLegs"></div>
+    </div>
+    <div class="grid" id="airportCards"></div>
+  </section>
+
+  <section id="map">
+    <div id="mapContainer"></div>
+  </section>
+
+</main>
+
+<footer>Personal roster app &middot; SimBrief pilot ID 141979</footer>
+
+</div>
+
+<script>
+const HUB = { icao:'YMML', iata:'MEL', city:'Melbourne', x:420, y:400 };
+const AIRPORTS = [
+  { icao:'YBBN', iata:'BNE', city:'Brisbane, QLD',  block:80,  x:560, y:230 },
+  { icao:'YSSY', iata:'SYD', city:'Sydney, NSW',     block:80,  x:535, y:305 },
+  { icao:'YPAD', iata:'ADL', city:'Adelaide, SA',    block:70,  x:305, y:365 },
+  { icao:'YMLT', iata:'LST', city:'Launceston, TAS', block:65,  x:470, y:470 },
+  { icao:'YMHB', iata:'HBA', city:'Hobart, TAS',     block:75,  x:478, y:500 },
+  { icao:'YAYE', iata:'AYQ', city:'Yulara, NT',      block:160, x:170, y:180 },
+];
+const AIRLINE_CODE = 'QLK';
+const AIRCRAFT_TYPE = 'BCS3';
+const PILOT_ID = '141979';
+
+function fmt(min){ const h=Math.floor(min/60), m=min%60; return `${h}:${String(m).padStart(2,'0')}`; }
+function blockBetween(a,b){
+  if(a.iata===HUB.iata) return b.block;
+  if(b.iata===HUB.iata) return a.block;
+  return Math.round((a.block+b.block)*0.6);
+}
+function fltNum(a,b,idx){
+  const base = a.iata===HUB.iata || b.iata===HUB.iata ? 1200 : 1270;
+  return 'QF'+(base+idx*3);
+}
+function simbriefLink(o,d,flt){
+  return `https://www.simbrief.com/system/dispatch.php?airline=${AIRLINE_CODE}&fltnum=${flt.replace('QF','')}&type=${AIRCRAFT_TYPE}&orig=${o.icao}&dest=${d.icao}&pid=${PILOT_ID}`;
+}
+
+let currentDuty = [];
+
+function rollDuty(){
+  const legCount = 2 + Math.floor(Math.random()*3); // 2-4
+  const stopCount = legCount - 1;
+  const pool = [...AIRPORTS];
+  const stops = [];
+  for(let i=0;i<stopCount;i++){
+    const idx = Math.floor(Math.random()*pool.length);
+    stops.push(pool.splice(idx,1)[0]);
+  }
+  const sequence = [HUB, ...stops, HUB];
+  currentDuty = [];
+  for(let i=0;i<sequence.length-1;i++){
+    const o = sequence[i], d = sequence[i+1];
+    const block = blockBetween(o,d);
+    const flt = fltNum(o,d,i);
+    currentDuty.push({o,d,block,flt});
+  }
+  renderDuty();
+}
+
+function renderDuty(){
+  document.getElementById('dutyTitle').textContent = `Duty \u2014 ${currentDuty.length} legs`;
+  document.getElementById('dutyLegs').innerHTML = currentDuty.map(l => `
+    <div class="leg">
+      <div>
+        <span class="route">${l.o.iata}\u2192${l.d.iata}</span>
+        <span class="flt">${l.flt}</span>
+      </div>
+      <div>
+        <span class="time">${fmt(l.block)}</span>
+        <a href="${simbriefLink(l.o,l.d,l.flt)}" target="_blank">SimBrief</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderCards(){
+  document.getElementById('airportCards').innerHTML = AIRPORTS.map(a => `
+    <div class="card"><b>${a.iata}</b><br>${a.city}<div class="m">${a.icao} &middot; ${fmt(a.block)} from MEL</div></div>
+  `).join('');
+}
+
+function renderMap(){
+  const lines = AIRPORTS.map(a => `<line class="route-line" x1="${HUB.x}" y1="${HUB.y}" x2="${a.x}" y2="${a.y}"/>`).join('');
+  const dots = AIRPORTS.map(a => `
+    <circle class="dest-dot" cx="${a.x}" cy="${a.y}" r="6"/>
+    <text class="lbl-code" x="${a.x+10}" y="${a.y-4}">${a.iata}</text>
+    <text class="lbl-sub" x="${a.x+10}" y="${a.y+10}">${fmt(a.block)}</text>
+  `).join('');
+  document.getElementById('mapContainer').innerHTML = `
+    <svg viewBox="0 0 650 560" xmlns="http://www.w3.org/2000/svg">
+      ${lines}${dots}
+      <circle class="hub-dot" cx="${HUB.x}" cy="${HUB.y}" r="9"/>
+      <text class="lbl-code" x="${HUB.x-14}" y="${HUB.y+28}">MEL</text>
+    </svg>`;
+}
+
+function renderStats(){
+  document.getElementById('headerStats').innerHTML = `
+    <div class="stat"><div class="num">${AIRPORTS.length}</div><div class="lbl">Destinations</div></div>
+  `;
+}
+
+document.querySelectorAll('nav button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+function doLogin(){
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appRoot').style.display = 'block';
+  rollDuty(); // fresh duty generated on every login
+}
+
+// allow Enter key to submit from either field
+['loginUser','loginPass'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if(e.key === 'Enter') doLogin();
+  });
+});
+
+renderCards();
+renderMap();
+renderStats();
+</script>
+
+</body>
+</html>
